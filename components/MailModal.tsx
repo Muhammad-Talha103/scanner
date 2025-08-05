@@ -81,8 +81,9 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
   }
 
   const generatePDF = async (): Promise<Blob> => {
-    const { jsPDF } = await import("jspdf")
-
+   const jsPDFModule = await import("jspdf")
+   
+    const jsPDF = jsPDFModule.default
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",

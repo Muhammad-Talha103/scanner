@@ -291,7 +291,7 @@ export default function ScannerApp() {
 </div>
 
       {/* Menu Bar */}
-      <div className="bg-gray-200 border-b border-gray-300 px-2 py-1">
+      <div className=" border-b border-gray-300 px-2 py-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
 
@@ -317,7 +317,7 @@ export default function ScannerApp() {
       </div>
 
       {/* Toolbar */}
-      <div className="bg-gray-200 border-b border-gray-300 px-2 py-2 overflow-x-auto">
+      <div className=" border-b border-gray-300 px-2 py-2 overflow-x-auto">
         <div className="flex items-center justify-between min-w-max">
           <div className="flex items-center space-x-1">
             {/* Scan Button with Dropdown */}
@@ -448,7 +448,7 @@ export default function ScannerApp() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 bg-gray-200 min-h-96 lg:min-h-0">
+        <div className="flex-1  min-h-96 lg:min-h-0">
           <ScannedImages
             images={scannedImages}
             isScanning={isScanning}
