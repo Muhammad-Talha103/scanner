@@ -4,7 +4,7 @@ import nodemailer from "nodemailer"
 // Email configuration - replace with your actual credentials
 const EMAIL_CONFIG = {
   host: "smtp.gmail.com", 
-  port: 587 ,
+  port: 465 ,
   secure: true,
   auth: {
     user: process.env.SMTP_USER, // Replace with your email
