@@ -155,8 +155,8 @@ export default function ScannerApp() {
 
   const menuItems: Record<string, DropdownItem[]> = {
     action: [
-      { label: "New Document", icon: <Plus className="w-4 h-4" />, shortcut: "Ctrl+N", onClick: handleNewDocument },
-      { label: "Open", icon: <FolderOpen className="w-4 h-4" />, shortcut: "Ctrl+O" },
+      { label: "New Document", icon: <Plus className="w-4 h-4" />, shortcut: "Ctrl+N", onClick: handleNewDocument,disabled: true },
+      { label: "Open", icon: <FolderOpen className="w-4 h-4" />, shortcut: "Ctrl+O",disabled: true },
       {
         label: "Import",
         icon: <Download className="w-4 h-4" />,
@@ -164,10 +164,11 @@ export default function ScannerApp() {
         onClick: () => {
         
         },
+   
       },
-      { label: "Export", icon: <Send className="w-4 h-4" />, shortcut: "Ctrl+E" },
-      { label: "Send", icon: <Mail className="w-4 h-4" />, shortcut: "Ctrl+S" },
-      { label: "Exit", icon: <LogOut className="w-4 h-4" />, shortcut: "Alt+F4" },
+      { label: "Export", icon: <Send className="w-4 h-4" />, shortcut: "Ctrl+E" ,disabled: true},
+      { label: "Send", icon: <Mail className="w-4 h-4" />, shortcut: "Ctrl+S",disabled: true },
+      { label: "Exit", icon: <LogOut className="w-4 h-4" />, shortcut: "Alt+F4",disabled: true },
     ],
     edit: [
       {
@@ -184,26 +185,26 @@ export default function ScannerApp() {
         onClick: handleRedo,
         disabled: !canRedo,
       },
-      { label: "Cut", icon: <Scissors className="w-4 h-4" />, shortcut: "Ctrl+X" },
-      { label: "Copy", icon: <Copy className="w-4 h-4" />, shortcut: "Ctrl+C" },
-      { label: "Paste", icon: <Paste className="w-4 h-4" />, shortcut: "Ctrl+V" },
-      { label: "Select All", icon: <Grid3X3 className="w-4 h-4" />, shortcut: "Ctrl+A" },
+      { label: "Cut", icon: <Scissors className="w-4 h-4" />, shortcut: "Ctrl+X" ,disabled: true},
+      { label: "Copy", icon: <Copy className="w-4 h-4" />, shortcut: "Ctrl+C" ,disabled: true},
+      { label: "Paste", icon: <Paste className="w-4 h-4" />, shortcut: "Ctrl+V",disabled: true },
+      { label: "Select All", icon: <Grid3X3 className="w-4 h-4" />, shortcut: "Ctrl+A" ,disabled: true},
     ],
     view: [
-      { label: "Zoom In", icon: <ZoomIn className="w-4 h-4" />, shortcut: "Ctrl++" },
-      { label: "Zoom Out", icon: <ZoomOut className="w-4 h-4" />, shortcut: "Ctrl+-" },
-      { label: "Fit to Window", icon: <Monitor className="w-4 h-4" />, shortcut: "Ctrl+0" },
-      { label: "Full Screen", icon: <Maximize className="w-4 h-4" />, shortcut: "F11" },
-      { label: "Thumbnails", icon: <Paste className="w-4 h-4" />, shortcut: "Ctrl+T" },
-      { label: "Properties", icon: <Info className="w-4 h-4" />, shortcut: "Alt+Enter" },
+      { label: "Zoom In", icon: <ZoomIn className="w-4 h-4" />, shortcut: "Ctrl++" ,disabled: true},
+      { label: "Zoom Out", icon: <ZoomOut className="w-4 h-4" />, shortcut: "Ctrl+-",disabled: true },
+      { label: "Fit to Window", icon: <Monitor className="w-4 h-4" />, shortcut: "Ctrl+0" ,disabled: true},
+      { label: "Full Screen", icon: <Maximize className="w-4 h-4" />, shortcut: "F11",disabled: true },
+      { label: "Thumbnails", icon: <Paste className="w-4 h-4" />, shortcut: "Ctrl+T",disabled: true },
+      { label: "Properties", icon: <Info className="w-4 h-4" />, shortcut: "Alt+Enter",disabled: true },
     ],
     extras: [
-      { label: "Preferences", icon: <Settings className="w-4 h-4" />, shortcut: "Ctrl+," },
-      { label: "Scanner Settings", icon: <FileText className="w-4 h-4" /> },
-      { label: "OCR Settings", icon: <Eye className="w-4 h-4" /> },
-      { label: "Plugins", icon: <Grid3X3 className="w-4 h-4" /> },
-      { label: "Help", icon: <HelpCircle className="w-4 h-4" />, shortcut: "F1" },
-      { label: "About", icon: <Info className="w-4 h-4" /> },
+      { label: "Preferences", icon: <Settings className="w-4 h-4" />, shortcut: "Ctrl+," ,disabled: true},
+      { label: "Scanner Settings", icon: <FileText className="w-4 h-4" />,disabled: true },
+      { label: "OCR Settings", icon: <Eye className="w-4 h-4" /> ,disabled: true},
+      { label: "Plugins", icon: <Grid3X3 className="w-4 h-4" /> ,disabled: true},
+      { label: "Help", icon: <HelpCircle className="w-4 h-4" />, shortcut: "F1" ,disabled: true},
+      { label: "About", icon: <Info className="w-4 h-4" /> ,disabled: true},
     ],
   }
 
@@ -265,26 +266,12 @@ export default function ScannerApp() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-  <div className="flex items-center justify-center px-3 pt-6 -mb-8 ">
+  <div className="flex items-center justify-center px-3 pt-6 lg:-mb-8 ">
   <div className="flex items-center space-x-3">
-    {/* Icon - Cloud Scanner */}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-10 w-10 text-blue-500 animate-bounce"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={1.5}
-        d="M3 15a4 4 0 004 4h9a5 5 0 100-10 7 7 0 00-13 6z"
-      />
-    </svg>
+    
 
     {/* Heading Text */}
-    <h2 className="text-2xl sm:text-[12px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
+    <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
       GREWE Scanner Interface Cloud Version<br className="hidden sm:block" /> 
     </h2>
   </div>
@@ -364,12 +351,7 @@ export default function ScannerApp() {
               <span className="text-xs text-gray-700 hidden sm:block">{isProcessing ? "Printing..." : "Print"}</span>
             </button>
 
-            {/* Fax */}
-            <button className="flex flex-col items-center px-2 sm:px-3 py-2 hover:bg-gray-100 rounded transition-colors">
-              <Calculator className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600 mb-1" />
-              <span className="text-xs text-gray-700 hidden sm:block">Fax</span>
-            </button>
-
+          
             {/* Mail */}
             <button
               className="flex flex-col items-center px-2 sm:px-3 py-2 hover:bg-gray-100 rounded transition-colors"
