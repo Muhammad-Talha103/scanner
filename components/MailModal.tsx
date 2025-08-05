@@ -193,14 +193,22 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         body: emailFormData,
       })
 
-     if (!response.ok) {
+    if (!response.ok) {
   let errorMessage = "Failed to send email"
   try {
-    const errorData = await response.json()
-    errorMessage = errorData.error || errorMessage
-  } catch {
+    // Read the body once as text
     const text = await response.text()
-    errorMessage = text || errorMessage
+
+    // Try to parse JSON from that text
+    try {
+      const errorData = JSON.parse(text)
+      errorMessage = errorData.error || errorMessage
+    } catch {
+      // Not JSON, just use the text as message
+      errorMessage = text || errorMessage
+    }
+  } catch {
+    // Could not read body at all, keep default message
   }
   throw new Error(errorMessage)
 }
