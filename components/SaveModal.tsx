@@ -140,7 +140,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({ isOpen, onClose, onSave })
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">PDF saved successfully</h3>
               <p className="text-sm text-gray-600">
-                Saved as "<span className="font-medium">{savedFileName}.pdf</span>"
+                Saved as <span className="font-medium">{savedFileName}.pdf</span>
               </p>
             </div>
           )}
