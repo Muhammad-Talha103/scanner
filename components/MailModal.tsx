@@ -82,7 +82,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
   const generatePDF = async (): Promise<Blob> => {
    const jsPDFModule = await import("jspdf")
-   
+
     const jsPDF = jsPDFModule.default
     const pdf = new jsPDF({
       orientation: "portrait",
@@ -193,10 +193,18 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         body: emailFormData,
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Failed to send email")
-      }
+     if (!response.ok) {
+  let errorMessage = "Failed to send email"
+  try {
+    const errorData = await response.json()
+    errorMessage = errorData.error || errorMessage
+  } catch {
+    const text = await response.text()
+    errorMessage = text || errorMessage
+  }
+  throw new Error(errorMessage)
+}
+
 
       setIsSuccess(true)
     } catch (err) {
