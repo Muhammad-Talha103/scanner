@@ -5,7 +5,7 @@ import nodemailer from "nodemailer"
 const EMAIL_CONFIG = {
   host: "smtp.gmail.com", 
   port: 587 ,
-  secure: false,
+  secure: true,
   auth: {
     user: process.env.SMTP_USER, // Replace with your email
     pass: process.env.SMTP_PASS, // Replace with your app password
@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
       port: EMAIL_CONFIG.port,
       secure: EMAIL_CONFIG.secure,
       auth: EMAIL_CONFIG.auth,
+      logger: true,
+      debug: true, // Enable debug output for troubleshooting
     })
 
     // Prepare attachments
