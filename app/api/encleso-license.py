@@ -101,3 +101,7 @@ class handler(BaseHTTPRequestHandler):
             "error": message
         })
         self.wfile.write(error_response.encode())
+
+
+
+

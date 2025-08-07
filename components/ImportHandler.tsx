@@ -25,11 +25,12 @@ export const ImportHandler: React.FC<ImportHandlerProps> = ({ onImagesImported, 
     const files = event.target.files
     if (!files || files.length === 0) return
 
-    const validImageTypes = ["image/png", "image/jpg", "image/jpeg"]
+    // Add "image/tiff" and "image/tif" to valid types
+    const validImageTypes = ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/tif"]
     const validFiles = Array.from(files).filter((file) => validImageTypes.includes(file.type))
 
     if (validFiles.length === 0) {
-      alert("Please select valid image files (PNG, JPG, JPEG)")
+      alert("Please select valid image files (PNG, JPG, JPEG, TIFF)")
       return
     }
 
@@ -85,7 +86,8 @@ export const ImportHandler: React.FC<ImportHandlerProps> = ({ onImagesImported, 
       <input
         ref={fileInputRef}
         type="file"
-        accept=".png,.jpg,.jpeg,image/png,image/jpeg,image/jpg"
+        // add .tiff and .tif extensions + mime types to accept attribute
+        accept=".png,.jpg,.jpeg,.tiff,.tif,image/png,image/jpeg,image/jpg,image/tiff,image/tif"
         multiple
         onChange={handleFileChange}
         style={{ display: "none" }}
