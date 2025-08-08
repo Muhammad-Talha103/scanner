@@ -1,5 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
+import type { Attachment } from "nodemailer/lib/mailer"
+
 
 // Email configuration - replace with your actual credentials
 const EMAIL_CONFIG = {
@@ -38,7 +40,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Prepare attachments
-    const attachments: any[] = []
+    const attachments: Attachment[] = []
 
     if (attachment) {
       const buffer = Buffer.from(await attachment.arrayBuffer())

@@ -80,7 +80,7 @@ const LoginRequired = () => {
 
           {/* Description */}
           <p className="text-gray-600 mb-8 leading-relaxed">
-            Please log in to access the GREWE Scanner Interface. You'll be redirected to the login page shortly.
+            Please log in to access the GREWE Scanner Interface. You&apos;ll be redirected to the login page shortly.
           </p>
 
           {/* Countdown Circle */}
@@ -253,29 +253,28 @@ export default function ScannerApp() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Check if user is logged in
-  if (!userInfo?.email) {
-    return <LoginRequired />
-  }
 
-  useEffect(() => {
-    if (!userInfo?.email) return;
-    const fetchUser = async () => {
-      try {
-        const query = `*[_type == "user" && email == $email]{username}`;
-        const params = { email: userInfo.email };
-        const result = await client.fetch(query, params);
-        if (result?.length > 0) {
-          setUserName(result[0].username);
-        } else {
-          setUserName(null);
-         }
-      } catch (error) {
-        console.error("Sanity fetch error:", error);
+useEffect(() => {
+  if (!userInfo?.email) return;
+
+  const fetchUser = async () => {
+    try {
+      const query = `*[_type == "user" && email == $email]{username}`;
+      const params = { email: userInfo.email };
+      const result = await client.fetch(query, params);
+      if (result?.length > 0) {
+        setUserName(result[0].username);
+      } else {
+        setUserName(null);
       }
-    };
-    fetchUser();
-  }, [userInfo?.email]);
+    } catch (error) {
+      console.error("Sanity fetch error:", error);
+    }
+  };
+
+  fetchUser();
+}, [userInfo?.email]);
+
 
   const {
     isReady,
@@ -303,6 +302,12 @@ export default function ScannerApp() {
     canUndo,
     canRedo,
   } = useScannerIntegration()
+
+    // Check if user is logged in
+  if (!userInfo?.email) {
+    return <LoginRequired />
+  }
+
 
   const selectedImage = getSelectedImage()
 

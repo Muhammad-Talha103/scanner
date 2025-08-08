@@ -154,7 +154,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
             <span>
               Showing {filteredUsers.length} of {users.length} users
               {filteredUsers.length === 0 && (
-                <span className="text-gray-500 ml-2">- No users found matching "{searchTerm}"</span>
+                <span className="text-gray-500 ml-2">- No users found matching {searchTerm}</span>
               )}
             </span>
           ) : (
@@ -187,7 +187,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredUsers.length > 0 ? (
-              filteredUsers.map((user, index) => (
+              filteredUsers.map((user) => (
                 <UserRow
                   key={user.id}
                   user={user}
@@ -224,7 +224,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
       {/* Mobile Card View */}
       <div className="md:hidden">
         {filteredUsers.length > 0 ? (
-          filteredUsers.map((user, index) => (
+          filteredUsers.map((user) => (
             <UserRow
               key={user.id}
               user={user}

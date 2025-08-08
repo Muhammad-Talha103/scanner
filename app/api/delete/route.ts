@@ -26,13 +26,27 @@ export async function POST(req: Request) {
     const userRecord = await auth.getUserByEmail(email)
     await auth.deleteUser(userRecord.uid)
     return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Deletion error:', error)
+  }catch (error: unknown) {
+  console.error('Deletion error:', error);
 
-    if (error.code === 'auth/user-not-found') {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({ error: 'Failed to delete user', details: error.message }, { status: 500 })
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    error.code === 'auth/user-not-found'
+  ) {
+    return NextResponse.json({ error: 'User not found' }, { status: 404 });
   }
+
+  const errorMessage = 
+    typeof error === 'object' && error !== null && 'message' in error
+      ? (error as { message: string }).message
+      : 'Unknown error';
+
+  return NextResponse.json(
+    { error: 'Failed to delete user', details: errorMessage },
+    { status: 500 }
+  );
+}
+
 }

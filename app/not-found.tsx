@@ -82,10 +82,10 @@ export default function NotFound() {
             Oops! Page Not Found
           </h2>
           <p className="text-gray-300 text-lg animate-fade-in-up animation-delay-200">
-            The page you're looking for seems to have vanished into the digital void.
+            The page you&apos;re looking for seems to have vanished into the digital void.
           </p>
           <p className="text-gray-400 text-sm animate-fade-in-up animation-delay-400">
-            Don't worry, even the best explorers sometimes take a wrong turn.
+            Don&apos;t worry, even the best explorers sometimes take a wrong turn.
           </p>
         </div>
 
@@ -127,7 +127,7 @@ export default function NotFound() {
         <div className="mt-12 p-4 bg-black/20 backdrop-blur-sm rounded-lg border border-gray-700/50 animate-fade-in-up animation-delay-800">
           <p className="text-gray-300 text-sm">
             <span className="text-purple-400 font-semibold">Fun Fact:</span> The first 404 error was discovered at CERN in 1992. 
-            You're now part of internet history! 🚀
+            You&apos;re now part of internet history! 🚀
           </p>
         </div>
       </div>

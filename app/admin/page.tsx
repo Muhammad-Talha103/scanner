@@ -43,6 +43,7 @@ export default function AdminPage() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
+        console.error('Error fetching users:', error)
         // handle fetch error if needed
       }
     }

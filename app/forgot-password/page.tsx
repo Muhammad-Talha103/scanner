@@ -251,9 +251,9 @@ export default function ForgetPassword() {
                 </h3>
                 <div className="mt-2 text-sm text-blue-700">
                   <ul className="list-disc list-inside space-y-1">
-                    <li>You'll receive an email with a password reset link</li>
+                    <li>You&apos;ll receive an email with a password reset link</li>
                     <li>The link will expire in 1 hour for security</li>
-                    <li>Check your spam folder if you don't see the email</li>
+                    <li>Check your spam folder if you don&apos;t see the email</li>
                     <li>Contact support if you continue having issues</li>
                   </ul>
                 </div>
@@ -275,7 +275,7 @@ export default function ForgetPassword() {
                     Security Reminder
                   </h3>
                   <div className="mt-1 text-sm text-yellow-700">
-                    For your security, we've logged this password reset request. If you didn't request this, please contact support immediately.
+                    For your security, we&apos;ve logged this password reset request. If you didn&apos;t request this, please contact support immediately.
                   </div>
                 </div>
               </div>
