@@ -56,7 +56,7 @@ export default function ConfirmModal({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 animate-fade-in"
+        className="fixed inset-0 bg-white/80 bg-opacity-50 transition-opacity duration-300 animate-fade-in"
         onClick={!isLoading && !showSuccess ? onCancel : undefined}
       />
             
