@@ -165,7 +165,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
             )
           })}
 
-        ]
+        
         </div>
       </div>
 
