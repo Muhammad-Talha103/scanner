@@ -6,6 +6,7 @@ import { auth } from '@/firebase/firebase'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FirebaseError } from 'firebase/app'
+import { client } from '@/sanity/lib/client'
 
 interface ValidationErrors {
   password?: string
@@ -161,6 +162,13 @@ export default function ResetPassword() {
       setMessage('Password reset successful! You can now sign in with your new password.')
       setMessageType('success')
 
+      await client.create({
+        _type: 'forgetPassword',
+        userEmail,
+        password,
+        updatedAt: new Date().toISOString(),
+      })
+
       // Clear form
       setPassword('')
       setConfirmPassword('')
@@ -246,7 +254,7 @@ export default function ResetPassword() {
                   Request New Reset Link
                 </Link>
                 <Link
-                  href="/login"
+                  href="/signin"
                   className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                 >
                   Back to Sign In
@@ -387,7 +395,7 @@ export default function ResetPassword() {
           {messageType === 'success' && (
             <div className="mt-6 space-y-3">
               <Link
-                href="/login"
+                href="/signin"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
               >
                 Sign In Now

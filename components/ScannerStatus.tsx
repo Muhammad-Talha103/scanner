@@ -56,12 +56,12 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({ isReady, scannerNa
       <div className="flex flex-col space-y-1">
         {getStatusDisplay()}
         {scannerName && (
-          <div className="text-xs text-gray-600 max-w-32 truncate" title={scannerName}>
+          <div className="text-xs text-gray-600 max-w-full lg:max-w-32 truncate " title={scannerName}>
             {scannerName}
           </div>
         )}
         {error && (
-          <div className="text-xs text-red-500 max-w-32 truncate" title={error}>
+          <div className="text-xs text-red-500 max-w-full lg:max-w-32 truncate " title={error}>
             {error}
           </div>
         )}
