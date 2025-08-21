@@ -1,10 +1,6 @@
+import { ScannedImage } from "@/components/scanner/Dropdown"
 import { jsPDF } from "jspdf"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 export const usePDFGenerator = () => {
   const generatePDF = async (

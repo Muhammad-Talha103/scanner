@@ -1,13 +1,9 @@
 "use client"
 
+import { ScannedImage } from "@/components/scanner/Dropdown"
 import { useState, useEffect, useCallback } from "react"
 
-// Define the ScannedImage interface
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
+
 
 // Define the StoredImage interface for storage
 interface StoredImage {

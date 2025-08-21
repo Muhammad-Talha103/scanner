@@ -2,12 +2,8 @@
 
 import type React from "react"
 import { useRef } from "react"
+import { ScannedImage } from "./scanner/Dropdown"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 interface ImportHandlerProps {
   onImagesImported: (images: ScannedImage[]) => void

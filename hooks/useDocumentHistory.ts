@@ -1,12 +1,9 @@
 "use client"
 
+import { ScannedImage } from "@/components/scanner/Dropdown"
 import { useReducer, useCallback, useEffect } from "react"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
+
 
 interface DocumentState {
   images: ScannedImage[]

@@ -3,12 +3,8 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
+import { ScannedImage } from "./scanner/Dropdown"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 interface MailModalProps {
   isOpen: boolean

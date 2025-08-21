@@ -2,14 +2,10 @@
 
 import type React from "react"
 import { useState } from "react"
-import { FileText, Loader2, Trash2 } from "lucide-react"
+import { FileText,  Trash2 } from "lucide-react"
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal"
+import { ScannedImage } from "./scanner/Dropdown"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 interface ScannedImagesProps {
   images: ScannedImage[]
@@ -105,6 +101,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
             return (
               <div
                 key={image.id}
+                
                 className={`bg-white border rounded-lg shadow-sm overflow-hidden cursor-pointer transition-all relative group ${
                   isCurrentlySelected
                     ? "border-blue-500 ring-2 ring-blue-200"
@@ -115,8 +112,9 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                 onClick={(e) => handleImageClick(image, e)}
               >
                 <div className="aspect-[3/4] relative">
+                
                   <img
-                    src={image.dataUrl || "/placeholder.svg"}
+                    src={image.dataUrl}
                     alt={`Page ${index + 1}`}
                     className="w-full h-full object-contain bg-gray-50"
                     crossOrigin="anonymous"
@@ -128,9 +126,12 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                   <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
                     Page {index + 1}
                   </div>
-                  <div className="absolute top-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
-                    {image.id.startsWith("import-") ? "Imported" : "Scanned"}
-                  </div>
+                  <div
+  className={`absolute top-2 right-2 text-white text-xs px-2 py-1 rounded
+    ${image.id.startsWith("import-") ? "bg-blue-600" : "bg-green-600"}`}
+>
+  {image.id.startsWith("import-") ? "Imported" : "Scanned"}
+</div>
 
                   {/* Delete button - only visible on hover */}
                   {onDeleteImage && (
@@ -164,19 +165,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
             )
           })}
 
-          {isScanning && (
-            <div className="bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden">
-              <div className="aspect-[3/4] flex items-center justify-center bg-gray-50">
-                <div className="text-center">
-                  <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Scanning...</p>
-                </div>
-              </div>
-              <div className="p-2">
-                <p className="text-xs text-gray-500">In progress</p>
-              </div>
-            </div>
-          )}
+        ]
         </div>
       </div>
 

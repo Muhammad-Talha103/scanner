@@ -3,12 +3,8 @@
 import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { X, RotateCw, ZoomIn, ZoomOut, Crop, Move, Undo, Redo, Save, Loader2, RotateCcw, Maximize } from "lucide-react"
+import { ScannedImage } from "./scanner/Dropdown"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 interface ImageEditorProps {
   isOpen: boolean

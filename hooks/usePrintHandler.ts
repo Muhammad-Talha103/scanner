@@ -1,12 +1,8 @@
 "use client"
 
+import { ScannedImage } from "@/components/scanner/Dropdown"
 import { useCallback } from "react"
 
-interface ScannedImage {
-  id: string
-  dataUrl: string
-  timestamp: number
-}
 
 export const usePrintHandler = () => {
   const printImages = useCallback(async (images: ScannedImage[]): Promise<void> => {
