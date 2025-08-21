@@ -18,7 +18,7 @@ interface ToolbarProps {
   isScanning: boolean
   scannedImages: ScannedImage[]
   isProcessing: boolean
-  selectedImage: ScannedImage
+  selectedImage: ScannedImage | null
   onScanClick: () => void
   onSaveClick: () => void
   onPrintClick: () => void
