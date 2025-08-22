@@ -38,6 +38,8 @@ export default function RootLayout({
           src="/encleso.js"
           strategy="afterInteractive"
         />
+       
+
       </head>
       <body className={inter.className}>
         <ClientProvider>

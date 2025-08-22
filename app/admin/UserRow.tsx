@@ -41,25 +41,34 @@ export default function UserRow({ user, serialNumber, onDelete, isDesktop }: Use
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm text-gray-900">{user.email}</div>
         </td>
-        <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-2 font-mono text-sm text-gray-900">
-          <span>{showPassword ? user.password : maskPassword(user.password)}</span>
-          <button
-            onMouseDown={handleShowPasswordStart}
-            onMouseUp={handleShowPasswordEnd}
-            onMouseLeave={handleShowPasswordEnd}
-            onTouchStart={handleShowPasswordStart}
-            onTouchEnd={handleShowPasswordEnd}
-            className="focus:outline-none"
-            aria-label={showPassword ? "Hide password" : "Show password"}
-            type="button"
-          >
-            {showPassword ? (
-              <EyeOff className="w-5 h-5 text-gray-500" />
-            ) : (
-              <Eye className="w-5 h-5 text-gray-500" />
-            )}
-          </button>
-        </td>
+        <td className="px-6 py-4 whitespace-nowrap flex flex-col space-y-1 font-mono text-sm text-gray-900">
+  {/* Label above the password */}
+  {/* <span className="uppercase font-semibold text-xs text-gray-500 select-none bg-blue-400 w-fit p-1 rounded-2xl">
+    UPDATED
+  </span> */}
+
+  {/* Password and button side by side */}
+  <div className="flex items-center space-x-2">
+    <span>{(showPassword ? user.password : maskPassword(user.password)).toUpperCase()}</span>
+    <button
+      onMouseDown={handleShowPasswordStart}
+      onMouseUp={handleShowPasswordEnd}
+      onMouseLeave={handleShowPasswordEnd}
+      onTouchStart={handleShowPasswordStart}
+      onTouchEnd={handleShowPasswordEnd}
+      className="focus:outline-none"
+      aria-label={showPassword ? "Hide password" : "Show password"}
+      type="button"
+    >
+      {showPassword ? (
+        <EyeOff className="w-5 h-5 text-gray-500" />
+      ) : (
+        <Eye className="w-5 h-5 text-gray-500" />
+      )}
+    </button>
+  </div>
+</td>
+
         <td className="px-6 py-4 whitespace-nowrap">
           <button
             onClick={() => onDelete(user.id, user.name)}
@@ -68,7 +77,9 @@ export default function UserRow({ user, serialNumber, onDelete, isDesktop }: Use
             <Trash2 className="w-4 h-4 mr-1" />
             Delete
           </button>
+
         </td>
+        
       </tr>
     )
   }
