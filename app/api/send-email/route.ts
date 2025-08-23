@@ -1,42 +1,52 @@
+// app/api/send-email/route.ts
+
 import { type NextRequest, NextResponse } from "next/server"
 import nodemailer from "nodemailer"
 import type { Attachment } from "nodemailer/lib/mailer"
 
+export const config = {
+  api: {
+    bodyParser: false, // Disable default body parsing
+  },
+}
 
-// Email configuration - replace with your actual credentials
+export const runtime = "nodejs" // Required to use Node APIs like nodemailer
+
 const EMAIL_CONFIG = {
-  host: "smtp.gmail.com", 
-  port: 465 ,
+  host: "smtp.gmail.com",
+  port: 465,
   secure: true,
   auth: {
-    user: process.env.SMTP_USER, // Replace with your email
-    pass: process.env.SMTP_PASS, // Replace with your app password
+    user: "talhagp908@gmail.com", // Your Gmail address
+    pass: "txjo bvhn cpmr cwyb",   // Your Gmail App Password
   },
 }
 
 export async function POST(request: NextRequest) {
   try {
+    // Parse multipart form data
     const formData = await request.formData()
 
     const to = formData.get("to") as string
     const subject = formData.get("subject") as string
     const message = formData.get("message") as string
+
     const attachment = formData.get("attachment") as File | null
     const pdfAttachment = formData.get("pdfAttachment") as File | null
 
-    // Validate required fields
     if (!to || !subject) {
-      return NextResponse.json({ error: "Recipient and subject are required" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Recipient and subject are required" },
+        { status: 400 }
+      )
     }
 
-    // Create transporter
+    // Create email transporter
     const transporter = nodemailer.createTransport({
       host: EMAIL_CONFIG.host,
       port: EMAIL_CONFIG.port,
       secure: EMAIL_CONFIG.secure,
       auth: EMAIL_CONFIG.auth,
-      logger: true,
-      debug: true, // Enable debug output for troubleshooting
     })
 
     // Prepare attachments
@@ -44,6 +54,14 @@ export async function POST(request: NextRequest) {
 
     if (attachment) {
       const buffer = Buffer.from(await attachment.arrayBuffer())
+
+      if (buffer.length > 25 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "Attachment too large (Max 25MB allowed)" },
+          { status: 400 }
+        )
+      }
+
       attachments.push({
         filename: attachment.name,
         content: buffer,
@@ -52,6 +70,14 @@ export async function POST(request: NextRequest) {
 
     if (pdfAttachment) {
       const buffer = Buffer.from(await pdfAttachment.arrayBuffer())
+
+      if (buffer.length > 25 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: "PDF too large (Max 25MB allowed)" },
+          { status: 400 }
+        )
+      }
+
       attachments.push({
         filename: pdfAttachment.name,
         content: buffer,
@@ -59,11 +85,11 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Email options
+    // Build email
     const mailOptions = {
       from: EMAIL_CONFIG.auth.user,
-      to: to,
-      subject: subject,
+      to,
+      subject,
       text: message || "No message provided",
       html: message ? `<p>${message.replace(/\n/g, "<br>")}</p>` : "<p>No message provided</p>",
       attachments: attachments.length > 0 ? attachments : undefined,
@@ -80,11 +106,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Email sending error:", error)
 
-    let errorMessage = "Failed to send email"
-    if (error instanceof Error) {
-      errorMessage = error.message
-    }
-
-    return NextResponse.json({ error: errorMessage }, { status: 500 })
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to send email" },
+      { status: 500 }
+    )
   }
 }
