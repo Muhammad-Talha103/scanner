@@ -167,44 +167,30 @@ const handleSend = async () => {
     setIsLoading(true);
     setError(null);
 
-    let pdfUrl = ""; // default empty
+    let finalMessage = formData.message;
 
-    // Agar PDF generate karni ho
+    // Agar PDF include karni ho
     if (formData.includePDF && scannedImages.length > 0) {
-      const pdfBlob = await generatePDF();
-      const pdfFile = new File([pdfBlob], `${formData.pdfName}.pdf`, {
-        type: "application/pdf",
-      });
+      // PDF API ka link banao
+      const pdfUrl = `${window.location.origin}/api/generate-pdf?name=${encodeURIComponent(formData.pdfName)}`;
 
-      // PDF ko server par upload karo
-      const uploadForm = new FormData();
-      uploadForm.append("file", pdfFile);
-
-      const uploadRes = await fetch("/api/upload", {
-        method: "POST",
-        body: uploadForm,
-      });
-
-      if (!uploadRes.ok) throw new Error("Failed to upload PDF");
-
-      const uploadData = await uploadRes.json();
-      pdfUrl = `${window.location.origin}${uploadData.url}`;
+      // Message me link add karo
+      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
     }
 
     // EmailJS template params
     const templateParams = {
       to_email: formData.to,
       subject: formData.subject,
-      message: formData.message, // sirf text
-      pdf_url: pdfUrl,           // url alag bhejna hai
+      message: finalMessage,
     };
 
     // EmailJS send
     await emailjs.send(
-      "service_bwk31zq",   // apna service ID
-      "template_ebrmlnm",  // apna template ID
+      "service_bwk31zq",   // tumhara service ID
+      "template_ebrmlnm",  // tumhara template ID
       templateParams,
-      "bX45Z98k0s3hHIUq9"  // apna public key
+      "bX45Z98k0s3hHIUq9"  // tumhara public key
     );
 
     setIsSuccess(true);
