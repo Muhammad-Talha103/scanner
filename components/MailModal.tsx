@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
 import { ScannedImage } from "./scanner/Dropdown"
 import emailjs from "@emailjs/browser"
@@ -37,7 +36,6 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
   useEffect(() => {
     if (isOpen) {
-      // Reset modal state when opening
       setFormData({
         to: "",
         subject: "",
@@ -54,7 +52,6 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
   useEffect(() => {
     if (isSuccess) {
-      // Auto-close after 3 seconds on success
       const timer = setTimeout(() => {
         onClose()
       }, 3000)
@@ -63,7 +60,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
   }, [isSuccess, onClose])
 
   const handleInputChange = (field: keyof FormData, value: string | boolean | File | null) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData(prev => ({ ...prev, [field]: value }))
     setError(null)
   }
 
@@ -76,15 +73,11 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     handleInputChange("attachFile", file)
   }
 
+  // --- Generate PDF from scannedImages ---
   const generatePDF = async (): Promise<Blob> => {
-   const jsPDFModule = await import("jspdf")
-
+    const jsPDFModule = await import("jspdf")
     const jsPDF = jsPDFModule.default
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    })
+    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
 
     const pageWidth = pdf.internal.pageSize.getWidth()
     const pageHeight = pdf.internal.pageSize.getHeight()
@@ -92,44 +85,32 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
     for (let i = 0; i < scannedImages.length; i++) {
       const image = scannedImages[i]
+      if (i > 0) pdf.addPage()
 
-      if (i > 0) {
-        pdf.addPage()
+      const img = new Image()
+      img.crossOrigin = "anonymous"
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = () => reject(new Error("Failed to load image"))
+        img.src = image.dataUrl
+      })
+
+      const imgWidth = img.width
+      const imgHeight = img.height
+      const availableWidth = pageWidth - 2 * margin
+      const availableHeight = pageHeight - 2 * margin
+
+      let finalWidth = availableWidth
+      let finalHeight = (imgHeight * availableWidth) / imgWidth
+      if (finalHeight > availableHeight) {
+        finalHeight = availableHeight
+        finalWidth = (imgWidth * availableHeight) / imgHeight
       }
 
-      try {
-        // Create a temporary image to get dimensions
-        const img = new Image()
-        img.crossOrigin = "anonymous"
+      const x = (pageWidth - finalWidth) / 2
+      const y = (pageHeight - finalHeight) / 2
 
-        await new Promise<void>((resolve, reject) => {
-          img.onload = () => resolve()
-          img.onerror = () => reject(new Error("Failed to load image"))
-          img.src = image.dataUrl
-        })
-
-        // Calculate dimensions to fit within page
-        const imgWidth = img.width
-        const imgHeight = img.height
-        const availableWidth = pageWidth - 2 * margin
-        const availableHeight = pageHeight - 2 * margin
-
-        let finalWidth = availableWidth
-        let finalHeight = (imgHeight * availableWidth) / imgWidth
-
-        if (finalHeight > availableHeight) {
-          finalHeight = availableHeight
-          finalWidth = (imgWidth * availableHeight) / imgHeight
-        }
-
-        const x = (pageWidth - finalWidth) / 2
-        const y = (pageHeight - finalHeight) / 2
-
-        pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight)
-      } catch (error) {
-        console.error("Error adding image to PDF:", error)
-        // Continue with other images
-      }
+      pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight)
     }
 
     return pdf.output("blob")
@@ -140,72 +121,73 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
       setError("Recipient email is required")
       return false
     }
-
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.to)) {
       setError("Please enter a valid email address")
       return false
     }
-
     if (!formData.subject.trim()) {
       setError("Subject is required")
       return false
     }
-
     if (formData.includePDF && !formData.pdfName.trim()) {
       setError("PDF name is required when including scanned images")
       return false
     }
-
     return true
   }
 
-const handleSend = async () => {
-  if (!validateForm()) return;
+  const handleSend = async () => {
+    if (!validateForm()) return
 
-  try {
-    setIsLoading(true);
-    setError(null);
+    try {
+      setIsLoading(true)
+      setError(null)
 
-    let finalMessage = formData.message;
+      let finalMessage = formData.message
+      let pdfUrl: string | null = null
 
-    // Agar PDF include karni ho
-    if (formData.includePDF && scannedImages.length > 0) {
-      // PDF API ka link banao
-      const pdfUrl = `${window.location.origin}/api/generate-pdf?name=${encodeURIComponent(formData.pdfName)}`;
+      if (formData.includePDF && scannedImages.length > 0) {
+        // Generate PDF
+        const pdfBlob = await generatePDF()
 
-      // Message me link add karo
-      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
+        // Upload to Sanity
+        const formDataUpload = new FormData()
+        formDataUpload.append("pdfFile", pdfBlob, `${formData.pdfName || "document"}.pdf`)
+
+        const res = await fetch("/api/upload-pdf", { method: "POST", body: formDataUpload })
+        const data = await res.json()
+        if (!data.url) throw new Error("Failed to upload PDF to Sanity")
+        pdfUrl = data.url
+
+        // Add PDF link to email
+        finalMessage += `\n\nDownload PDF: ${pdfUrl}`
+      }
+
+      // Prepare EmailJS params
+      const templateParams = {
+        to_email: formData.to,
+        subject: formData.subject,
+        message: finalMessage,
+      }
+
+      await emailjs.send(
+        "service_bwk31zq",
+        "template_ebrmlnm",
+        templateParams,
+        "bX45Z98k0s3hHIUq9"
+      )
+
+      setIsSuccess(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to send email")
+    } finally {
+      setIsLoading(false)
     }
-
-    // EmailJS template params
-    const templateParams = {
-      to_email: formData.to,
-      subject: formData.subject,
-      message: finalMessage,
-    };
-
-    // EmailJS send
-    await emailjs.send(
-      "service_bwk31zq",   // tumhara service ID
-      "template_ebrmlnm",  // tumhara template ID
-      templateParams,
-      "bX45Z98k0s3hHIUq9"  // tumhara public key
-    );
-
-    setIsSuccess(true);
-  } catch (err) {
-    setError(err instanceof Error ? err.message : "Failed to send email");
-  } finally {
-    setIsLoading(false);
   }
-};
-
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") {
-      onClose()
-    }
+    if (e.key === "Escape") onClose()
   }
 
   if (!isOpen) return null
