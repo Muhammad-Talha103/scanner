@@ -38,7 +38,7 @@ interface EnclesoType {
 declare global {
   interface Window {
     Encleso?: EnclesoType;
-    ExportedScannerNames?: string[]; // ✅ Add this line
+    ExportedScannerNames?: string[];
     showSaveFilePicker?: (options: {
       suggestedName?: string;
       types?: Array<{
@@ -51,11 +51,12 @@ declare global {
 
 export const useScannerIntegration = () => {
   const [isReady, setIsReady] = useState(false);
+  const [scanners, setScanners] = useState<string[]>([]);
   const [scannerName, setScannerName] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isLoadingImages, setIsLoadingImages] = useState(false);
+  const [isLoadingImages] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
 
   const { generatePDF } = usePDFGenerator();
@@ -78,9 +79,10 @@ export const useScannerIntegration = () => {
     isImageSelected,
   } = useDocumentHistory();
 
+  // ✅ Load SDK script
   useEffect(() => {
     if (window.ExportedScannerNames) {
-      setScriptLoaded(true); // ✅ Skip script loading
+      setScriptLoaded(true);
       return;
     }
 
@@ -109,7 +111,16 @@ export const useScannerIntegration = () => {
     if (window.ExportedScannerNames) {
       setTimeout(() => {
         setIsReady(true);
-        setScannerName(window.ExportedScannerNames?.[0] || null);
+        setScanners(window.ExportedScannerNames || []);
+
+        if (
+          !scannerName &&
+          window.ExportedScannerNames &&
+          window.ExportedScannerNames.length > 0
+        ) {
+          setScannerName(window.ExportedScannerNames[0]);
+        }
+
         setError(null);
       }, 1000);
       return;
@@ -119,25 +130,33 @@ export const useScannerIntegration = () => {
       Encleso.OnError = (err) => {
         console.error("Scanner Error:", err?.Message || err);
         setIsReady(false);
-        setScannerName(null);
         setError(`Scanner Error: ${err?.Message || "Unknown error"}`);
         setIsScanning(false);
       };
 
       Encleso.OnReady = (ret) => {
         if (ret?.ScannersList?.length > 0) {
-          const defaultScanner = ret.ScannersList[ret.DefaultIndex];
+          const list = ret.ScannersList;
           setIsReady(true);
-          setScannerName(defaultScanner);
+          setScanners(list);
+
+          // ✅ only set default scanner if none is selected
+          if (!scannerName) {
+            setScannerName(list[ret.DefaultIndex] || list[0]);
+          }
+
           setError(null);
         } else {
           setIsReady(false);
-          setScannerName(null);
+          setScanners([]);
+          if (!scannerName) setScannerName(null);
           setError("No scanners found.");
         }
       };
     }
-  }, [scriptLoaded]);
+  }, [scriptLoaded, scannerName]);
+
+  // Polling
   useEffect(() => {
     if (!scriptLoaded) return;
 
@@ -146,80 +165,12 @@ export const useScannerIntegration = () => {
       if (Encleso || window.ExportedScannerNames) {
         initializeEncleso();
       }
-    }, 500);
+    }, 3000); // reduced duplicate polling
 
-    const pollingInterval = setInterval(() => {
-      const Encleso = window.Encleso;
-      if (Encleso || window.ExportedScannerNames) {
-        initializeEncleso();
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(interval);
-      clearInterval(pollingInterval);
-    };
+    return () => clearInterval(interval);
   }, [initializeEncleso, scriptLoaded]);
 
-  //  const startScan = useCallback(async () => {
-  //     if (!isReady || !scannerName || isScanning) return;
-
-  //     setError(null);
-  //     setIsScanning(true);
-
-  //     try {
-
-  //       const Encleso = window.Encleso;
-  //       if (!Encleso) throw new Error("Encleso SDK is not available.");
-  //       if (!window.StartScanning) throw new Error("Encleso scan function not available.");
-
-  //       // Run the actual scan
-  //       const ret = await window.StartScanning();
-
-  //       if (!ret || ret.ScannedImagesCount < 1) {
-  //         setError("No images scanned.");
-  //         return;
-  //       }
-
-  //       const newImages: ScannedImage[] = [];
-
-  //       for (
-  //         let i = ret.ScannedImagesStartingIndex;
-  //         i < ret.ScannedImagesStartingIndex + ret.ScannedImagesCount;
-  //         i++
-  //       ) {
-  //         try {
-  //           const blob = await Encleso.GetImagePreview(i);
-  //           const url = URL.createObjectURL(blob);
-  //           console.log("Preview blob for index", i, blob);
-  //           console.log("Url of image",url)
-  //           const newImage: ScannedImage = {
-  //             id: `scan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  //             dataUrl: url,
-  //             timestamp: Date.now(),
-  //           };
-  //           newImages.push(newImage);
-  //           console.log(`Scanned image preview loaded at index ${i}:`, newImage);
-  //         } catch (e) {
-  //           console.error(`Failed to load scanned image preview at index ${i}:`, e);
-  //           setError(`Error loading scanned image preview (Page ${i + 1}).`);
-  //         }
-  //       }
-
-  //       if (newImages.length > 0) {
-  //         addImages(newImages, "Image Scanned");
-  //       } else {
-  //         setError("Scan completed, but no images could be previewed.");
-  //       }
-  //     } catch (err) {
-  //       const errorMessage = err instanceof Error ? err.message : String(err);
-  //       console.error("Scan error:", err);
-  //       setError(errorMessage);
-  //     } finally {
-  //       setIsScanning(false);
-  //     }
-  //   }, [isReady, scannerName, isScanning, addImages]);
-
+  // ✅ convert base64 to Blob
   const base64ToBlob = (base64String: string, mimeType = "image/png"): Blob => {
     let base64 = base64String;
 
@@ -238,6 +189,7 @@ export const useScannerIntegration = () => {
     return new Blob([byteArray], { type: mimeType });
   };
 
+  // ✅ start scan
   const startScan = useCallback(async () => {
     if (!isReady || !scannerName || isScanning) return;
 
@@ -248,13 +200,11 @@ export const useScannerIntegration = () => {
       const Encleso = window.Encleso;
       if (!Encleso) throw new Error("Encleso SDK is not available.");
 
-      // Set capabilities
       await Encleso.SetCapabilities({
         Resolution: 300,
         PixelType: 1, // 0 = B/W, 1 = Grayscale, 2 = Color
       });
 
-      // Start scanning
       const ret = await Encleso.StartScan(scannerName, false);
 
       if (!ret || ret.ScannedImagesCount < 1) {
@@ -271,25 +221,19 @@ export const useScannerIntegration = () => {
       ) {
         try {
           const result = await Encleso.GetImagePreview(i);
-          console.log(`🟡 Image preview result at index ${i}:`, result);
-
           let imageUrl: string;
 
           if (result instanceof Blob) {
             imageUrl = URL.createObjectURL(result);
           } else if (typeof result === "string") {
-            if (result.startsWith("blob:")) {
-              imageUrl = result; // ✅ Use directly
-            } else if (result.startsWith("data:image")) {
-              imageUrl = result; // ✅ Already a data URL
+            if (result.startsWith("blob:") || result.startsWith("data:image")) {
+              imageUrl = result;
             } else if (/^[A-Za-z0-9+/=\r\n]+$/.test(result.trim())) {
-              // raw base64
               const blob = base64ToBlob(
                 `data:image/png;base64,${result.trim()}`
               );
               imageUrl = URL.createObjectURL(blob);
             } else if (
-              result.startsWith("file://") ||
               result.startsWith("http") ||
               /\.(png|jpg|jpeg|bmp|gif|tif)$/i.test(result)
             ) {
@@ -299,25 +243,20 @@ export const useScannerIntegration = () => {
               const blob = await response.blob();
               imageUrl = URL.createObjectURL(blob);
             } else {
-              throw new Error(
-                `Unrecognized string format returned from GetImagePreview(${i})`
-              );
+              throw new Error(`Unrecognized image format at index ${i}`);
             }
           } else {
             throw new Error(`Invalid image data at index ${i}`);
           }
 
-          const newImage: ScannedImage = {
+          newImages.push({
             id: `scan-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             dataUrl: imageUrl,
             timestamp: Date.now(),
-          };
-
-          newImages.push(newImage);
+          });
         } catch (e) {
           console.error(`❌ Failed to load image at index ${i}:`, e);
           setError(`Error loading scanned image preview (Page ${i + 1})`);
-          continue;
         }
       }
 
@@ -335,6 +274,7 @@ export const useScannerIntegration = () => {
     }
   }, [isReady, scannerName, isScanning, addImages]);
 
+  // ✅ save to PDF
   const saveToPDF = useCallback(async () => {
     const imagesToSave =
       getSelectedImages().length > 0 ? getSelectedImages() : scannedImages;
@@ -370,16 +310,15 @@ export const useScannerIntegration = () => {
       await generatePDF(imagesToSave, defaultFileName, fileHandle);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save PDF");
-      throw err;
     } finally {
       setIsProcessing(false);
     }
   }, [scannedImages, getSelectedImages, generatePDF, isProcessing]);
 
+  // ✅ print
   const printDocument = useCallback(async () => {
     const imagesToPrint =
       getSelectedImages().length > 0 ? getSelectedImages() : scannedImages;
-
     if (imagesToPrint.length === 0 || isProcessing) return;
 
     try {
@@ -388,35 +327,25 @@ export const useScannerIntegration = () => {
       await printImages(imagesToPrint);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to print document");
-      throw err;
     } finally {
       setIsProcessing(false);
     }
   }, [scannedImages, getSelectedImages, printImages, isProcessing]);
 
+  // ✅ other helpers
   const addImportedImages = useCallback(
-    (importedImages: ScannedImage[]) => {
-      addImages(importedImages, "Images Imported");
-    },
+    (importedImages: ScannedImage[]) =>
+      addImages(importedImages, "Images Imported"),
     [addImages]
   );
 
   const handleDeleteImage = useCallback(
-    async (imageId: string) => {
-      try {
-        deleteImage(imageId);
-      } catch (error) {
-        console.error("Failed to delete image:", error);
-        throw new Error("Failed to delete image. Please try again.");
-      }
-    },
+    (imageId: string) => deleteImage(imageId),
     [deleteImage]
   );
 
   const handleImageClick = useCallback(
-    (image: ScannedImage) => {
-      setSelectedImage(image.id);
-    },
+    (image: ScannedImage) => setSelectedImage(image.id),
     [setSelectedImage]
   );
 
@@ -425,13 +354,17 @@ export const useScannerIntegration = () => {
     return scannedImages.find((img) => img.id === selectedImageId) || null;
   }, [selectedImageId, scannedImages]);
 
-  const getImagesForEmail = useCallback(() => {
-    return getSelectedImages().length > 0 ? getSelectedImages() : scannedImages;
-  }, [scannedImages, getSelectedImages]);
+  const getImagesForEmail = useCallback(
+    () =>
+      getSelectedImages().length > 0 ? getSelectedImages() : scannedImages,
+    [scannedImages, getSelectedImages]
+  );
 
   return {
     isReady,
+    scanners,
     scannerName,
+    setScannerName, // ✅ user can select scanner
     isScanning,
     scannedImages,
     error,

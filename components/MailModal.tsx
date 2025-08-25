@@ -4,7 +4,7 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
 import { ScannedImage } from "./scanner/Dropdown"
-
+import emailjs from "@emailjs/browser"
 
 interface MailModalProps {
   isOpen: boolean
@@ -160,63 +160,57 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     return true
   }
 
-  const handleSend = async () => {
-    if (!validateForm()) return
+const handleSend = async () => {
+  if (!validateForm()) return;
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      const emailFormData = new FormData()
-      emailFormData.append("to", formData.to)
-      emailFormData.append("subject", formData.subject)
-      emailFormData.append("message", formData.message)
-
-      // Add file attachment if selected
-      if (formData.attachFile) {
-        emailFormData.append("attachment", formData.attachFile)
-      }
-
-      // Generate and add PDF if requested
-      if (formData.includePDF && scannedImages.length > 0) {
-        const pdfBlob = await generatePDF()
-        const pdfFile = new File([pdfBlob], `${formData.pdfName}.pdf`, { type: "application/pdf" })
-        emailFormData.append("pdfAttachment", pdfFile)
-      }
-
-      const response = await fetch("/api/send-email", {
-        method: "POST",
-        body: emailFormData,
-      })
-
-    if (!response.ok) {
-  let errorMessage = "Failed to send email"
   try {
-    // Read the body once as text
-    const text = await response.text()
+    setIsLoading(true);
+    setError(null);
 
-    // Try to parse JSON from that text
-    try {
-      const errorData = JSON.parse(text)
-      errorMessage = errorData.error || errorMessage
-    } catch {
-      // Not JSON, just use the text as message
-      errorMessage = text || errorMessage
+    let finalMessage = formData.message;
+
+    // Agar PDF generate karni ho
+    if (formData.includePDF && scannedImages.length > 0) {
+      const pdfBlob = await generatePDF();
+      const pdfFile = new File([pdfBlob], `${formData.pdfName}.pdf`, { type: "application/pdf" });
+
+      // PDF ko server par upload karo
+      const uploadForm = new FormData();
+      uploadForm.append("file", pdfFile);
+
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: uploadForm });
+      if (!uploadRes.ok) throw new Error("Failed to upload PDF");
+
+      const uploadData = await uploadRes.json();
+      const pdfUrl = `${window.location.origin}${uploadData.url}`;
+
+      // PDF URL ko message me add karo
+      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
     }
-  } catch {
-    // Could not read body at all, keep default message
-  }
-  throw new Error(errorMessage)
-}
 
+    // EmailJS template params
+    const templateParams = {
+      to_email: formData.to,
+      subject: formData.subject,
+      message: finalMessage,
+    };
 
-      setIsSuccess(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send email")
-    } finally {
-      setIsLoading(false)
-    }
+    // EmailJS send
+    await emailjs.send(
+      "service_bwk31zq",   // Replace with your service ID
+      "template_ebrmlnm",  // Replace with your template ID
+      templateParams,
+      "bX45Z98k0s3hHIUq9"    // Replace with your public key
+    );
+
+    setIsSuccess(true);
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Failed to send email");
+  } finally {
+    setIsLoading(false);
   }
+};
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
@@ -428,3 +422,4 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     </div>
   )
 }
+
