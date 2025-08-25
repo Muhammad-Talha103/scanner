@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
 import { ScannedImage } from "./scanner/Dropdown"
 import emailjs from "@emailjs/browser"
+import { client } from "@/sanity/lib/client" // <-- Sanity client for frontend upload
 
 interface MailModalProps {
   isOpen: boolean
@@ -64,21 +65,17 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     setError(null)
   }
 
-  const handleFileSelect = () => {
-    fileInputRef.current?.click()
-  }
-
+  const handleFileSelect = () => fileInputRef.current?.click()
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
     handleInputChange("attachFile", file)
   }
 
-  // --- Generate PDF from scannedImages ---
+  // --- Generate PDF ---
   const generatePDF = async (): Promise<Blob> => {
     const jsPDFModule = await import("jspdf")
     const jsPDF = jsPDFModule.default
     const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
-
     const pageWidth = pdf.internal.pageSize.getWidth()
     const pageHeight = pdf.internal.pageSize.getHeight()
     const margin = 10
@@ -109,7 +106,6 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
       const x = (pageWidth - finalWidth) / 2
       const y = (pageHeight - finalHeight) / 2
-
       pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight)
     }
 
@@ -151,20 +147,14 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         // Generate PDF
         const pdfBlob = await generatePDF()
 
-        // Upload to Sanity
-        const formDataUpload = new FormData()
-        formDataUpload.append("pdfFile", pdfBlob, `${formData.pdfName || "document"}.pdf`)
+        // Upload PDF directly to Sanity from frontend
+        const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
+        pdfUrl = asset.url
 
-        const res = await fetch("/api/upload-pdf", { method: "POST", body: formDataUpload })
-        const data = await res.json()
-        if (!data.url) throw new Error("Failed to upload PDF to Sanity")
-        pdfUrl = data.url
-
-        // Add PDF link to email
         finalMessage += `\n\nDownload PDF: ${pdfUrl}`
       }
 
-      // Prepare EmailJS params
+      // EmailJS template params
       const templateParams = {
         to_email: formData.to,
         subject: formData.subject,
@@ -172,26 +162,23 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
       }
 
       await emailjs.send(
-        "service_bwk31zq",
-        "template_ebrmlnm",
+        "service_bwk31zq", // your service ID
+        "template_ebrmlnm", // your template ID
         templateParams,
-        "bX45Z98k0s3hHIUq9"
+        "bX45Z98k0s3hHIUq9" // your public key
       )
 
       setIsSuccess(true)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send email")
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose()
-  }
-
+  const handleKeyPress = (e: React.KeyboardEvent) => { if (e.key === "Escape") onClose() }
   if (!isOpen) return null
-
   return (
     <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50 p-4">
       <div
