@@ -41,7 +41,7 @@ import { ImageEditor } from "@/components/ImageEditor";
 import { LoginRequired } from "@/components/scanner/LoginRequired";
 import { MenuBar } from "@/components/scanner/MenuBar";
 import { Toolbar } from "@/components/scanner/Toolbar";
-import { Header } from "@/components/scanner/Header";
+import Header from "@/components/scanner/Header";
 
 import { useScannerIntegration } from "@/hooks/useScannerIntegration";
 
