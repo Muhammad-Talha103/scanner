@@ -167,9 +167,9 @@ async function GetScannerCaps() {
 
     // Resolution
     if (ret.Resolution && ret.Resolution.Values && ret.Resolution.Values.length > 0) {
-      console.log("Available resolutions:", ret.Resolution.Values);
-      console.log("Current resolution index:", ret.Resolution.CurrentIndex);
-      console.log("Selected resolution:", ret.Resolution.Values[ret.Resolution.CurrentIndex]);
+      // console.log("Available resolutions:", ret.Resolution.Values);
+      // console.log("Current resolution index:", ret.Resolution.CurrentIndex);
+      // console.log("Selected resolution:", ret.Resolution.Values[ret.Resolution.CurrentIndex]);
     } else {
       console.warn("Resolution not available for this scanner:", selectedScanner);
       $("#resolution").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
@@ -177,15 +177,15 @@ async function GetScannerCaps() {
 
     // Color mode
     if (ret.PixelType && ret.PixelType.Values && ret.PixelType.Values.length > 0) {
-      console.log(
-        "Available color modes:",
-        ret.PixelType.Values.map(Encleso.PixelTypeToString)
-      );
-      // console.log("Current color mode index:", ret.PixelType.CurrentIndex);
-      console.log(
-        "Selected color mode:",
-        Encleso.PixelTypeToString(ret.PixelType.Values[ret.PixelType.CurrentIndex])
-      );
+      // console.log(
+      //   "Available color modes:",
+      //   ret.PixelType.Values.map(Encleso.PixelTypeToString)
+      // );
+      // // console.log("Current color mode index:", ret.PixelType.CurrentIndex);
+      // console.log(
+      //   "Selected color mode:",
+      //   Encleso.PixelTypeToString(ret.PixelType.Values[ret.PixelType.CurrentIndex])
+      // );
     } else {
       console.warn("Color modes not available for this scanner:", selectedScanner);
       $("#colorMode").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
@@ -366,11 +366,11 @@ async function GetScannerCaps() {
         };
 
         Encleso.OnReady = (ret) => {
-          console.log("[Encleso] Connected to client application successfully!");
-          console.log("[Encleso] Available scanners:", ret.ScannersList);
+          // console.log("[Encleso] Connected to client application successfully!");
+          // console.log("[Encleso] Available scanners:", ret.ScannersList);
 
           window.ExportedScannerNames = ret.ScannersList;
-          console.log("Exported scanner names:", window.ExportedScannerNames);
+          // console.log("Exported scanner names:", window.ExportedScannerNames);
 
           if (ret.ScannersList.length < 1) {
             $("#ScannerName").html(EMPTY_COMBOSELECT);

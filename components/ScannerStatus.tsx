@@ -171,6 +171,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                       ? "bg-blue-50 text-blue-700"
                       : "text-gray-700"
                   }`}
+                  title={scanner} // full text on hover
                 >
                   {scanner}
                 </button>
@@ -180,37 +181,43 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         </div>
       )}
 
-      {/* Resolutions Dropdown */}
-      <div className="flex flex-col text-xs text-gray-600">
-        <span className="font-semibold">Resolutions:</span>
-        <select
-          className="border rounded p-1 mt-1 text-xs"
-          value={selectedResolution}
-          onChange={(e) => handleResolutionChange(e.target.value)}
-        >
-          {resolutions.map((res, i) => (
-            <option key={i} value={res}>
-              {res} x {res}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Show resolution & color mode only if scanner is fully ready and selected */}
+      {isReady && selectedScanner && (
+        <>
+          {/* Resolutions Dropdown */}
+          <div className="flex flex-col text-xs text-gray-600">
+            <span className="font-semibold">Resolutions:</span>
+            <select
+              className="border rounded p-1 mt-1 text-xs"
+              value={selectedResolution}
+              onChange={(e) => handleResolutionChange(e.target.value)}
+            >
+              {resolutions.map((res, i) => (
+                <option key={i} value={res}>
+                  {res} x {res}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      {/* Color Modes Dropdown */}
-      <div className="flex flex-col text-xs text-gray-600">
-        <span className="font-semibold">Color Modes:</span>
-        <select
-          className="border rounded p-1 mt-1 text-xs"
-          value={selectedColorMode}
-          onChange={(e) => handleColorModeChange(e.target.value)}
-        >
-          {colorModes.map((mode, i) => (
-            <option key={i} value={mode}>
-              {mode}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* Color Modes Dropdown */}
+          <div className="flex flex-col text-xs text-gray-600">
+            <span className="font-semibold">Color Modes:</span>
+            <select
+              className="border rounded p-1 mt-1 text-xs"
+              value={selectedColorMode}
+              onChange={(e) => handleColorModeChange(e.target.value)}
+            >
+              {colorModes.map((mode, i) => (
+                <option key={i} value={mode}>
+                  {mode}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
+      )}
+
       {error && (
         <div
           className="text-xs text-red-500 max-w-full lg:max-w-40 truncate animate-in slide-in-from-top-2 duration-300"
