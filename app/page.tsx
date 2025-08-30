@@ -69,9 +69,9 @@ export default function ScannerApp() {
   // Scanner integration hooks
   const {
     isReady,
-  scanners,
-  scannerName,
-  setScannerName,
+    scanners,
+    scannerName,
+    setScannerName,
     isScanning,
     scannedImages,
     startScan,
@@ -379,9 +379,9 @@ export default function ScannerApp() {
         <aside className="w-full lg:w-40 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 p-3">
           <ScannerStatus
             isReady={isReady}
-             scanners={scanners}
-  selectedScanner={scannerName}
-  onSelectScanner={setScannerName}
+            scanners={scanners}
+            selectedScanner={scannerName}
+            onSelectScanner={setScannerName}
             error={error}
           />
 

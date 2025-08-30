@@ -24,7 +24,18 @@ interface ScanError {
   Message: string;
 }
 
-interface EnclesoType {
+interface ScannerCapabilities {
+  Resolution?: {
+    Values: number[];
+    CurrentIndex: number;
+  };
+  PixelType?: {
+    Values: number[];
+    CurrentIndex?: number;
+  };
+}
+
+export interface EnclesoType {
   OnReady?: (ret: ScannerResult) => void;
   OnError?: (err: ScanError) => void;
   SetCapabilities: (cap: {
@@ -33,12 +44,16 @@ interface EnclesoType {
   }) => Promise<void>;
   StartScan: (scannerName: string, showUI: boolean) => Promise<ScanReturn>;
   GetImagePreview: (index: number) => Promise<Blob | string>;
+  GetCapabilities?: (scannerName: string) => Promise<ScannerCapabilities>; 
+  PixelTypeToString?: (v: number) => string;
 }
 
 declare global {
   interface Window {
     Encleso?: EnclesoType;
     ExportedScannerNames?: string[];
+    getResolutionCaps?: () => Promise<number[]>;   // ✅ from encleso.js
+    getColorModeCaps?: () => Promise<string[]>;    // ✅ from encleso.js
     showSaveFilePicker?: (options: {
       suggestedName?: string;
       types?: Array<{
@@ -58,6 +73,8 @@ export const useScannerIntegration = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isLoadingImages] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const [resolutionCapsFn, setResolutionCapsFn] = useState<(() => Promise<number[]>) | null>(null);
+const [colorModeCapsFn, setColorModeCapsFn] = useState<(() => Promise<string[]>) | null>(null);
 
   const { generatePDF } = usePDFGenerator();
   const { printImages } = usePrintHandler();
@@ -78,6 +95,13 @@ export const useScannerIntegration = () => {
     getSelectedImages,
     isImageSelected,
   } = useDocumentHistory();
+
+  useEffect(() => {
+  if (scriptLoaded) {
+    if (typeof window.getResolutionCaps === "function") setResolutionCapsFn(() => window.getResolutionCaps!);
+    if (typeof window.getColorModeCaps === "function") setColorModeCapsFn(() => window.getColorModeCaps!);
+  }
+}, [scriptLoaded]);
 
   // ✅ Load SDK script
   useEffect(() => {
@@ -140,7 +164,6 @@ export const useScannerIntegration = () => {
           setIsReady(true);
           setScanners(list);
 
-          // ✅ only set default scanner if none is selected
           if (!scannerName) {
             setScannerName(list[ret.DefaultIndex] || list[0]);
           }
@@ -165,7 +188,7 @@ export const useScannerIntegration = () => {
       if (Encleso || window.ExportedScannerNames) {
         initializeEncleso();
       }
-    }, 3000); // reduced duplicate polling
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [initializeEncleso, scriptLoaded]);
@@ -202,7 +225,7 @@ export const useScannerIntegration = () => {
 
       await Encleso.SetCapabilities({
         Resolution: 300,
-        PixelType: 1, // 0 = B/W, 1 = Grayscale, 2 = Color
+        PixelType: 1,
       });
 
       const ret = await Encleso.StartScan(scannerName, false);
@@ -364,7 +387,7 @@ export const useScannerIntegration = () => {
     isReady,
     scanners,
     scannerName,
-    setScannerName, // ✅ user can select scanner
+    setScannerName,
     isScanning,
     scannedImages,
     error,
@@ -389,5 +412,7 @@ export const useScannerIntegration = () => {
     redo,
     canUndo,
     canRedo,
+getResolutionCaps: resolutionCapsFn, // will be null until SDK ready
+  getColorModeCaps: colorModeCapsFn,   // will be null until SDK ready
   };
 };

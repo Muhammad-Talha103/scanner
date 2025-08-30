@@ -137,16 +137,73 @@ if (!window.__ENCLESO_INITIALIZED__) {
     }
   }
 
-  function GetScannerCaps() {
-    const ScannerName = window.ExportedScannerNames
-
-    SetScannerCapsControlsState(false);
-    if (ScannerName ) return;
-
-    Encleso.GetCapabilities(ScannerName).then((ret) => {
-      SetScannerCapsControlsState(true, ret);
-    });
+async function GetScannerCaps() {
+  const scanners = window.ExportedScannerNames;
+  if (!scanners || scanners.length < 1) {
+    console.warn("No scanner available");
+    SetScannerCapsControlsState(true, null);
+    return;
   }
+
+  const selectedScanner = scanners[2]; // first scanner
+
+  // Disable controls while fetching
+  SetScannerCapsControlsState(false);
+
+  try {
+    // Pass the scanner name as a string, NOT as an array
+    const ret = await Encleso.GetCapabilities(selectedScanner);
+
+    if (!ret) {
+      console.error("Encleso.GetCapabilities returned undefined for", selectedScanner);
+      SetScannerCapsControlsState(true, null);
+      return;
+    }
+
+    // console.log("Raw scanner capabilities for", selectedScanner, ":", ret);
+
+    // Update UI
+    SetScannerCapsControlsState(true, ret);
+
+    // Resolution
+    if (ret.Resolution && ret.Resolution.Values && ret.Resolution.Values.length > 0) {
+      console.log("Available resolutions:", ret.Resolution.Values);
+      console.log("Current resolution index:", ret.Resolution.CurrentIndex);
+      console.log("Selected resolution:", ret.Resolution.Values[ret.Resolution.CurrentIndex]);
+    } else {
+      console.warn("Resolution not available for this scanner:", selectedScanner);
+      $("#resolution").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
+    }
+
+    // Color mode
+    if (ret.PixelType && ret.PixelType.Values && ret.PixelType.Values.length > 0) {
+      console.log(
+        "Available color modes:",
+        ret.PixelType.Values.map(Encleso.PixelTypeToString)
+      );
+      // console.log("Current color mode index:", ret.PixelType.CurrentIndex);
+      console.log(
+        "Selected color mode:",
+        Encleso.PixelTypeToString(ret.PixelType.Values[ret.PixelType.CurrentIndex])
+      );
+    } else {
+      console.warn("Color modes not available for this scanner:", selectedScanner);
+      $("#colorMode").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
+    }
+
+    // Duplex
+    if (ret.Duplex && ret.Duplex.Supported) {
+      $("#chkDuplex").attr("disabled", false);
+      $("#chkDuplex").prop("checked", ret.Duplex.Enabled);
+    } else {
+      $("#chkDuplex").attr("disabled", true);
+    }
+  } catch (err) {
+    console.error("Failed to fetch scanner capabilities for", selectedScanner, err);
+    SetScannerCapsControlsState(true, null);
+  }
+}
+
 
   if (typeof window !== "undefined") {
     console.log("[Encleso Demo] Script loaded, waiting for Encleso library...");
