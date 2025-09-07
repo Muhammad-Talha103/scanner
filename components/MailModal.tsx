@@ -1,9 +1,11 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from "react"
+import type React from "react"
+import { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
-import { ScannedImage } from "./scanner/Dropdown"
+import type { ScannedImage } from "./scanner/Dropdown"
 import { client } from "@/sanity/lib/client" // <-- Sanity client for frontend upload
+import emailjs from "@emailjs/browser"
 
 interface MailModalProps {
   isOpen: boolean
@@ -29,6 +31,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     includePDF: false,
     pdfName: "",
   })
+  const [senderType, setSenderType] = useState<"own" | "grewscanner">("own")
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -44,23 +47,15 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         includePDF: false,
         pdfName: "",
       })
+      setSenderType("own")
       setIsLoading(false)
       setIsSuccess(false)
       setError(null)
     }
   }, [isOpen])
 
-  useEffect(() => {
-    if (isSuccess) {
-      const timer = setTimeout(() => {
-        onClose()
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [isSuccess, onClose])
-
   const handleInputChange = (field: keyof FormData, value: string | boolean | File | null) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
+    setFormData((prev) => ({ ...prev, [field]: value }))
     setError(null)
   }
 
@@ -70,7 +65,6 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     handleInputChange("attachFile", file)
   }
 
-  // --- Generate PDF ---
   const generatePDF = async (): Promise<Blob> => {
     const jsPDFModule = await import("jspdf")
     const jsPDF = jsPDFModule.default
@@ -132,100 +126,94 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     return true
   }
 
-const handleSend = async () => {
-  if (!validateForm()) return;
-  setIsLoading(true);
-  console.log("Sending email to:", formData.to);
-  try {
-    let pdfUrl: string | null = null;
+  const handleSendWithUserEmail = async () => {
+    if (!validateForm()) return
+    setIsLoading(true)
+    // console.log("Sending email to:", formData.to)
+    try {
+      let pdfUrl: string | null = null
 
-    if (formData.includePDF && scannedImages.length > 0) {
-      const pdfBlob = await generatePDF();
-      const asset = await client.assets.upload("file", pdfBlob, {
-        filename: `${formData.pdfName || "document"}.pdf`,
-      });
-      pdfUrl = asset.url;
+      if (formData.includePDF && scannedImages.length > 0) {
+        const pdfBlob = await generatePDF()
+        const asset = await client.assets.upload("file", pdfBlob, {
+          filename: `${formData.pdfName || "document"}.pdf`,
+        })
+        pdfUrl = asset.url
+      }
+
+      let body = formData.message
+      if (pdfUrl) {
+        body += `\n\nDownload PDF: ${pdfUrl}`
+      }
+
+      const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
+        formData.subject,
+      )}&body=${encodeURIComponent(body)}`
+
+      const a = document.createElement("a")
+      a.href = mailtoLink
+      a.style.display = "none"
+      document.body.appendChild(a)
+
+      a.click()
+      document.body.removeChild(a)
+
+      setTimeout(() => setIsSuccess(true), 25000)
+      setIsLoading(false)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
+      setIsLoading(false)
     }
-
-    // mailto body prepare
-    let body = formData.message;
-    if (pdfUrl) {
-      body += `\n\nDownload PDF: ${pdfUrl}`;
-    }
-
-    // mailto link
-    const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    // ✅ First open Outlook
-    const a = document.createElement("a");
-    a.href = mailtoLink;
-    a.style.display = "none";
-    document.body.appendChild(a);
-
-    // Force open mailto
-    a.click();
-    document.body.removeChild(a);
-
-    // ✅ Then show success message
-    setTimeout(() => setIsSuccess(true), 25000);
-    setIsLoading(false);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    setError(message);
-    setIsLoading(false);
   }
-};
 
+  const handleSendWithGrewScannerEmail = async () => {
+    if (!validateForm()) return
 
-//  const handleSend = async () => {
-//     if (!validateForm()) return
+    try {
+      setIsLoading(true)
+      setError(null)
 
-//     try {
-//       setIsLoading(true)
-//       setError(null)
+      let finalMessage = formData.message
+      let pdfUrl: string | null = null
 
-//       let finalMessage = formData.message
-//       let pdfUrl: string | null = null
+      if (formData.includePDF && scannedImages.length > 0) {
+        const pdfBlob = await generatePDF()
 
-//       if (formData.includePDF && scannedImages.length > 0) {
-//         // Generate PDF
-//         const pdfBlob = await generatePDF()
+        const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
+        pdfUrl = asset.url
 
-//         // Upload PDF directly to Sanity from frontend
-//         const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
-//         pdfUrl = asset.url
+        finalMessage += `\n\nDownload PDF: ${pdfUrl}`
+      }
 
-//         finalMessage += `\n\nDownload PDF: ${pdfUrl}`
-//       }
+      const templateParams = {
+        to_email: formData.to,
+        subject: formData.subject,
+        message: finalMessage,
+      }
 
-//       // EmailJS template params
-//       const templateParams = {
-//         to_email: formData.to,
-//         subject: formData.subject,
-//         message: finalMessage,
-//       }
+      await emailjs.send("service_slh2t1t", "template_rhbj1ta", templateParams, "yElbkX08frFpeH4BD")
 
-//       await emailjs.send(
-//         "service_bwk31zq", // your service ID
-//         "template_ebrmlnm", // your template ID
-//         templateParams,
-//         "bX45Z98k0s3hHIUq9" // your public key
-//       )
+      setIsSuccess(true)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-//       setIsSuccess(true)
-//     } catch (err: unknown) {
-//       const message = err instanceof Error ? err.message : String(err)
-//       setError(message)
-//     } finally {
-//       setIsLoading(false)
-//     }
-//   }
+  const handleSend = () => {
+    if (senderType === "own") {
+      handleSendWithUserEmail()
+    } else {
+      handleSendWithGrewScannerEmail()
+    }
+  }
 
-
-
-  const handleKeyPress = (e: React.KeyboardEvent) => { if (e.key === "Escape") onClose() }
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") onClose()
+  }
   if (!isOpen) return null
   return (
     <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50 p-4">
@@ -235,7 +223,6 @@ const handleSend = async () => {
         }`}
         onKeyDown={handleKeyPress}
       >
-        {/* Modal Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-blue-600" />
@@ -250,11 +237,11 @@ const handleSend = async () => {
           </button>
         </div>
 
-        {/* Modal Content */}
         <div className="p-6">
           {!isSuccess ? (
             <div className="space-y-4">
-              {/* Recipient Email */}
+              
+
               <div>
                 <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-2">
                   To <span className="text-red-500">*</span>
@@ -270,7 +257,6 @@ const handleSend = async () => {
                 />
               </div>
 
-              {/* Subject */}
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
                   Subject <span className="text-red-500">*</span>
@@ -286,7 +272,6 @@ const handleSend = async () => {
                 />
               </div>
 
-              {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                   Message
@@ -302,7 +287,6 @@ const handleSend = async () => {
                 />
               </div>
 
-              {/* File Attachment */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">File Attachment</label>
                 <div className="flex items-center space-x-3">
@@ -338,7 +322,6 @@ const handleSend = async () => {
                 />
               </div>
 
-              {/* Include PDF Option */}
               {scannedImages.length > 0 && (
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex items-center space-x-3 mb-3">
@@ -380,14 +363,47 @@ const handleSend = async () => {
                 </div>
               )}
 
-              {/* Error Message */}
+<div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">Send From</label>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <input
+                      id="own-email"
+                      type="radio"
+                      name="senderType"
+                      value="own"
+                      checked={senderType === "own"}
+                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      disabled={isLoading}
+                    />
+                    <label htmlFor="own-email" className="ml-2 text-sm text-gray-700">
+                      Own Email
+                    </label>
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      id="grewscanner-email"
+                      type="radio"
+                      name="senderType"
+                      value="grewscanner"
+                      checked={senderType === "grewscanner"}
+                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
+                      className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      disabled={isLoading}
+                    />
+                    <label htmlFor="grewscanner-email" className="ml-2 text-sm text-gray-700">
+                      GrewScanner Email
+                    </label>
+                  </div>
+                </div>
+              </div>
               {error && (
                 <div className="bg-red-50 border border-red-200 rounded-md p-3">
                   <p className="text-sm text-red-600">{error}</p>
                 </div>
               )}
 
-              {/* Action Buttons */}
               <div className="flex justify-end space-x-3 pt-4">
                 <button
                   onClick={onClose}
@@ -409,7 +425,7 @@ const handleSend = async () => {
                   ) : (
                     <>
                       <Mail className="w-4 h-4" />
-                      <span></span>
+                      <span>Send</span>
                     </>
                   )}
                 </button>
@@ -429,4 +445,3 @@ const handleSend = async () => {
     </div>
   )
 }
-
