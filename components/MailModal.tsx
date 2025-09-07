@@ -133,49 +133,98 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     return true
   }
 
-  const handleSend = async () => {
-    if (!validateForm()) return
+const handleSend = async () => {
+  if (!validateForm()) return;
+  setIsLoading(true);
+  console.log("Sending email to:", formData.to);
+  try {
+    let pdfUrl: string | null = null;
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      let finalMessage = formData.message
-      let pdfUrl: string | null = null
-
-      if (formData.includePDF && scannedImages.length > 0) {
-        // Generate PDF
-        const pdfBlob = await generatePDF()
-
-        // Upload PDF directly to Sanity from frontend
-        const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
-        pdfUrl = asset.url
-
-        finalMessage += `\n\nDownload PDF: ${pdfUrl}`
-      }
-
-      // EmailJS template params
-      const templateParams = {
-        to_email: formData.to,
-        subject: formData.subject,
-        message: finalMessage,
-      }
-
-      await emailjs.send(
-        "service_bwk31zq", // your service ID
-        "template_ebrmlnm", // your template ID
-        templateParams,
-        "bX45Z98k0s3hHIUq9" // your public key
-      )
-
-      setIsSuccess(true)
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err)
-      setError(message)
-    } finally {
-      setIsLoading(false)
+    if (formData.includePDF && scannedImages.length > 0) {
+      const pdfBlob = await generatePDF();
+      const asset = await client.assets.upload("file", pdfBlob, {
+        filename: `${formData.pdfName || "document"}.pdf`,
+      });
+      pdfUrl = asset.url;
     }
+
+    // mailto body prepare
+    let body = formData.message;
+    if (pdfUrl) {
+      body += `\n\nDownload PDF: ${pdfUrl}`;
+    }
+
+    // mailto link
+    const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
+      formData.subject
+    )}&body=${encodeURIComponent(body)}`;
+
+    // ✅ First open Outlook
+    const a = document.createElement("a");
+    a.href = mailtoLink;
+    a.style.display = "none";
+    document.body.appendChild(a);
+
+    // Force open mailto
+    a.click();
+    document.body.removeChild(a);
+
+    // ✅ Then show success message
+    setTimeout(() => setIsSuccess(true), 25000);
+    setIsLoading(false);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    setError(message);
+    setIsLoading(false);
   }
+};
+
+
+//  const handleSend = async () => {
+//     if (!validateForm()) return
+
+//     try {
+//       setIsLoading(true)
+//       setError(null)
+
+//       let finalMessage = formData.message
+//       let pdfUrl: string | null = null
+
+//       if (formData.includePDF && scannedImages.length > 0) {
+//         // Generate PDF
+//         const pdfBlob = await generatePDF()
+
+//         // Upload PDF directly to Sanity from frontend
+//         const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
+//         pdfUrl = asset.url
+
+//         finalMessage += `\n\nDownload PDF: ${pdfUrl}`
+//       }
+
+//       // EmailJS template params
+//       const templateParams = {
+//         to_email: formData.to,
+//         subject: formData.subject,
+//         message: finalMessage,
+//       }
+
+//       await emailjs.send(
+//         "service_bwk31zq", // your service ID
+//         "template_ebrmlnm", // your template ID
+//         templateParams,
+//         "bX45Z98k0s3hHIUq9" // your public key
+//       )
+
+//       setIsSuccess(true)
+//     } catch (err: unknown) {
+//       const message = err instanceof Error ? err.message : String(err)
+//       setError(message)
+//     } finally {
+//       setIsLoading(false)
+//     }
+//   }
+
+
 
   const handleKeyPress = (e: React.KeyboardEvent) => { if (e.key === "Escape") onClose() }
   if (!isOpen) return null
