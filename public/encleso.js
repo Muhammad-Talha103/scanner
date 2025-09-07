@@ -371,7 +371,7 @@ async function GetScannerCaps() {
       const resp = await fetch('/api/encleso', { method: 'GET', credentials: 'same-origin' });
       const json = await resp.json();
 
-      console.log("[DEBUG] /api/encleso response:", json);
+      // console.log("[DEBUG] /api/encleso response:", json);
       
       if (!resp.ok) {
          console.error('[Encleso Demo] /api/encleso returned error', json);
@@ -390,7 +390,7 @@ async function GetScannerCaps() {
          await Encleso.SetLicense(json.token);
          console.log('[Encleso Demo] License applied successfully.');
       } catch (e) {
-         console.error('[Encleso Demo] Encleso.SetLicense failed:', e);
+        //  console.error('[Encleso Demo] Encleso.SetLicense failed:', e);
          $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
          return;
       }
