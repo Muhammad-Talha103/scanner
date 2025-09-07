@@ -366,7 +366,11 @@ async function GetScannerCaps() {
         };
 
         Encleso.OnReady = async (ret) => {
-           try {
+          try {
+    // Debug: Show current domain/origin
+    console.log("[DEBUG] Browser detected origin:", window.location.origin);
+
+    // === Step 1: Fetch license token from your backend API ===
     const res = await fetch("/api/encleso", { method: "POST" });
     const result = await res.json();
     const token = result?.enclesoResponse?.token;
@@ -374,12 +378,16 @@ async function GetScannerCaps() {
     if (!token) {
       console.error("[Encleso] No license token received!");
     } else {
+      // === Step 2: Apply license token ===
       const licenseResult = await Encleso.SetLicense(token);
+
       console.log("[Encleso] License token set:", token);
       console.log("[Encleso] License status code:", licenseResult);
-      
+
       if (licenseResult !== 0) {
-        console.warn("[Encleso] License not accepted → watermark will remain.");
+        console.warn("❌ [Encleso] License not accepted → watermark will remain.");
+      } else {
+        console.log("✅ [Encleso] License accepted successfully!");
       }
     }
   } catch (err) {
