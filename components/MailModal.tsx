@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
 import { ScannedImage } from "./scanner/Dropdown"
-import emailjs from "@emailjs/browser"
 import { client } from "@/sanity/lib/client" // <-- Sanity client for frontend upload
 
 interface MailModalProps {

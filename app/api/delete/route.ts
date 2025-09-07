@@ -14,39 +14,45 @@ if (!getApps().length) {
   initializeApp({ credential: cert(serviceAccount) })
 }
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*', // sab domain allow
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+}
+
+export async function OPTIONS() {
+  // Browser preflight request handle karne ke liye
+  return new NextResponse(null, { headers: corsHeaders })
+}
+
 export async function POST(req: Request) {
-  const { email } = await req.json()
-
-  if (!email) {
-    return NextResponse.json({ error: 'Email is required' }, { status: 400 })
-  }
-
   try {
+    const { email } = await req.json()
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400, headers: corsHeaders })
+    }
+
     const auth = getAuth()
     const userRecord = await auth.getUserByEmail(email)
     await auth.deleteUser(userRecord.uid)
-    return NextResponse.json({ success: true })
-  }catch (error: unknown) {
-  console.error('Deletion error:', error);
 
-  if (
-    typeof error === 'object' &&
-    error !== null &&
-    'code' in error &&
-    error.code === 'auth/user-not-found'
-  ) {
-    return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    return NextResponse.json({ success: true }, { status: 200, headers: corsHeaders })
+  } catch (error: unknown) {
+    console.error('Deletion error:', error)
+
+    const errorMessage =
+      typeof error === 'object' && error !== null && 'message' in error
+        ? (error as { message: string }).message
+        : 'Unknown error'
+
+    // User not found case
+    if (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'auth/user-not-found') {
+      return NextResponse.json({ error: 'User not found' }, { status: 404, headers: corsHeaders })
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to delete user', details: errorMessage },
+      { status: 500, headers: corsHeaders }
+    )
   }
-
-  const errorMessage = 
-    typeof error === 'object' && error !== null && 'message' in error
-      ? (error as { message: string }).message
-      : 'Unknown error';
-
-  return NextResponse.json(
-    { error: 'Failed to delete user', details: errorMessage },
-    { status: 500 }
-  );
-}
-
 }
