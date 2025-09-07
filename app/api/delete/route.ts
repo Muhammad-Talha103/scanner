@@ -46,7 +46,7 @@ export async function POST(req: Request) {
         : 'Unknown error'
 
     // User not found case
-    if (typeof error === 'object' && error !== null && 'code' in error && (error as any).code === 'auth/user-not-found') {
+    if (typeof error === 'object' && error !== null && 'code' in error && (error).code === 'auth/user-not-found') {
       return NextResponse.json({ error: 'User not found' }, { status: 404, headers: corsHeaders })
     }
 
