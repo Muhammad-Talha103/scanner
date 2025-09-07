@@ -49,7 +49,7 @@ export default function UserRow({ user, serialNumber, onDelete, isDesktop }: Use
 
   {/* Password and button side by side */}
   <div className="flex items-center space-x-2">
-    <span>{(showPassword ? user.password : maskPassword(user.password)).toUpperCase()}</span>
+    <span>{(showPassword ? user.password : maskPassword(user.password))}</span>
     <button
       onMouseDown={handleShowPasswordStart}
       onMouseUp={handleShowPasswordEnd}
