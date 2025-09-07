@@ -365,7 +365,26 @@ async function GetScannerCaps() {
           $("#alert-warn-error").removeClass("d-none").addClass("d-block").html(err.Message);
         };
 
-        Encleso.OnReady = (ret) => {
+        Encleso.OnReady = async (ret) => {
+           try {
+    const res = await fetch("/api/encleso", { method: "POST" });
+    const result = await res.json();
+    const token = result?.enclesoResponse?.token;
+
+    if (!token) {
+      console.error("[Encleso] No license token received!");
+    } else {
+      const licenseResult = await Encleso.SetLicense(token);
+      console.log("[Encleso] License token set:", token);
+      console.log("[Encleso] License status code:", licenseResult);
+      
+      if (licenseResult !== 0) {
+        console.warn("[Encleso] License not accepted → watermark will remain.");
+      }
+    }
+  } catch (err) {
+    console.error("[Encleso] Failed to set license:", err);
+  }
           // console.log("[Encleso] Connected to client application successfully!");
           // console.log("[Encleso] Available scanners:", ret.ScannersList);
 
