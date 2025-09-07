@@ -367,32 +367,39 @@ async function GetScannerCaps() {
 
         Encleso.OnReady = async (ret) => {
           try {
-    // Debug: Show current domain/origin
-    console.log("[DEBUG] Browser detected origin:", window.location.origin);
+      // fetch token from our Next.js API
+      const resp = await fetch('/api/encleso', { method: 'GET', credentials: 'same-origin' });
+      const json = await resp.json();
 
-    // === Step 1: Fetch license token from your backend API ===
-    const res = await fetch("/api/encleso", { method: "POST" });
-    const result = await res.json();
-    const token = result?.enclesoResponse?.token;
-
-    if (!token) {
-      console.error("[Encleso] No license token received!");
-    } else {
-      // === Step 2: Apply license token ===
-      const licenseResult = await Encleso.SetLicense(token);
-
-      console.log("[Encleso] License token set:", token);
-      console.log("[Encleso] License status code:", licenseResult);
-
-      if (licenseResult !== 0) {
-        console.warn("❌ [Encleso] License not accepted → watermark will remain.");
-      } else {
-        console.log("✅ [Encleso] License accepted successfully!");
+      console.log("[DEBUG] /api/encleso response:", json);
+      
+      if (!resp.ok) {
+         console.error('[Encleso Demo] /api/encleso returned error', json);
+         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("License server error: " + (json?.error || resp.status));
+         return;
       }
-    }
-  } catch (err) {
-    console.error("[Encleso] Failed to set license:", err);
-  }
+
+      if (!json || !json.token) {
+         console.error('[Encleso Demo] No token in response', json);
+         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to fetch license token.");
+         return;
+      }
+
+      // apply license (token is short-lived)
+      try {
+         await Encleso.SetLicense(json.token);
+         console.log('[Encleso Demo] License applied successfully.');
+      } catch (e) {
+         console.error('[Encleso Demo] Encleso.SetLicense failed:', e);
+         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
+         return;
+      }
+
+   } catch (fetchErr) {
+      console.error('[Encleso Demo] Failed to fetch license token:', fetchErr);
+      $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Could not contact license server.");
+      return;
+   }
           // console.log("[Encleso] Connected to client application successfully!");
           // console.log("[Encleso] Available scanners:", ret.ScannersList);
 

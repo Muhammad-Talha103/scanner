@@ -1,32 +1,45 @@
-// app/api/encleso/route.ts
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function GET() {
   try {
-    // Apni client wali license key
-    const licenseKey: string = "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu"
+    // License key ko string ke andar rakho
+    const LICENSE_KEY: string = "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu";
 
-    // Encleso endpoint call
-    const res = await fetch("https://encleso.com/API/SetLicenseKey", {
+    if (!LICENSE_KEY) {
+      return NextResponse.json(
+        { error: "License key missing" },
+        { status: 500 }
+      );
+    }
+
+    // Apna allowed origin jo aapne Encleso ko diya tha
+    const origin: string = "https://grew-scanner.vercel.app";
+
+    const body = new URLSearchParams();
+    body.append("Key", LICENSE_KEY);
+
+    const resp = await fetch("https://encleso.com/API/SetLicenseKey", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "Origin": "https://grew-scanner.vercel.app", 
+        "Origin": origin,
       },
-      body: new URLSearchParams({
-        Key: licenseKey,
-      }),
-    })
+      body: body.toString(),
+    });
 
-    // Try parsing response as JSON
-    const enclesoResponse: unknown = await res.json()
+    if (!resp.ok) {
+      const text = await resp.text();
+      return NextResponse.json(
+        { error: "Encleso API error", detail: text },
+        { status: resp.status }
+      );
+    }
 
-    return Response.json({ enclesoResponse })
+    const json: unknown = await resp.json();
+    return NextResponse.json(json);
   } catch (err: unknown) {
-    console.error("Encleso API error:", err)
-    return Response.json(
-      { error: "Failed to get license" },
-      { status: 500 }
-    )
+    const message =
+      err instanceof Error ? err.message : "Unknown server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
