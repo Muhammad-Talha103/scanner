@@ -6,6 +6,7 @@ import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
 import type { ScannedImage } from "./scanner/Dropdown"
 import { client } from "@/sanity/lib/client" // <-- Sanity client for frontend upload
 import emailjs from "@emailjs/browser"
+import { uploadFileToSanity } from "@/sanity/lib/uploadFile"
 
 interface MailModalProps {
   isOpen: boolean
@@ -17,17 +18,17 @@ interface FormData {
   to: string
   subject: string
   message: string
-  attachFile: File | null
+  attachFiles: File[]
   includePDF: boolean
   pdfName: string
 }
 
 export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedImages }) => {
-  const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState<FormData>({
     to: "",
     subject: "",
     message: "",
-    attachFile: null,
+    attachFiles: [],
     includePDF: false,
     pdfName: "",
   })
@@ -43,7 +44,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         to: "",
         subject: "",
         message: "",
-        attachFile: null,
+        attachFiles: [],
         includePDF: false,
         pdfName: "",
       })
@@ -60,11 +61,15 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
   }
 
   const handleFileSelect = () => fileInputRef.current?.click()
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null
-    handleInputChange("attachFile", file)
+   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (files.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        attachFiles: [...prev.attachFiles, ...files],
+      }))
+    }
   }
-
   const generatePDF = async (): Promise<Blob> => {
     const jsPDFModule = await import("jspdf")
     const jsPDF = jsPDFModule.default
@@ -132,19 +137,29 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     // console.log("Sending email to:", formData.to)
     try {
       let pdfUrl: string | null = null
+      let fileUrl: string[]  = []
 
       if (formData.includePDF && scannedImages.length > 0) {
         const pdfBlob = await generatePDF()
         const asset = await client.assets.upload("file", pdfBlob, {
           filename: `${formData.pdfName || "document"}.pdf`,
         })
+
         pdfUrl = asset.url
+      }
+ if (formData.attachFiles.length > 0) {
+          fileUrl = await Promise.all(
+          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
+        )
       }
 
       let body = formData.message
       if (pdfUrl) {
         body += `\n\nDownload PDF: ${pdfUrl}`
       }
+        if (fileUrl.length > 0) {
+      body += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`
+    }
 
       const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
         formData.subject,
@@ -176,6 +191,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
       let finalMessage = formData.message
       let pdfUrl: string | null = null
+      let fileUrl: string[] | null = null
 
       if (formData.includePDF && scannedImages.length > 0) {
         const pdfBlob = await generatePDF()
@@ -185,6 +201,14 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
 
         finalMessage += `\n\nDownload PDF: ${pdfUrl}`
       }
+
+        if (formData.attachFiles.length > 0) {
+          fileUrl = await Promise.all(
+          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
+        )
+        finalMessage += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`
+      }
+
 
       const templateParams = {
         to_email: formData.to,
@@ -215,6 +239,14 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
     if (e.key === "Escape") onClose()
   }
   if (!isOpen) return null
+
+  const removeFile = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      attachFiles: prev.attachFiles.filter((_, i) => i !== index),
+    }))
+  }
+
   return (
     <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50 p-4">
       <div
@@ -293,34 +325,43 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                   <button
                     type="button"
                     onClick={handleFileSelect}
+                    
                     className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                     disabled={isLoading}
                   >
                     <Paperclip className="w-4 h-4" />
                     <span className="text-sm">Choose File</span>
                   </button>
-                  {formData.attachFile && (
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <FileText className="w-4 h-4" />
-                      <span className="truncate max-w-48">{formData.attachFile.name}</span>
-                      <button
-                        onClick={() => handleInputChange("attachFile", null)}
-                        className="text-red-500 hover:text-red-700"
-                        disabled={isLoading}
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )}
+                
                 </div>
                 <input
                   ref={fileInputRef}
                   type="file"
+                  multiple
                   onChange={handleFileChange}
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt"
                   className="hidden"
                 />
               </div>
+              {formData.attachFiles.length > 0 && (
+              <div className="space-y-2">
+                {formData.attachFiles.map((file, idx) => (
+                  <div key={idx} className="flex items-center justify-between text-sm text-gray-600">
+                    <div className="flex items-center space-x-2">
+                      <FileText className="w-4 h-4" />
+                      <span className="truncate max-w-[180px]">{file.name}</span>
+                    </div>
+                    <button
+                      onClick={() => removeFile(idx)}
+                      className="text-red-500 hover:text-red-700"
+                      disabled={isLoading}
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
 
               {scannedImages.length > 0 && (
                 <div className="border-t border-gray-200 pt-4">
