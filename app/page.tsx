@@ -44,6 +44,7 @@ import { Toolbar } from "@/components/scanner/Toolbar";
 import Header from "@/components/scanner/Header";
 
 import { useScannerIntegration } from "@/hooks/useScannerIntegration";
+import Marquee from "@/components/scanner/Advertise";
 
 interface DropdownItem {
   label: string;
@@ -374,6 +375,7 @@ export default function ScannerApp() {
         onLogout={handleLogout}
       />
 
+    <Marquee/>
       <div className="flex flex-1 flex-col lg:flex-row">
         {/* Sidebar */}
         <aside className="w-full lg:w-40 bg-gray-100 border-b lg:border-b-0 lg:border-r border-gray-300 p-3">
