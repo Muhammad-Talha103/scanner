@@ -1,3 +1,102 @@
+// "use client";
+
+// import type React from "react";
+// import { useState, useEffect } from "react";
+// import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react";
+// import type { EnclesoType } from "@/hooks/useScannerIntegration";
+
+// interface ScannerStatusProps {
+//   isReady: boolean;
+//   scanners: string[];
+//   selectedScanner: string | null;
+//   onSelectScanner: (name: string) => void;
+//   error: string | null;
+// }
+
+// export const ScannerStatus: React.FC<ScannerStatusProps> = ({
+//   isReady,
+//   scanners,
+//   selectedScanner,
+//   onSelectScanner,
+//   error,
+// }) => {
+//   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+//   const [resolutions, setResolutions] = useState<string[]>([]);
+//   const [colorModes, setColorModes] = useState<string[]>([]);
+//   const [selectedResolution, setSelectedResolution] = useState<string>("");
+//   const [selectedColorMode, setSelectedColorMode] = useState<string>("");
+
+//   // Fetch capabilities whenever selectedScanner changes
+//   useEffect(() => {
+//     const Encleso: EnclesoType | undefined = window.Encleso;
+//     if (!selectedScanner || !Encleso) return;
+
+//     const fetchCapabilities = async () => {
+//       try {
+//         const caps = await Encleso.GetCapabilities?.(selectedScanner);
+//         if (!caps) return;
+
+//         // Resolution
+//         if (caps.Resolution?.Values?.length) {
+//           const resValues = caps.Resolution.Values.map(String);
+//           setResolutions(resValues);
+//           setSelectedResolution(
+//             resValues[caps.Resolution.CurrentIndex] || resValues[0]
+//           );
+//         } else {
+//           setResolutions(["Unsupported"]);
+//           setSelectedResolution("Unsupported");
+//         }
+
+//         // Color modes
+//         if (caps.PixelType?.Values?.length) {
+//           const colorValues = Encleso.PixelTypeToString
+//             ? caps.PixelType.Values.map(Encleso.PixelTypeToString)
+//             : caps.PixelType.Values.map(String);
+//           setColorModes(colorValues);
+//           setSelectedColorMode(colorValues[0]);
+//         } else {
+//           setColorModes(["Unsupported"]);
+//           setSelectedColorMode("Unsupported");
+//         }
+//       } catch (err) {
+//         console.error("Failed to fetch capabilities for", selectedScanner, err);
+//         setResolutions(["Error"]);
+//         setColorModes(["Error"]);
+//         setSelectedResolution("Error");
+//         setSelectedColorMode("Error");
+//       }
+//     };
+
+//     fetchCapabilities();
+//   }, [selectedScanner]);
+
+//   // Update scanner capabilities
+//   const updateCapabilities = async (resolution: string, colorMode: string) => {
+//     const Encleso: EnclesoType | undefined = window.Encleso;
+//     if (!Encleso || !selectedScanner) return;
+
+//     try {
+//       await Encleso.SetCapabilities({
+//         Resolution: Number(resolution),
+//         PixelType: colorModes.indexOf(colorMode),
+//       });
+//     } catch (err) {
+//       console.error("Failed to set capabilities:", err);
+//     }
+//   };
+
+//   const handleResolutionChange = (value: string) => {
+//     setSelectedResolution(value);
+//     updateCapabilities(value, selectedColorMode);
+//   };
+
+//   const handleColorModeChange = (value: string) => {
+//     setSelectedColorMode(value);
+//     updateCapabilities(selectedResolution, value);
+//   };
+
+
 "use client";
 
 import type React from "react";
@@ -23,6 +122,8 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [resolutions, setResolutions] = useState<string[]>([]);
   const [colorModes, setColorModes] = useState<string[]>([]);
+  const [resolutionValues, setResolutionValues] = useState<number[]>([]);
+  const [pixelTypeValues, setPixelTypeValues] = useState<number[]>([]);
   const [selectedResolution, setSelectedResolution] = useState<string>("");
   const [selectedColorMode, setSelectedColorMode] = useState<string>("");
 
@@ -36,27 +137,29 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         const caps = await Encleso.GetCapabilities?.(selectedScanner);
         if (!caps) return;
 
-        // Resolution
+        // === Resolution ===
         if (caps.Resolution?.Values?.length) {
-          const resValues = caps.Resolution.Values.map(String);
-          setResolutions(resValues);
-          setSelectedResolution(
-            resValues[caps.Resolution.CurrentIndex] || resValues[0]
-          );
+          const resValues = caps.Resolution.Values.map(Number);
+          setResolutionValues(resValues);
+          setResolutions(resValues.map((r) => `${r} x ${r}`));
+          setSelectedResolution(`${resValues[caps.Resolution.CurrentIndex]}` || `${resValues[0]}`);
         } else {
           setResolutions(["Unsupported"]);
+          setResolutionValues([]);
           setSelectedResolution("Unsupported");
         }
 
-        // Color modes
+        // === Color Modes ===
         if (caps.PixelType?.Values?.length) {
-          const colorValues = Encleso.PixelTypeToString
-            ? caps.PixelType.Values.map(Encleso.PixelTypeToString)
-            : caps.PixelType.Values.map(String);
+          setPixelTypeValues(caps.PixelType.Values);
+          const colorValues = caps.PixelType.Values.map((val) =>
+            Encleso.PixelTypeToString ? Encleso.PixelTypeToString(val) : String(val)
+          );
           setColorModes(colorValues);
-          setSelectedColorMode(colorValues[0]);
+          setSelectedColorMode(colorValues[caps.PixelType.CurrentIndex ?? 0] || colorValues[0]);
         } else {
           setColorModes(["Unsupported"]);
+          setPixelTypeValues([]);
           setSelectedColorMode("Unsupported");
         }
       } catch (err) {
@@ -65,6 +168,8 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         setColorModes(["Error"]);
         setSelectedResolution("Error");
         setSelectedColorMode("Error");
+        setResolutionValues([]);
+        setPixelTypeValues([]);
       }
     };
 
@@ -77,9 +182,12 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
     if (!Encleso || !selectedScanner) return;
 
     try {
+      const resIndex = resolutions.indexOf(resolution);
+      const pixIndex = colorModes.indexOf(colorMode);
+
       await Encleso.SetCapabilities({
-        Resolution: Number(resolution),
-        PixelType: colorModes.indexOf(colorMode),
+        Resolution: resolutionValues[resIndex] ?? resolutionValues[0],
+        PixelType: pixelTypeValues[pixIndex] ?? pixelTypeValues[0],
       });
     } catch (err) {
       console.error("Failed to set capabilities:", err);
