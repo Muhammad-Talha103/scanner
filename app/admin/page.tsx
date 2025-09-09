@@ -1,60 +1,64 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import { fetchUsers, SanityUser, Userr } from './datafetch'
-import UserTable from './UserTable'
-import { useRouter } from 'next/navigation'
-import { Shield, Users, Loader2 } from 'lucide-react'
+import { useEffect, useState } from "react";
+import { fetchUsersWithPasswordMerge, Userr } from "./datafetch";
+import UserTable from "./UserTable";
+import { useRouter } from "next/navigation";
+import { Shield, Users, Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminPage() {
-  const router = useRouter()
-  const [users, setUsers] = useState<Userr[]>([])
-  const [loading, setLoading] = useState(true)
-  const [authorized, setAuthorized] = useState(false)
-  const [authChecking, setAuthChecking] = useState(true)
+  const router = useRouter();
+  const [users, setUsers] = useState<Userr[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [authorized, setAuthorized] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
 
   useEffect(() => {
     // Check if admin is authenticated
     const checkAuth = async () => {
       // Add a small delay to show the auth checking animation
-      await new Promise(resolve => setTimeout(resolve, 800))
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const isAdmin = localStorage.getItem('isAdminAuthenticated')
-      if (isAdmin !== 'true') {
-        router.push('/admin/admin-login')
-        return
+      const isAdmin = localStorage.getItem("isAdminAuthenticated");
+
+      if (isAdmin !== "true") {
+        router.push("/admin/admin-login");
+        return;
       }
 
-      setAuthorized(true)
-      setAuthChecking(false)
+      setAuthorized(true);
+      setAuthChecking(false);
 
-      // Fetch users
+      // Fetch users with password merge logic
       try {
-        const fetchedUsers: SanityUser[] = await fetchUsers()
-        const formattedUsers: Userr[] = fetchedUsers.map((user, index) => ({
-          id: user._id,
-          serial: index + 1,
-          name: user.username,
+        setLoading(true);
+
+        const fetchedUsers: Userr[] = await fetchUsersWithPasswordMerge();
+
+        // Log each user for debugging
+        fetchedUsers.map((user) => ({
+          name: user.name,
           email: user.email,
-          password: user.userpassword,
-          createdAt: user.createdAt,
-        }))
-        setUsers(formattedUsers)
-        setLoading(false)
+          isPasswordUpdated: user.isPasswordUpdated,
+          passwordLength: user.password.length,
+        }));
+
+        setUsers(fetchedUsers);
+        setLoading(false);
       } catch (error) {
-        setLoading(false)
-        console.error('Error fetching users:', error)
+        setLoading(false);
         // handle fetch error if needed
       }
-    }
+    };
 
-    checkAuth()
-  }, [router])
+    checkAuth();
+  }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('isAdminAuthenticated')
-    router.push('/admin/admin-login')
-  }
+    localStorage.removeItem("isAdminAuthenticated");
+    router.push("/admin/admin-login");
+  };
 
   // Authorization checking state
   if (authChecking) {
@@ -69,20 +73,28 @@ export default function AdminPage() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-800">Verifying Access</h2>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Verifying Access
+            </h2>
             <p className="text-gray-600 max-w-md mx-auto">
               Checking your admin credentials and permissions...
             </p>
 
             <div className="flex items-center justify-center space-x-2 mt-6">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              <div
+                className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.1s" }}
+              ></div>
+              <div
+                className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"
+                style={{ animationDelay: "0.2s" }}
+              ></div>
             </div>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!authorized) {
@@ -92,11 +104,13 @@ export default function AdminPage() {
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Shield className="w-8 h-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Access Denied</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            Access Denied
+          </h2>
           <p className="text-gray-600">Redirecting to login...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Loading users state
@@ -111,7 +125,9 @@ export default function AdminPage() {
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Admin Dashboard
+                </h1>
                 <p className="text-gray-600">Loading your dashboard...</p>
               </div>
             </div>
@@ -141,15 +157,23 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-xl font-semibold text-gray-800">Loading Users</h3>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Loading Users
+                  </h3>
                   <p className="text-gray-600 max-w-md mx-auto">
                     Fetching user data from the database...
                   </p>
 
                   <div className="flex items-center justify-center space-x-2 mt-6">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div
+                      className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.1s" }}
+                    ></div>
+                    <div
+                      className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce"
+                      style={{ animationDelay: "0.2s" }}
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -187,53 +211,87 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto ">
-        <div className="mb-8 animate-fade-in flex items-center justify-between ">
-          <div>
+  <div className="max-w-7xl mx-auto">
+    <div className="mb-8 animate-fade-in flex items-center justify-between">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Admin Dashboard
+        </h1>
+        <p className="text-gray-600">Manage users and their information</p>
+      </div>
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Manage users and their information</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="
-    px-6 py-3 
-    bg-green-600 
-    text-white 
-    font-semibold 
-    rounded-lg 
-    shadow-md 
-    hover:bg-green-700 
-    focus:outline-none 
-    focus:ring-2 
-    focus:ring-green-400 
-    focus:ring-offset-2 
-    transition 
-    duration-300 
-    transform 
-    hover:scale-105
-    active:scale-95
-    select-none
-  "
-          >
-            Logout
-          </button>
+      {/* Buttons container */}
+      <div className="flex gap-4">
+        {/* Change Credentials Button */}
+        <Link href="/admin/change-password"
+          
+          className="
+            px-6 py-3 
+            bg-blue-600 
+            text-white 
+            font-semibold 
+            rounded-lg 
+            shadow-md 
+            hover:bg-blue-700 
+            focus:outline-none 
+            focus:ring-2 
+            focus:ring-blue-400 
+            focus:ring-offset-2 
+            transition 
+            duration-300 
+            transform 
+            hover:scale-105
+            active:scale-95
+            select-none
+          "
+        >
+          Change Credentials
+        </Link>
 
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 animate-fade-in">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-800">User Management</h2>
-          </div>
-
-          <UserTable users={users} />
-        </div>
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="
+            px-6 py-3 
+            bg-green-600 
+            text-white 
+            font-semibold 
+            rounded-lg 
+            shadow-md 
+            hover:bg-green-700 
+            focus:outline-none 
+            focus:ring-2 
+            focus:ring-green-400 
+            focus:ring-offset-2 
+            transition 
+            duration-300 
+            transform 
+            hover:scale-105
+            active:scale-95
+            select-none
+          "
+        >
+          Logout
+        </button>
       </div>
     </div>
-  )
+
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 animate-fade-in">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-800">
+          User Management
+        </h2>
+      </div>
+
+      <UserTable users={users} />
+    </div>
+  </div>
+</div>
+
+  );
 }

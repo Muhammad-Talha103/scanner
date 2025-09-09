@@ -13,7 +13,7 @@ export async function GET() {
     }
 
     // Apna allowed origin jo aapne Encleso ko diya tha
-    const origin: string = "https://grew-scanner.vercel.app";
+    const origin: string = "grewescan.de";
 
     const body = new URLSearchParams();
     body.append("Key", LICENSE_KEY);
