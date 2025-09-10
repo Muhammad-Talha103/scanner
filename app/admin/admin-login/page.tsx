@@ -1,26 +1,38 @@
 "use client"
 
-import { useEffect, useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react"
+import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { client } from "@/sanity/lib/client"
 
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
+  const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({})
-const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState(false)
+  const [adminCreds, setAdminCreds] = useState<{ username: string; password: string }[]>([])
 
   const router = useRouter()
 
+  // Fetch credentials from Sanity
   useEffect(() => {
-    const isAdmin = localStorage.getItem('isAdminAuthenticated')
-    if (isAdmin === 'true') {
-      router.replace('/admin')
+    async function fetchAdmin() {
+      try {
+        const query = `*[_type == "admin"]{username, password}`
+        const result = await client.fetch(query)
+        setAdminCreds(result)
+        console.log("[Sanity] Admin Credentials fetched:", result)
+      } catch (err) {
+        console.error("[Sanity] Error fetching admin credentials:", err)
+      }
+    }
+    fetchAdmin()
+
+    // Auto redirect if already logged in
+    const isAdmin = localStorage.getItem("isAdminAuthenticated")
+    if (isAdmin === "true") {
+      router.replace("/admin")
     }
   }, [router])
 
@@ -28,52 +40,43 @@ const [loading, setLoading] = useState(false);
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
 
-    // Clear error when user starts typing
     if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: undefined
-      }))
+      setErrors(prev => ({ ...prev, [name]: undefined }))
     }
   }
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
 
- const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
+    const { email, password } = formData
+    const newErrors: { email?: string; password?: string; general?: string } = {}
 
-  setLoading(true);
+    if (!email) newErrors.email = "Email is required"
+    if (!password) newErrors.password = "Password is required"
 
-  const { email, password } = formData;
-  const newErrors: { email?: string; password?: string; general?: string } = {};
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      setLoading(false)
+      return
+    }
 
-  if (!email) {
-    newErrors.email = "Email is required";
-  }
-  if (!password) {
-    newErrors.password = "Password is required";
-  }
+    // ✅ Match against fetched Sanity credentials
+    const match = adminCreds.find(
+      admin => admin.username === email && admin.password === password
+    )
 
-  if (Object.keys(newErrors).length > 0) {
-    setErrors(newErrors);
-    setLoading(false);
-    return;
-  }
-
-  // Simulate async login (e.g., API call) with setTimeout
-  setTimeout(() => {
-    if (email === "admin" && password === "admin") {
-      localStorage.setItem('isAdminAuthenticated', 'true');
-      router.push("/admin");
+    if (match) {
+      localStorage.setItem("isAdminAuthenticated", "true")
+      router.push("/admin")
     } else {
-      setErrors({ general: "Invalid email or password" });
-      setLoading(false);
+      setErrors({ general: "Invalid email or password" })
+      setLoading(false)
     }
-  }, 1000); // simulate 1s delay
-};
-
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center p-4 animate-fade-in">
       {/* Background Pattern */}

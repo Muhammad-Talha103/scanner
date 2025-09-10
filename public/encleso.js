@@ -47,7 +47,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
         $("#colorMode").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
       }
 
-      if (jsonCaps && jsonCaps.Duplex.Supported) {
+      if (jsonCaps && jsonCaps.Duplex && jsonCaps.Duplex.Supported) {
         $("#chkDuplex").attr("disabled", false);
         $("#chkDuplex").prop("checked", jsonCaps.Duplex.Enabled);
       } else {
@@ -91,43 +91,58 @@ if (!window.__ENCLESO_INITIALIZED__) {
     await Encleso.ImageLibRemove(ImgLibIndexList);
   }
 
- async function scan() {
-  const ScannerName = window.ExportedScannerNames;
-
-  if (!ScannerName) {
-    throw new Error("No scanner selected");
-  }
-  const ShowUI = $("#chkShowUI").is(":checked");
-
-  const Caps = {};
-  if ($("#resolution").prop("disabled") === false) Caps.Resolution = $("#resolution option:selected").val();
-  if ($("#colorMode").prop("disabled") === false) Caps.PixelType = $("#colorMode option:selected").val();
-  if ($("#chkDuplex").prop("disabled") === false) Caps.Duplex = $("#chkDuplex").prop("checked");
-  Encleso.SetCapabilities(Caps);
-
-  await ClearImageLibrary();
-
-  try {
-    const ret = await Encleso.StartScan(ScannerName[0], ShowUI);
-    console.log("Scan result:", ret);
-
-
-    
-
-    if (!ret || typeof ret.ScannedImagesCount !== 'number' || ret.ScannedImagesCount < 1) {
-      ShowScannedImage(false, 0, "Scan was cancelled or no images scanned!");
-      throw new Error("Scan was cancelled or no images scanned");
+  async function scan() {
+    // Read selected scanner from DOM (value attribute), fallback to exported list first element
+    const selectedFromDom = $("#ScannerName").val();
+    const exported = window.ExportedScannerNames || [];
+    const ScannerName = selectedFromDom || exported[0];
+    if (!ScannerName) {
+      throw new Error("No scanner selected");
     }
 
-    ShowScannedImage(true, 0);
+    const ShowUI = $("#chkShowUI").is(":checked");
 
-    return ret;
-  } catch (err) {
-    ShowScannedImage(false, 0, err.message || "Unknown scan error");
-    throw err;
+    const Caps = {};
+    if ($("#resolution").prop("disabled") === false) {
+      const resVal = $("#resolution option:selected").val();
+      // resolution might be string "300" or "300 x 300" depending on source; extract numeric
+      const numericRes = parseInt(String(resVal).toString().split(" ")[0], 10);
+      if (!isNaN(numericRes)) Caps.Resolution = numericRes;
+    }
+    if ($("#colorMode").prop("disabled") === false) {
+      const pixVal = $("#colorMode option:selected").val();
+      const numericPix = Number(pixVal);
+      if (!isNaN(numericPix)) Caps.PixelType = numericPix;
+    }
+    if ($("#chkDuplex").prop("disabled") === false) Caps.Duplex = $("#chkDuplex").prop("checked");
+
+    try {
+      // apply capabilities
+      if (Object.keys(Caps).length > 0) {
+        await Encleso.SetCapabilities(Caps);
+      }
+    } catch (err) {
+      console.warn("SetCapabilities failed before scan:", err);
+    }
+
+    await ClearImageLibrary();
+
+    try {
+      const ret = await Encleso.StartScan(ScannerName, ShowUI);
+      console.log("Scan result:", ret);
+
+      if (!ret || typeof ret.ScannedImagesCount !== "number" || ret.ScannedImagesCount < 1) {
+        ShowScannedImage(false, 0, "Scan was cancelled or no images scanned!");
+        throw new Error("Scan was cancelled or no images scanned");
+      }
+
+      ShowScannedImage(true, 0);
+      return ret;
+    } catch (err) {
+      ShowScannedImage(false, 0, err.message || "Unknown scan error");
+      throw err;
+    }
   }
-}
-
 
   async function StartScanning() {
     try {
@@ -137,73 +152,45 @@ if (!window.__ENCLESO_INITIALIZED__) {
     }
   }
 
-async function GetScannerCaps() {
-  const scanners = window.ExportedScannerNames;
-  if (!scanners || scanners.length < 1) {
-    console.warn("No scanner available");
-    SetScannerCapsControlsState(true, null);
-    return;
-  }
-
-  const selectedScanner = scanners[2]; // first scanner
-
-  // Disable controls while fetching
-  SetScannerCapsControlsState(false);
-
-  try {
-    // Pass the scanner name as a string, NOT as an array
-    const ret = await Encleso.GetCapabilities(selectedScanner);
-
-    if (!ret) {
-      console.error("Encleso.GetCapabilities returned undefined for", selectedScanner);
+  async function GetScannerCaps() {
+    const scanners = window.ExportedScannerNames;
+    if (!scanners || scanners.length < 1) {
+      console.warn("No scanner available");
       SetScannerCapsControlsState(true, null);
       return;
     }
 
-    // console.log("Raw scanner capabilities for", selectedScanner, ":", ret);
+    // try to read selected scanner from DOM, else first exported scanner
+    const selectedFromDom = $("#ScannerName").val();
+    const selectedScanner = selectedFromDom || scanners[0];
 
-    // Update UI
-    SetScannerCapsControlsState(true, ret);
+    // Disable controls while fetching
+    SetScannerCapsControlsState(false);
 
-    // Resolution
-    if (ret.Resolution && ret.Resolution.Values && ret.Resolution.Values.length > 0) {
-      // console.log("Available resolutions:", ret.Resolution.Values);
-      // console.log("Current resolution index:", ret.Resolution.CurrentIndex);
-      // console.log("Selected resolution:", ret.Resolution.Values[ret.Resolution.CurrentIndex]);
-    } else {
-      console.warn("Resolution not available for this scanner:", selectedScanner);
-      $("#resolution").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
+    try {
+      // Pass the scanner name as a string, NOT as an array
+      const ret = await Encleso.GetCapabilities(selectedScanner);
+
+      if (!ret) {
+        console.error("Encleso.GetCapabilities returned undefined for", selectedScanner);
+        SetScannerCapsControlsState(true, null);
+        return;
+      }
+
+      SetScannerCapsControlsState(true, ret);
+
+      // Duplex
+      if (ret.Duplex && ret.Duplex.Supported) {
+        $("#chkDuplex").attr("disabled", false);
+        $("#chkDuplex").prop("checked", ret.Duplex.Enabled);
+      } else {
+        $("#chkDuplex").attr("disabled", true);
+      }
+    } catch (err) {
+      console.error("Failed to fetch scanner capabilities for", selectedScanner, err);
+      SetScannerCapsControlsState(true, null);
     }
-
-    // Color mode
-    if (ret.PixelType && ret.PixelType.Values && ret.PixelType.Values.length > 0) {
-      // console.log(
-      //   "Available color modes:",
-      //   ret.PixelType.Values.map(Encleso.PixelTypeToString)
-      // );
-      // // console.log("Current color mode index:", ret.PixelType.CurrentIndex);
-      // console.log(
-      //   "Selected color mode:",
-      //   Encleso.PixelTypeToString(ret.PixelType.Values[ret.PixelType.CurrentIndex])
-      // );
-    } else {
-      console.warn("Color modes not available for this scanner:", selectedScanner);
-      $("#colorMode").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
-    }
-
-    // Duplex
-    if (ret.Duplex && ret.Duplex.Supported) {
-      $("#chkDuplex").attr("disabled", false);
-      $("#chkDuplex").prop("checked", ret.Duplex.Enabled);
-    } else {
-      $("#chkDuplex").attr("disabled", true);
-    }
-  } catch (err) {
-    console.error("Failed to fetch scanner capabilities for", selectedScanner, err);
-    SetScannerCapsControlsState(true, null);
   }
-}
-
 
   if (typeof window !== "undefined") {
     console.log("[Encleso Demo] Script loaded, waiting for Encleso library...");
@@ -216,7 +203,7 @@ async function GetScannerCaps() {
         retryCount++;
         if (retryCount > maxRetries) {
           console.error(
-            "[Encleso Demo] Failed to load Encleso library after 5 seconds. Check if the Encleso service is running.",
+            "[Encleso Demo] Failed to load Encleso library after multiple attempts. Check if the Encleso service is running."
           );
           return;
         }
@@ -228,7 +215,7 @@ async function GetScannerCaps() {
       console.log("[Encleso Demo] Encleso library found, setting up handlers...");
       console.log(
         "[Encleso Demo] Available Encleso functions:",
-        Object.getOwnPropertyNames(Encleso).filter((name) => typeof Encleso[name] === "function"),
+        Object.getOwnPropertyNames(Encleso).filter((name) => typeof Encleso[name] === "function")
       );
       console.log("[Encleso Demo] Full Encleso object:", Encleso);
 
@@ -245,32 +232,6 @@ async function GetScannerCaps() {
           }
         }
 
-        console.log("[Encleso Demo] Testing client app reachability...");
-        try {
-          const testSocket = new WebSocket(Encleso["#WEBSOCKET_URL"]);
-          testSocket.onopen = () => {
-            console.log("[Encleso Demo] Client app is reachable! Closing test connection...");
-            testSocket.close();
-          };
-          testSocket.onerror = () => {
-            console.log("[Encleso Demo] Client app is NOT reachable. Is it running?");
-          };
-          setTimeout(() => {
-            if (testSocket.readyState === WebSocket.CONNECTING) {
-              testSocket.close();
-            }
-          }, 2000);
-        } catch (e) {
-          console.log("[Encleso Demo] Could not test client app reachability:", e);
-        }
-
-        if (Encleso["#WebSocket"]) {
-          console.log("[Encleso Demo] WebSocket state:", Encleso["#WebSocket"].readyState);
-          if (Encleso["#WebSocket"].readyState === WebSocket.CLOSED) {
-            console.log("[Encleso Demo] WebSocket is closed, library should reconnect automatically");
-          }
-        }
-
         let connectionAttempts = 0;
         const maxAttempts = 200;
 
@@ -280,7 +241,7 @@ async function GetScannerCaps() {
             setupEnclesoHandlers();
             setupConnectionMonitor();
           } else if (connectionAttempts >= maxAttempts) {
-            console.error("[Encleso Demo] Failed to connect after 10 seconds. Client app may not be running.");
+            console.error("[Encleso Demo] Failed to connect after attempts. Client app may not be running.");
             $("#alert-warn-error")
               .removeClass("d-none")
               .addClass("d-block")
@@ -297,8 +258,6 @@ async function GetScannerCaps() {
                 }
               }
             }
-
-            console.log(`[Encleso Demo] Still waiting for connection... (${connectionAttempts}/${maxAttempts})`);
             connectionAttempts++;
             setTimeout(waitForConnection, 50);
           }
@@ -345,11 +304,6 @@ async function GetScannerCaps() {
 
       function attemptReconnection() {
         console.log("[Encleso Demo] Attempting automatic reconnection...");
-
-        if (Encleso["#WebSocket"]) {
-          console.log("[Encleso Demo] WebSocket state:", Encleso["#WebSocket"].readyState);
-        }
-
         setTimeout(() => {
           if (Encleso["#IsConnected"] === false) {
             console.log("[Encleso Demo] Auto-reconnection failed. Client app may need to be restarted.");
@@ -367,46 +321,37 @@ async function GetScannerCaps() {
 
         Encleso.OnReady = async (ret) => {
           try {
-      // fetch token from our Next.js API
-      const resp = await fetch('/api/encleso', { method: 'GET', credentials: 'same-origin' });
-      const json = await resp.json();
+            // fetch token from our Next.js API
+            const resp = await fetch("/api/encleso", { method: "GET", credentials: "same-origin" });
+            const json = await resp.json();
 
-      // console.log("[DEBUG] /api/encleso response:", json);
-      
-      if (!resp.ok) {
-         console.error('[Encleso Demo] /api/encleso returned error', json);
-         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("License server error: " + (json?.error || resp.status));
-         return;
-      }
+            if (!resp.ok) {
+              console.error("[Encleso Demo] /api/encleso returned error", json);
+              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("License server error: " + (json?.error || resp.status));
+              return;
+            }
 
-      if (!json || !json.token) {
-         console.error('[Encleso Demo] No token in response', json);
-         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to fetch license token.");
-         return;
-      }
+            if (!json || !json.token) {
+              console.error("[Encleso Demo] No token in response", json);
+              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to fetch license token.");
+              return;
+            }
 
-      // apply license (token is short-lived)
-      try {
-         await Encleso.SetLicense(json.token);
-         console.log('[Encleso Demo] License applied successfully.');
-      } catch (e) {
-        //  console.error('[Encleso Demo] Encleso.SetLicense failed:', e);
-         $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
-         return;
-      }
+            try {
+              await Encleso.SetLicense(json.token);
+              console.log("[Encleso Demo] License applied successfully.");
+            } catch (e) {
+              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
+              return;
+            }
+          } catch (fetchErr) {
+            console.error("[Encleso Demo] Failed to fetch license token:", fetchErr);
+            $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Could not contact license server.");
+            return;
+          }
 
-   } catch (fetchErr) {
-      console.error('[Encleso Demo] Failed to fetch license token:', fetchErr);
-      $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Could not contact license server.");
-      return;
-   }
-          // console.log("[Encleso] Connected to client application successfully!");
-          // console.log("[Encleso] Available scanners:", ret.ScannersList);
-
-          window.ExportedScannerNames = ret.ScannersList;
-          // console.log("Exported scanner names:", window.ExportedScannerNames);
-
-          if (ret.ScannersList.length < 1) {
+          window.ExportedScannerNames = ret.ScannersList || [];
+          if (!window.ExportedScannerNames.length) {
             $("#ScannerName").html(EMPTY_COMBOSELECT);
             SetScannerCapsControlsState(true, null);
             $("#alert-warn-error")
@@ -416,7 +361,6 @@ async function GetScannerCaps() {
             return;
           }
 
-          // === FIX: add value attributes to options for proper .val() retrieval ===
           let options = "";
           for (let i = 0; i < ret.ScannersList.length; i++) {
             options += `<option value="${ret.ScannersList[i]}" ${i == ret.DefaultIndex ? "selected" : ""}>${ret.ScannersList[i]}</option>`;
@@ -427,6 +371,12 @@ async function GetScannerCaps() {
             ShowScannedImage(false);
             $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
             GetScannerCaps();
+
+            setTimeout(() => {
+              const res = $("#resolution option:selected").val();
+              const color = $("#colorMode option:selected").val();
+              console.log("[DEBUG] Selected Scanner Settings -> Resolution:", res, ", Color Mode:", color);
+            }, 100);
           });
 
           SetScannerCapsControlsState(false);
