@@ -39,8 +39,8 @@ export interface EnclesoType {
   OnReady?: (ret: ScannerResult) => void;
   OnError?: (err: ScanError) => void;
   SetCapabilities: (cap: {
-    Resolution: number;
-    PixelType: number;
+    Resolution?: number;
+    PixelType?: number;
   }) => Promise<void>;
   StartScan: (scannerName: string, showUI: boolean) => Promise<ScanReturn>;
   GetImagePreview: (index: number) => Promise<Blob | string>;

@@ -95,6 +95,9 @@
 //     setSelectedColorMode(value);
 //     updateCapabilities(selectedResolution, value);
 //   };
+
+
+
 "use client";
 
 import type React from "react";
@@ -209,36 +212,41 @@ useEffect(() => {
     fetchCapabilities();
   }, [selectedScanner]);
 
+
  
-  // Update scanner capabilities
-  const updateCapabilities = async (resolutionLabel: string, colorModeLabel: string) => {
-    const Encleso: EnclesoType | undefined = window.Encleso;
-    if (!Encleso || !selectedScanner) return;
+ // Define capability update type
+interface ScannerCapabilities {
+  Resolution?: number;
+  PixelType?: number;
+}
 
-    try {
-      const resIndex = resolutions.indexOf(resolutionLabel);
-      const pixIndex = colorModes.indexOf(colorModeLabel);
+// Update scanner capabilities
+const updateCapabilities = async (resolutionLabel: string, colorModeLabel: string) => {
+  const Encleso: EnclesoType | undefined = window.Encleso;
+  if (!Encleso || !selectedScanner) return;
 
-      const resolutionNumber =
-        (resIndex >= 0 ? resolutionValues[resIndex] : resolutionValues[0]) ?? undefined;
-      const pixelNumber = (pixIndex >= 0 ? pixelTypeValues[pixIndex] : pixelTypeValues[0]) ?? undefined;
+  try {
+    const resIndex = resolutions.indexOf(resolutionLabel);
+    const pixIndex = colorModes.indexOf(colorModeLabel);
 
-      const capsToSet: any = {};
-      if (typeof resolutionNumber === "number") capsToSet.Resolution = resolutionNumber;
-      if (typeof pixelNumber === "number") capsToSet.PixelType = pixelNumber;
+    const resolutionNumber =
+      (resIndex >= 0 ? resolutionValues[resIndex] : resolutionValues[0]) ?? undefined;
+    const pixelNumber =
+      (pixIndex >= 0 ? pixelTypeValues[pixIndex] : pixelTypeValues[0]) ?? undefined;
 
-      // only call if we have something
-      if (Object.keys(capsToSet).length > 0) {
-        await Encleso.SetCapabilities(capsToSet);
-        // optional: re-fetch caps to sync UI (some scanners may change current index)
-        // const refreshed = await Encleso.GetCapabilities?.(selectedScanner);
-        // ...update local state if desired
-      }
-    } catch (err) {
-      console.error("Failed to set capabilities:", err);
+    const capsToSet: ScannerCapabilities = {};
+    if (typeof resolutionNumber === "number") capsToSet.Resolution = resolutionNumber;
+    if (typeof pixelNumber === "number") capsToSet.PixelType = pixelNumber;
+
+    if (Object.keys(capsToSet).length > 0) {
+      await Encleso.SetCapabilities(capsToSet);
+      // optional: re-fetch caps if needed
+      // const refreshed = await Encleso.GetCapabilities?.(selectedScanner);
     }
-  };
-
+  } catch (err) {
+    console.error("Failed to set capabilities:", err);
+  }
+};
  const handleResolutionChange = (value: string) => {
     setSelectedResolution(value);
     updateCapabilities(value, selectedColorMode);
