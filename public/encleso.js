@@ -1,7 +1,7 @@
 if (!window.__ENCLESO_INITIALIZED__) {
   window.__ENCLESO_INITIALIZED__ = true;
 
-  console.log("[Encleso Demo] Initializing Encleso integration script...");
+  // console.log("[Encleso Demo] Initializing Encleso integration script...");
 
   const EMPTY_COMBOSELECT = "<option selected>Choose...</option>";
   const CAPCTL_UNSUPPORTED_INNERHTML = "Unsupported";
@@ -129,7 +129,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
     try {
       const ret = await Encleso.StartScan(ScannerName, ShowUI);
-      console.log("Scan result:", ret);
+      // console.log("Scan result:", ret);
 
       if (!ret || typeof ret.ScannedImagesCount !== "number" || ret.ScannedImagesCount < 1) {
         ShowScannedImage(false, 0, "Scan was cancelled or no images scanned!");
@@ -193,7 +193,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
   }
 
   if (typeof window !== "undefined") {
-    console.log("[Encleso Demo] Script loaded, waiting for Encleso library...");
+    // console.log("[Encleso Demo] Script loaded, waiting for Encleso library...");
 
     let retryCount = 0;
     const maxRetries = 100;
@@ -207,24 +207,24 @@ if (!window.__ENCLESO_INITIALIZED__) {
           );
           return;
         }
-        console.log(`[Encleso Demo] Encleso not ready yet, retrying... (${retryCount}/${maxRetries})`);
+        // console.log(`[Encleso Demo] Encleso not ready yet, retrying... (${retryCount}/${maxRetries})`);
         setTimeout(setHandlers, 50);
         return;
       }
 
-      console.log("[Encleso Demo] Encleso library found, setting up handlers...");
-      console.log(
-        "[Encleso Demo] Available Encleso functions:",
-        Object.getOwnPropertyNames(Encleso).filter((name) => typeof Encleso[name] === "function")
-      );
-      console.log("[Encleso Demo] Full Encleso object:", Encleso);
+      // // console.log("[Encleso Demo] Encleso library found, setting up handlers...");
+      // console.log(
+      //   "[Encleso Demo] Available Encleso functions:",
+      //   Object.getOwnPropertyNames(Encleso).filter((name) => typeof Encleso[name] === "function")
+      // );
+      // console.log("[Encleso Demo] Full Encleso object:", Encleso);
 
       if (Encleso["#IsConnected"] === false) {
-        console.log("[Encleso Demo] WebSocket not connected. Attempting automatic reconnection...");
-        console.log("[Encleso Demo] Target URL:", Encleso["#WEBSOCKET_URL"]);
+        // console.log("[Encleso Demo] WebSocket not connected. Attempting automatic reconnection...");
+        // console.log("[Encleso Demo] Target URL:", Encleso["#WEBSOCKET_URL"]);
 
         if (typeof Encleso.Connect === "function") {
-          console.log("[Encleso Demo] Calling Encleso.Connect() to trigger connection...");
+          // console.log("[Encleso Demo] Calling Encleso.Connect() to trigger connection...");
           try {
             Encleso.Connect();
           } catch (e) {
@@ -237,7 +237,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
         const waitForConnection = () => {
           if (Encleso["#IsConnected"] === true) {
-            console.log("[Encleso Demo] WebSocket connected successfully!");
+            // console.log("[Encleso Demo] WebSocket connected successfully!");
             setupEnclesoHandlers();
             setupConnectionMonitor();
           } else if (connectionAttempts >= maxAttempts) {
@@ -249,7 +249,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
             return;
           } else {
             if (connectionAttempts % 20 === 0) {
-              console.log("[Encleso Demo] Attempting to trigger connection again...");
+              // console.log("[Encleso Demo] Attempting to trigger connection again...");
               if (typeof Encleso.Connect === "function") {
                 try {
                   Encleso.Connect();
@@ -278,7 +278,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
           if (currentStatus !== lastConnectionStatus) {
             if (currentStatus === false && lastConnectionStatus === true) {
-              console.log("[Encleso Demo] Connection lost! Attempting to reconnect...");
+              // console.log("[Encleso Demo] Connection lost! Attempting to reconnect...");
               $("#ScannerName").html(EMPTY_COMBOSELECT);
               SetScannerCapsControlsState(true, null);
               $("#alert-warn-error")
@@ -292,7 +292,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
               attemptReconnection();
             } else if (currentStatus === true && lastConnectionStatus === false) {
-              console.log("[Encleso Demo] Connection restored!");
+              // console.log("[Encleso Demo] Connection restored!");
               $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
               setupEnclesoHandlers();
             }
@@ -303,10 +303,10 @@ if (!window.__ENCLESO_INITIALIZED__) {
       }
 
       function attemptReconnection() {
-        console.log("[Encleso Demo] Attempting automatic reconnection...");
+        // console.log("[Encleso Demo] Attempting automatic reconnection...");
         setTimeout(() => {
           if (Encleso["#IsConnected"] === false) {
-            console.log("[Encleso Demo] Auto-reconnection failed. Client app may need to be restarted.");
+            // console.log("[Encleso Demo] Auto-reconnection failed. Client app may need to be restarted.");
             $("#alert-warn-error").html("Connection lost. The Encleso client app may need to be restarted.");
           }
         }, 3000);
@@ -339,7 +339,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
             try {
               await Encleso.SetLicense(json.token);
-              console.log("[Encleso Demo] License applied successfully.");
+              // console.log("[Encleso Demo] License applied successfully.");
             } catch (e) {
               $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
               return;
@@ -375,7 +375,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
             setTimeout(() => {
               const res = $("#resolution option:selected").val();
               const color = $("#colorMode option:selected").val();
-              console.log("[DEBUG] Selected Scanner Settings -> Resolution:", res, ", Color Mode:", color);
+              // console.log("[DEBUG] Selected Scanner Settings -> Resolution:", res, ", Color Mode:", color);
             }, 100);
           });
 

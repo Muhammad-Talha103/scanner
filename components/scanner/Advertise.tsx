@@ -13,7 +13,7 @@ export default function ScrollingText({
 }: ScrollingTextProps) {
   // Replace "encleso.com" in the text with a link
   const linkedText = text.split("encleso.com").map((part, idx, arr) => (
-    <>
+    <span key={idx}>
       {part}
       {idx < arr.length - 1 && (
         <Link
@@ -25,7 +25,7 @@ export default function ScrollingText({
           encleso.com
         </Link>
       )}
-    </>
+    </span>
   ))
 
   return (

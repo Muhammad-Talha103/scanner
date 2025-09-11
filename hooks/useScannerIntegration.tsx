@@ -96,33 +96,51 @@ const [colorModeCapsFn, setColorModeCapsFn] = useState<(() => Promise<string[]>)
     isImageSelected,
   } = useDocumentHistory();
 
-  useEffect(() => {
-  if (scriptLoaded) {
-    if (typeof window.getResolutionCaps === "function") setResolutionCapsFn(() => window.getResolutionCaps!);
-    if (typeof window.getColorModeCaps === "function") setColorModeCapsFn(() => window.getColorModeCaps!);
+ useEffect(() => {
+  const interval = setInterval(() => {
+    if (window.Encleso || window.ExportedScannerNames) {
+      setScriptLoaded(true);
+
+      if (typeof window.getResolutionCaps === "function")
+        setResolutionCapsFn(() => window.getResolutionCaps!);
+
+      if (typeof window.getColorModeCaps === "function")
+        setColorModeCapsFn(() => window.getColorModeCaps!);
+
+      clearInterval(interval); // stop polling once script is found
+    }
+  }, 500);
+
+  // immediate check
+  if (window.Encleso || window.ExportedScannerNames) {
+    setScriptLoaded(true);
+    clearInterval(interval);
   }
-}, [scriptLoaded]);
+
+  return () => clearInterval(interval);
+}, []);
+
 
   // ✅ Load SDK script
-  useEffect(() => {
-    if (window.ExportedScannerNames) {
-      setScriptLoaded(true);
-      return;
-    }
+  // useEffect(() => {
+  //   if (window.ExportedScannerNames) {
+  //     setScriptLoaded(true);
+  //     return;
+  //   }
 
-    const script = document.createElement("script");
-    script.src = "https://encleso.com/Assets/scripts/encleso.min.js";
-    script.async = true;
-    script.onload = () => setScriptLoaded(true);
-    script.onerror = () => setError("Failed to load Encleso SDK script.");
-    document.head.appendChild(script);
+  //   const script = document.createElement("script");
+  //   script.src = "https://encleso.com/Assets/scripts/encleso.min.js";
+  //   script.async = true;
+  //   script.onload = () => setScriptLoaded(true);
+  //   script.onerror = () => setError("Failed to load Encleso SDK script.");
+  //   document.head.appendChild(script);
 
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
-  }, []);
+  //   return () => {
+  //     if (document.head.contains(script)) {
+  //       document.head.removeChild(script);
+  //     }
+  //   };
+  // }, []);
 
   const initializeEncleso = useCallback(() => {
     const Encleso = window.Encleso;
