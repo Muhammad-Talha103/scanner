@@ -1,7 +1,6 @@
 if (!window.__ENCLESO_INITIALIZED__) {
   window.__ENCLESO_INITIALIZED__ = true;
 
-  // console.log("[Encleso Demo] Initializing Encleso integration script...");
 
   const EMPTY_COMBOSELECT = "<option selected>Choose...</option>";
   const CAPCTL_UNSUPPORTED_INNERHTML = "Unsupported";
@@ -92,7 +91,6 @@ if (!window.__ENCLESO_INITIALIZED__) {
   }
 
   async function scan() {
-    // Read selected scanner from DOM (value attribute), fallback to exported list first element
     const selectedFromDom = $("#ScannerName").val();
     const exported = window.ExportedScannerNames || [];
     const ScannerName = selectedFromDom || exported[0];
@@ -105,7 +103,6 @@ if (!window.__ENCLESO_INITIALIZED__) {
     const Caps = {};
     if ($("#resolution").prop("disabled") === false) {
       const resVal = $("#resolution option:selected").val();
-      // resolution might be string "300" or "300 x 300" depending on source; extract numeric
       const numericRes = parseInt(String(resVal).toString().split(" ")[0], 10);
       if (!isNaN(numericRes)) Caps.Resolution = numericRes;
     }
@@ -129,7 +126,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
     try {
       const ret = await Encleso.StartScan(ScannerName, ShowUI);
-      // console.log("Scan result:", ret);
+      
 
       if (!ret || typeof ret.ScannedImagesCount !== "number" || ret.ScannedImagesCount < 1) {
         ShowScannedImage(false, 0, "Scan was cancelled or no images scanned!");
@@ -160,15 +157,11 @@ if (!window.__ENCLESO_INITIALIZED__) {
       return;
     }
 
-    // try to read selected scanner from DOM, else first exported scanner
     const selectedFromDom = $("#ScannerName").val();
     const selectedScanner = selectedFromDom || scanners[0];
-
-    // Disable controls while fetching
     SetScannerCapsControlsState(false);
 
     try {
-      // Pass the scanner name as a string, NOT as an array
       const ret = await Encleso.GetCapabilities(selectedScanner);
 
       if (!ret) {
@@ -193,7 +186,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
   }
 
   if (typeof window !== "undefined") {
-    // console.log("[Encleso Demo] Script loaded, waiting for Encleso library...");
+
 
     let retryCount = 0;
     const maxRetries = 100;
@@ -207,110 +200,84 @@ if (!window.__ENCLESO_INITIALIZED__) {
           );
           return;
         }
-        // console.log(`[Encleso Demo] Encleso not ready yet, retrying... (${retryCount}/${maxRetries})`);
+    
         setTimeout(setHandlers, 50);
         return;
       }
 
-      // // console.log("[Encleso Demo] Encleso library found, setting up handlers...");
-      // console.log(
-      //   "[Encleso Demo] Available Encleso functions:",
-      //   Object.getOwnPropertyNames(Encleso).filter((name) => typeof Encleso[name] === "function")
-      // );
-      // console.log("[Encleso Demo] Full Encleso object:", Encleso);
+      if (Encleso === false) {
+  let connectionAttempts = 0;
+  const maxAttempts = 200;
 
-      if (Encleso["#IsConnected"] === false) {
-        // console.log("[Encleso Demo] WebSocket not connected. Attempting automatic reconnection...");
-        // console.log("[Encleso Demo] Target URL:", Encleso["#WEBSOCKET_URL"]);
+  const waitForConnection = () => {
+    if (Encleso === true) {
+     
+      setupEnclesoHandlers();
+      setupConnectionMonitor();
+    } else if (connectionAttempts >= maxAttempts) {
+      console.error("[Encleso Demo] Failed to connect after attempts. Client app may not be running.");
+      $("#alert-warn-error")
+        .removeClass("d-none")
+        .addClass("d-block")
+        .html("Cannot connect to Encleso client app. Please ensure it's running and try again.");
+      return;
+    } else {
+      connectionAttempts++;
+      setTimeout(waitForConnection, 50);
+    }
+  };
 
-        if (typeof Encleso.Connect === "function") {
-          // console.log("[Encleso Demo] Calling Encleso.Connect() to trigger connection...");
-          try {
-            Encleso.Connect();
-          } catch (e) {
-            console.log("[Encleso Demo] Connect() call failed:", e);
-          }
-        }
-
-        let connectionAttempts = 0;
-        const maxAttempts = 200;
-
-        const waitForConnection = () => {
-          if (Encleso["#IsConnected"] === true) {
-            // console.log("[Encleso Demo] WebSocket connected successfully!");
-            setupEnclesoHandlers();
-            setupConnectionMonitor();
-          } else if (connectionAttempts >= maxAttempts) {
-            console.error("[Encleso Demo] Failed to connect after attempts. Client app may not be running.");
-            $("#alert-warn-error")
-              .removeClass("d-none")
-              .addClass("d-block")
-              .html("Cannot connect to Encleso client app. Please ensure it's running and try again.");
-            return;
-          } else {
-            if (connectionAttempts % 20 === 0) {
-              // console.log("[Encleso Demo] Attempting to trigger connection again...");
-              if (typeof Encleso.Connect === "function") {
-                try {
-                  Encleso.Connect();
-                } catch (e) {
-                  console.log("[Encleso Demo] Reconnection attempt failed:", e);
-                }
-              }
-            }
-            connectionAttempts++;
-            setTimeout(waitForConnection, 50);
-          }
-        };
-
-        waitForConnection();
-        return;
-      }
+  waitForConnection();
+  return;
+}
 
       setupConnectionMonitor();
       setupEnclesoHandlers();
 
-      function setupConnectionMonitor() {
-        let lastConnectionStatus = Encleso["#IsConnected"];
+     function setupConnectionMonitor() {
+  let lastConnected = true;
 
-        setInterval(() => {
-          const currentStatus = Encleso["#IsConnected"];
-
-          if (currentStatus !== lastConnectionStatus) {
-            if (currentStatus === false && lastConnectionStatus === true) {
-              // console.log("[Encleso Demo] Connection lost! Attempting to reconnect...");
-              $("#ScannerName").html(EMPTY_COMBOSELECT);
-              SetScannerCapsControlsState(true, null);
-              $("#alert-warn-error")
-                .removeClass("d-none")
-                .addClass("d-block")
-                .html("Connection lost. Attempting to reconnect...");
-
-              delete window.StartScanning;
-              delete window.SaveImageToFilesystem;
-              delete window.scan;
-
-              attemptReconnection();
-            } else if (currentStatus === true && lastConnectionStatus === false) {
-              // console.log("[Encleso Demo] Connection restored!");
-              $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
-              setupEnclesoHandlers();
-            }
-
-            lastConnectionStatus = currentStatus;
-          }
-        }, 1000);
+  setInterval(async () => {
+    try {
+      await Encleso.ImageLibGetCount();
+      if (!lastConnected) {
+        lastConnected = true;
+        
+        $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
+        setupEnclesoHandlers();
       }
+    } catch (err) {
+      if (lastConnected) {
+        lastConnected = false;
+        console.warn("[Monitor] Connection lost ❌");
+        $("#ScannerName").html("<option selected>Choose...</option>");
+        SetScannerCapsControlsState(true, null);
+        $("#alert-warn-error")
+          .removeClass("d-none")
+          .addClass("d-block")
+          .html("Connection lost. Please check Encleso client app.");
+
+        delete window.StartScanning;
+        delete window.SaveImageToFilesystem;
+        delete window.scan;
+
+        attemptReconnection();
+      }
+    }
+  }, 1000);
+}
 
       function attemptReconnection() {
-        // console.log("[Encleso Demo] Attempting automatic reconnection...");
-        setTimeout(() => {
-          if (Encleso["#IsConnected"] === false) {
-            // console.log("[Encleso Demo] Auto-reconnection failed. Client app may need to be restarted.");
-            $("#alert-warn-error").html("Connection lost. The Encleso client app may need to be restarted.");
-          }
-        }, 3000);
-      }
+  
+  setTimeout(async () => {
+    try {
+      await Encleso.ImageLibGetCount();
+      
+    } catch (e) {
+      $("#alert-warn-error").html("Still not connected. Please restart Encleso client app.");
+    }
+  }, 3000);
+}
 
       function setupEnclesoHandlers() {
         Encleso.OnError = (err) => {
@@ -339,7 +306,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
             try {
               await Encleso.SetLicense(json.token);
-              // console.log("[Encleso Demo] License applied successfully.");
+              
             } catch (e) {
               $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
               return;
@@ -372,11 +339,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
             $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
             GetScannerCaps();
 
-            setTimeout(() => {
-              const res = $("#resolution option:selected").val();
-              const color = $("#colorMode option:selected").val();
-              // console.log("[DEBUG] Selected Scanner Settings -> Resolution:", res, ", Color Mode:", color);
-            }, 100);
+          
           });
 
           SetScannerCapsControlsState(false);

@@ -300,7 +300,7 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
 
       {/* Scanner Dropdown */}
       {scanners.length > 0 && (
-        <div className="relative max-w-xs">
+        <div className="relative">
           <button
             onClick={() => {
               closeAllDropdowns();
