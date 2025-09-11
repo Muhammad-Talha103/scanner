@@ -58,7 +58,7 @@ export const Toolbar = ({
       <div className="flex items-center space-x-1 min-w-max">
         {/* Scan */}
         <button
-          className={`flex flex-col items-center px-3 py-2 ${
+          className={`flex flex-col items-center px-3 py-2 cursor-pointer ${
             scannerName && !isScanning
               ? "hover:bg-gray-100 cursor-pointer"
               : "cursor-not-allowed opacity-50"
@@ -70,7 +70,7 @@ export const Toolbar = ({
         </button>
         {/* Save */}
         <button
-          className={`flex flex-col items-center px-3 py-2 ${
+          className={`flex flex-col items-center px-3 py-2 ${ scannedImages.length > 0 && "cursor-pointer"} ${
             scannedImages.length > 0 && !isProcessing
               ? "hover:bg-gray-100"
               : "cursor-not-allowed opacity-50"
@@ -82,7 +82,7 @@ export const Toolbar = ({
         </button>
         {/* Print */}
         <button
-          className={`flex flex-col items-center px-3 py-2 ${
+          className={`flex flex-col items-center px-3 py-2 ${ scannedImages.length > 0 && "cursor-pointer"} ${
             scannedImages.length > 0 && !isProcessing
               ? "hover:bg-gray-100"
               : "cursor-not-allowed opacity-50"
@@ -94,7 +94,7 @@ export const Toolbar = ({
         </button>
         {/* Mail */}
         <button
-          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100"
+          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
           onClick={onMailClick}
         >
           <Mail className="w-6 h-6 text-gray-600 mb-1" />
@@ -102,7 +102,7 @@ export const Toolbar = ({
         </button>
         {/* New */}
         <button
-          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100"
+          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
           onClick={onNewDocument}
         >
           <Plus className="w-6 h-6 text-gray-600 mb-1" />
@@ -111,7 +111,7 @@ export const Toolbar = ({
         {/* Edit */}
         <button
           className={`flex flex-col items-center px-3 py-2 ${
-            selectedImage ? "hover:bg-gray-100" : "cursor-not-allowed opacity-50"
+            selectedImage ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
           }`}
           onClick={onEditClick}
           disabled={!selectedImage}
