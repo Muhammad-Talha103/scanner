@@ -15,13 +15,12 @@ if (!getApps().length) {
 }
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*', // sab domain allow
+  'Access-Control-Allow-Origin': '*', 
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 }
 
 export async function OPTIONS() {
-  // Browser preflight request handle karne ke liye
   return new NextResponse(null, { headers: corsHeaders })
 }
 

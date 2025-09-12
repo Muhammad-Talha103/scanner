@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     // License key ko string ke andar rakho
-    const LICENSE_KEY: string = "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu";
+    const LICENSE_KEY: string = process.env.ENCLESO_LICENSE_KEY || "";
+
 
     if (!LICENSE_KEY) {
       return NextResponse.json(
@@ -13,7 +14,7 @@ export async function GET() {
     }
 
     // Apna allowed origin jo aapne Encleso ko diya tha
-    const origin: string = "https://www.grewescan.de";
+    const origin: string = process.env.ENCLESO_ALLOWED_ORIGINS || "";
 
     const body = new URLSearchParams();
     body.append("Key", LICENSE_KEY);

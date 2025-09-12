@@ -14,6 +14,7 @@ export interface ScannedImage {
   id: string
   dataUrl: string
   timestamp: number
+ 
 }
 
 interface DropdownProps {

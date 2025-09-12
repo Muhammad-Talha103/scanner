@@ -97,20 +97,20 @@
 //   };
 
 
+"use client"
 
-"use client";
-
-import type React from "react";
-import { useState, useEffect } from "react";
-import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react";
-import type { EnclesoType } from "@/hooks/useScannerIntegration";
+import type React from "react"
+import { useState, useEffect } from "react"
+import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react"
+import type { EnclesoType } from "@/hooks/useScannerIntegration"
 
 interface ScannerStatusProps {
-  isReady: boolean;
-  scanners: string[];
-  selectedScanner: string | null;
-  onSelectScanner: (name: string) => void;
-  error: string | null;
+  isReady: boolean
+  scanners: string[]
+  selectedScanner: string | null
+  onSelectScanner: (name: string) => void
+  error: string | null
+  onCapabilitiesChange?: (resolution?: number, pixelType?: number) => void
 }
 
 export const ScannerStatus: React.FC<ScannerStatusProps> = ({
@@ -119,143 +119,138 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   selectedScanner,
   onSelectScanner,
   error,
+  onCapabilitiesChange,
 }) => {
-  const [isScannerOpen, setIsScannerOpen] = useState(false);
-  const [isResolutionOpen, setIsResolutionOpen] = useState(false);
-  const [isColorModeOpen, setIsColorModeOpen] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false)
+  const [isResolutionOpen, setIsResolutionOpen] = useState(false)
+  const [isColorModeOpen, setIsColorModeOpen] = useState(false)
 
-  const [resolutions, setResolutions] = useState<string[]>([]);
-  const [colorModes, setColorModes] = useState<string[]>([]);
-  const [resolutionValues, setResolutionValues] = useState<number[]>([]);
-  const [pixelTypeValues, setPixelTypeValues] = useState<number[]>([]);
-  const [selectedResolution, setSelectedResolution] = useState<string>("");
-  const [selectedColorMode, setSelectedColorMode] = useState<string>("");
+  const [resolutions, setResolutions] = useState<string[]>([])
+  const [colorModes, setColorModes] = useState<string[]>([])
+  const [resolutionValues, setResolutionValues] = useState<number[]>([])
+  const [pixelTypeValues, setPixelTypeValues] = useState<number[]>([])
+  const [selectedResolution, setSelectedResolution] = useState<string>("")
+  const [selectedColorMode, setSelectedColorMode] = useState<string>("")
 
-  // Close all dropdowns helper
   const closeAllDropdowns = () => {
-    setIsScannerOpen(false);
-    setIsResolutionOpen(false);
-    setIsColorModeOpen(false);
-  };
+    setIsScannerOpen(false)
+    setIsResolutionOpen(false)
+    setIsColorModeOpen(false)
+  }
 
-  // Fetch capabilities whenever selectedScanner changes
-useEffect(() => {
-    const Encleso: EnclesoType | undefined = window.Encleso;
-    if (!selectedScanner || !Encleso) {
-      // clear UI when no scanner
-      setResolutions([]);
-      setColorModes([]);
-      setResolutionValues([]);
-      setPixelTypeValues([]);
-      setSelectedResolution("");
-      setSelectedColorMode("");
-      return;
+  // ✅ whenever scanner changes → reset old selections
+  useEffect(() => {
+    if (!selectedScanner) {
+      setResolutions([])
+      setColorModes([])
+      setResolutionValues([])
+      setPixelTypeValues([])
+      setSelectedResolution("")
+      setSelectedColorMode("")
+    } else {
+      // // reset so we fetch fresh caps for new scanner
+      setSelectedResolution("")
+      setSelectedColorMode("")
     }
+  }, [selectedScanner])
 
-    const fetchCapabilities = async () => {
-      try {
-        const caps = await Encleso.GetCapabilities?.(selectedScanner);
-        if (!caps) {
-          // clear if none
-          setResolutions(["Unsupported"]);
-          setResolutionValues([]);
-          setSelectedResolution("Unsupported");
-          setColorModes(["Unsupported"]);
-          setPixelTypeValues([]);
-          setSelectedColorMode("Unsupported");
-          return;
+// === fetch scanner capabilities ===
+ // inside fetchCapabilities effect
+useEffect(() => {
+  const Encleso: EnclesoType | undefined = window.Encleso
+  if (!selectedScanner || !Encleso) return
+
+  const fetchCapabilities = async () => {
+    try {
+      const caps = await Encleso.GetCapabilities?.(selectedScanner)
+      
+      if (!caps) return
+
+      // === Resolution ===
+      if (caps.Resolution?.Values?.length) {
+        const resValues = caps.Resolution.Values.map(Number)
+        const labels = resValues.map((r) => `${r} DPI`)
+
+        setResolutionValues(resValues)
+        setResolutions(labels)
+
+        // ✅ only set first if nothing already selected
+        if (!selectedResolution) {
+          setSelectedResolution(labels[0])
+          onCapabilitiesChange?.(resValues[0], undefined)
         }
-
-        // === Resolution ===
-        if (caps.Resolution?.Values?.length) {
-          const resValues = caps.Resolution.Values.map(Number);
-          setResolutionValues(resValues);
-          const labels = resValues.map((r) => `${r} x ${r}`);
-          setResolutions(labels);
-
-          const currentIndex = typeof caps.Resolution.CurrentIndex === "number" ? caps.Resolution.CurrentIndex : 0;
-          const chosenLabel = labels[currentIndex] ?? labels[0];
-          setSelectedResolution(chosenLabel);
-        } else {
-          setResolutions(["Unsupported"]);
-          setResolutionValues([]);
-          setSelectedResolution("Unsupported");
-        }
-
-        // === Color Modes ===
-        if (caps.PixelType?.Values?.length) {
-          setPixelTypeValues(caps.PixelType.Values.map(Number));
-          const colorValues = caps.PixelType.Values.map((val: number) =>
-            Encleso.PixelTypeToString ? Encleso.PixelTypeToString(val) : String(val)
-          );
-          setColorModes(colorValues);
-
-          const pixelIndex = typeof caps.PixelType.CurrentIndex === "number" ? caps.PixelType.CurrentIndex : 0;
-          const chosenColor = colorValues[pixelIndex] ?? colorValues[0];
-          setSelectedColorMode(chosenColor);
-        } else {
-          setColorModes(["Unsupported"]);
-          setPixelTypeValues([]);
-          setSelectedColorMode("Unsupported");
-        }
-      } catch (err) {
-        console.error("Failed to fetch capabilities for", selectedScanner, err);
-        setResolutions(["Error"]);
-        setColorModes(["Error"]);
-        setSelectedResolution("Error");
-        setSelectedColorMode("Error");
-        setResolutionValues([]);
-        setPixelTypeValues([]);
       }
-    };
 
-    fetchCapabilities();
-  }, [selectedScanner]);
+      // === Color Modes ===
+      if (caps.PixelType?.Values?.length) {
+        const pixelValues = caps.PixelType.Values.map(Number)
+        const labels = pixelValues.map((val: number) =>
+          Encleso.PixelTypeToString ? Encleso.PixelTypeToString(val) : String(val),
+        )
 
+        setPixelTypeValues(pixelValues)
+        setColorModes(labels)
 
- 
- // Define capability update type
-interface ScannerCapabilities {
-  Resolution?: number;
-  PixelType?: number;
+        // ✅ only set first if nothing already selected
+        if (!selectedColorMode) {
+          setSelectedColorMode(labels[0])
+          onCapabilitiesChange?.(undefined, pixelValues[0])
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch capabilities for", selectedScanner, err)
+    }
+  }
+
+  fetchCapabilities()
+}, [selectedScanner, onCapabilitiesChange]) // ✅ removed selectedResolution, selectedColorMode from deps
+
+  // === Capability Update ===
+  const updateCapabilities = async (resolutionLabel: string, colorModeLabel: string) => {
+    const Encleso: EnclesoType | undefined = window.Encleso
+    if (!Encleso || !selectedScanner) return
+
+    try {
+      const resIndex = resolutions.indexOf(resolutionLabel)
+      const pixIndex = colorModes.indexOf(colorModeLabel)
+
+      const resolutionNumber = resolutionValues[resIndex] ?? undefined
+      const pixelNumber = pixelTypeValues[pixIndex] ?? undefined
+
+      const caps: { Resolution?: number; PixelType?: number } = {}
+      if (resolutionNumber !== undefined) caps.Resolution = resolutionNumber
+      if (pixelNumber !== undefined) caps.PixelType = pixelNumber
+
+      if (Object.keys(caps).length > 0) {
+        await Encleso.SetCapabilities(caps)
+
+        // ✅ preserve UI + update hook state
+        if (caps.Resolution !== undefined) {
+          setSelectedResolution(resolutionLabel)
+          onCapabilitiesChange?.(caps.Resolution, undefined)
+        }
+        if (caps.PixelType !== undefined) {
+          setSelectedColorMode(colorModeLabel)
+          onCapabilitiesChange?.(undefined, caps.PixelType)
+        }
+      }
+    } catch (err) {
+      console.error("Failed to set capabilities:", err)
+    }
+  }
+
+ const handleResolutionChange = (value: string) => {
+  setSelectedResolution(value) // ✅ update immediately
+  updateCapabilities(value, selectedColorMode)
+  setIsResolutionOpen(false)
 }
 
-// Update scanner capabilities
-const updateCapabilities = async (resolutionLabel: string, colorModeLabel: string) => {
-  const Encleso: EnclesoType | undefined = window.Encleso;
-  if (!Encleso || !selectedScanner) return;
+const handleColorModeChange = (value: string) => {
+  setSelectedColorMode(value) // ✅ update immediately
+  updateCapabilities(selectedResolution, value)
+  setIsColorModeOpen(false)
+}
 
-  try {
-    const resIndex = resolutions.indexOf(resolutionLabel);
-    const pixIndex = colorModes.indexOf(colorModeLabel);
-
-    const resolutionNumber =
-      (resIndex >= 0 ? resolutionValues[resIndex] : resolutionValues[0]) ?? undefined;
-    const pixelNumber =
-      (pixIndex >= 0 ? pixelTypeValues[pixIndex] : pixelTypeValues[0]) ?? undefined;
-
-    const capsToSet: ScannerCapabilities = {};
-    if (typeof resolutionNumber === "number") capsToSet.Resolution = resolutionNumber;
-    if (typeof pixelNumber === "number") capsToSet.PixelType = pixelNumber;
-
-    if (Object.keys(capsToSet).length > 0) {
-      await Encleso.SetCapabilities(capsToSet);
-      // optional: re-fetch caps if needed
-      // const refreshed = await Encleso.GetCapabilities?.(selectedScanner);
-    }
-  } catch (err) {
-    console.error("Failed to set capabilities:", err);
-  }
-};
- const handleResolutionChange = (value: string) => {
-    setSelectedResolution(value);
-    updateCapabilities(value, selectedColorMode);
-  };
-
-  const handleColorModeChange = (value: string) => {
-    setSelectedColorMode(value);
-    updateCapabilities(selectedResolution, value);
-  };
 
   const getStatusDisplay = () => {
     if (error) {
@@ -264,7 +259,7 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
           <AlertCircle className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Error</span>
         </div>
-      );
+      )
     }
 
     if (!isReady) {
@@ -273,7 +268,7 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
           <WifiOff className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Initializing...</span>
         </div>
-      );
+      )
     }
 
     if (scanners.length > 0) {
@@ -282,7 +277,7 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
           <Wifi className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Connected ({scanners.length})</span>
         </div>
-      );
+      )
     }
 
     return (
@@ -290,8 +285,8 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
         <WifiOff className="w-4 h-4" />
         <span className="text-xs">No Scanner</span>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -303,15 +298,13 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
         <div className="relative">
           <button
             onClick={() => {
-              closeAllDropdowns();
-              setIsScannerOpen(!isScannerOpen);
+              closeAllDropdowns()
+              setIsScannerOpen(!isScannerOpen)
             }}
             className="w-full border rounded p-2 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
             <span className="truncate">{selectedScanner || scanners[0]}</span>
-            <ChevronDown
-              className={`w-3 h-3 ml-2 ${isScannerOpen ? "rotate-180" : "rotate-0"}`}
-            />
+            <ChevronDown className={`w-3 h-3 ml-2 ${isScannerOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
           {isScannerOpen && (
@@ -321,13 +314,11 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
                   <button
                     key={index}
                     onClick={() => {
-                      onSelectScanner(scanner);
-                      setIsScannerOpen(false);
+                      onSelectScanner(scanner)
+                      setIsScannerOpen(false)
                     }}
                     className={`w-full text-left px-3 py-2 text-[11px] hover:bg-gray-100 ${
-                      selectedScanner === scanner
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700"
+                      selectedScanner === scanner ? "bg-blue-50 text-blue-700" : "text-gray-700"
                     }`}
                     title={scanner}
                   >
@@ -346,15 +337,13 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
           <span className="font-semibold">Resolutions:</span>
           <button
             onClick={() => {
-              closeAllDropdowns();
-              setIsResolutionOpen(!isResolutionOpen);
+              closeAllDropdowns()
+              setIsResolutionOpen(!isResolutionOpen)
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span>{selectedResolution || "Select resolution"}</span>
-            <ChevronDown
-              className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`}
-            />
+            <span className="text-xs">{selectedResolution || "Select resolution"}</span>
+            <ChevronDown className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
           {isResolutionOpen && (
@@ -364,13 +353,11 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
                   <button
                     key={i}
                     onClick={() => {
-                      handleResolutionChange(res);
-                      setIsResolutionOpen(false);
+                      handleResolutionChange(res)
+                      setIsResolutionOpen(false)
                     }}
                     className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
-                      selectedResolution === res
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700"
+                      selectedResolution === res ? "bg-blue-50 text-blue-700" : "text-gray-700"
                     }`}
                   >
                     {res}
@@ -388,15 +375,13 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
           <span className="font-semibold">Color Modes:</span>
           <button
             onClick={() => {
-              closeAllDropdowns();
-              setIsColorModeOpen(!isColorModeOpen);
+              closeAllDropdowns()
+              setIsColorModeOpen(!isColorModeOpen)
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span>{selectedColorMode || "Select color mode"}</span>
-            <ChevronDown
-              className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`}
-            />
+            <span className="text-[11px]">{selectedColorMode || "Select color mode"}</span>
+            <ChevronDown className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`} />
           </button>
 
           {isColorModeOpen && (
@@ -406,13 +391,11 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
                   <button
                     key={i}
                     onClick={() => {
-                      handleColorModeChange(mode);
-                      setIsColorModeOpen(false);
+                      handleColorModeChange(mode)
+                      setIsColorModeOpen(false)
                     }}
                     className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
-                      selectedColorMode === mode
-                        ? "bg-blue-50 text-blue-700"
-                        : "text-gray-700"
+                      selectedColorMode === mode ? "bg-blue-50 text-blue-700" : "text-gray-700"
                     }`}
                   >
                     {mode}
@@ -425,10 +408,7 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
       )}
 
       {error && (
-        <div
-          className="text-xs text-red-500 max-w-full lg:max-w-40 truncate"
-          title={error}
-        >
+        <div className="text-xs text-red-500 max-w-full lg:max-w-40 truncate" title={error}>
           {error}
         </div>
       )}
@@ -446,14 +426,5 @@ const updateCapabilities = async (resolutionLabel: string, colorModeLabel: strin
         }
       `}</style>
     </div>
-  );
-};
-
-
-
-
-
-  
-
-
- 
+  )
+}
