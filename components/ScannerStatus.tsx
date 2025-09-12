@@ -155,7 +155,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   }, [selectedScanner])
 
 // === fetch scanner capabilities ===
- // inside fetchCapabilities effect
+
 useEffect(() => {
   const Encleso: EnclesoType | undefined = window.Encleso
   if (!selectedScanner || !Encleso) return
@@ -169,12 +169,12 @@ useEffect(() => {
       // === Resolution ===
       if (caps.Resolution?.Values?.length) {
         const resValues = caps.Resolution.Values.map(Number)
-        const labels = resValues.map((r) => `${r} DPI`)
+        const labels = resValues.map((r) => `${r} x ${r}`)
 
         setResolutionValues(resValues)
         setResolutions(labels)
 
-        // ✅ only set first if nothing already selected
+        
         if (!selectedResolution) {
           setSelectedResolution(labels[0])
           onCapabilitiesChange?.(resValues[0], undefined)
