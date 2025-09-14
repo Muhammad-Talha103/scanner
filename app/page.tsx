@@ -101,32 +101,6 @@ export default function ScannerApp() {
     updateScannerCapabilities,
   } = useScannerIntegration();
 
-  useEffect(() => {
-    const saved = localStorage.getItem("scannedImages");
-    if (saved) {
-      try {
-        const savedImages = JSON.parse(saved);
-        if (Array.isArray(savedImages) && savedImages.length > 0) {
-          addImportedImages(savedImages);
-        }
-      } catch (error) {
-        console.error("Failed to parse saved scanned images:", error);
-      }
-    }
-  }, [addImportedImages]);
-
-  // Save scannedImages to localStorage whenever it changes
-  useEffect(() => {
-    if (scannedImages.length > 0) {
-      try {
-        localStorage.setItem("scannedImages", JSON.stringify(scannedImages));
-      } catch (error) {
-        console.error("Failed to save scanned images:", error);
-      }
-    } else {
-      localStorage.removeItem("scannedImages");
-    }
-  }, [scannedImages]);
   // Fetch username from Sanity on email change
   useEffect(() => {
     if (!userInfo?.email) return;
