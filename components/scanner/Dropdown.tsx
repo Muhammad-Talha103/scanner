@@ -9,12 +9,13 @@ interface DropdownItem {
   shortcut?: string
   onClick?: () => void
   disabled?: boolean
+  href?: string
 }
+
 export interface ScannedImage {
   id: string
   dataUrl: string
   timestamp: number
- 
 }
 
 interface DropdownProps {
@@ -30,39 +31,66 @@ export const Dropdown = ({ items, isOpen, onImagesImported, onClose }: DropdownP
   return (
     <div className="absolute top-full left-0 mt-1 w-56 bg-white border border-gray-300 rounded-md shadow-lg z-50">
       {items.map((item, index) => {
-        const buttonContent = (
-          <button
-            key={index}
-            className={`w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md ${
-              item.disabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            onClick={() => {
-              if (!item.disabled) {
-                item.onClick?.()
-                if (item.label !== "Import") {
-                  onClose?.()
-                }
-              }
-            }}
-            disabled={item.disabled}
-          >
+        const baseClasses = `w-full flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first:rounded-t-md last:rounded-b-md ${
+          item.disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : ""
+        }`
+
+        const content = (
+          <>
             <div className="flex items-center space-x-3">
               {item.icon}
               <span>{item.label}</span>
             </div>
-            {item.shortcut && <span className="text-xs text-gray-500">{item.shortcut}</span>}
-          </button>
+            {item.shortcut && (
+              <span className="text-xs text-gray-500">{item.shortcut}</span>
+            )}
+          </>
         )
 
+        // Special case: "Import" button wrapped with ImportHandler
         if (item.label === "Import" && onImagesImported) {
           return (
             <ImportHandler key={index} onImagesImported={onImagesImported}>
-              {buttonContent}
+              <button
+                className={baseClasses}
+                disabled={item.disabled}
+              >
+                {content}
+              </button>
             </ImportHandler>
           )
         }
 
-        return buttonContent
+        // If href is provided, render as link
+        if (item.href) {
+          return (
+            <a
+              key={index}
+              href={item.href}
+            
+              className={baseClasses}
+            >
+              {content}
+            </a>
+          )
+        }
+
+        // Otherwise, render as button
+        return (
+          <button
+            key={index}
+            className={baseClasses}
+            onClick={() => {
+              if (!item.disabled) {
+                item.onClick?.()
+                onClose?.()
+              }
+            }}
+            disabled={item.disabled}
+          >
+            {content}
+          </button>
+        )
       })}
     </div>
   )

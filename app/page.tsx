@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useEffect, useState } from "react"
+import type React from "react";
+import { useEffect, useState } from "react";
 import {
   FileText,
   Mail,
@@ -25,48 +25,50 @@ import {
   Monitor,
   Info,
   Loader2,
-} from "lucide-react"
-import { useDispatch, useSelector } from "react-redux"
-import { useRouter } from "next/navigation"
-import { signOut as firebaseSignOut } from "firebase/auth"
+  BookOpenCheck,
+} from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { signOut as firebaseSignOut } from "firebase/auth";
 
-import { client } from "@/sanity/lib/client"
-import { auth } from "@/firebase/firebase"
-import { signOut } from "@/redux/slice"
-import type { RootState } from "@/redux/store"
+import { client } from "@/sanity/lib/client";
+import { auth } from "@/firebase/firebase";
+import { signOut } from "@/redux/slice";
+import type { RootState } from "@/redux/store";
 
-import { ScannerStatus } from "@/components/ScannerStatus"
-import { ScannedImages } from "@/components/ScannedImages"
-import { MailModal } from "@/components/MailModal"
-import { ImageEditor } from "@/components/ImageEditor"
-import { LoginRequired } from "@/components/scanner/LoginRequired"
-import { MenuBar } from "@/components/scanner/MenuBar"
-import { Toolbar } from "@/components/scanner/Toolbar"
-import Header from "@/components/scanner/Header"
+import { ScannerStatus } from "@/components/ScannerStatus";
+import { ScannedImages } from "@/components/ScannedImages";
+import { MailModal } from "@/components/MailModal";
+import { ImageEditor } from "@/components/ImageEditor";
+import { LoginRequired } from "@/components/scanner/LoginRequired";
+import { MenuBar } from "@/components/scanner/MenuBar";
+import { Toolbar } from "@/components/scanner/Toolbar";
+import Header from "@/components/scanner/Header";
 
-import { useScannerIntegration } from "@/hooks/useScannerIntegration"
-import Marquee from "@/components/scanner/Advertise"
+import { useScannerIntegration } from "@/hooks/useScannerIntegration";
+import Marquee from "@/components/scanner/Advertise";
 
 interface DropdownItem {
-  label: string
-  icon: React.ReactNode
-  shortcut?: string
-  onClick?: () => void
-  disabled?: boolean
+  label: string;
+  icon: React.ReactNode;
+  shortcut?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  href?: string;
 }
 
 export default function ScannerApp() {
   // Redux & Router
-  const dispatch = useDispatch()
-  const router = useRouter()
-  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
   // Local states
-  const [userName, setUserName] = useState<string | null>(null)
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
-  const [showUserDropdown, setShowUserDropdown] = useState(false)
-  const [showMailModal, setShowMailModal] = useState(false)
-  const [showImageEditor, setShowImageEditor] = useState(false)
+  const [userName, setUserName] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showMailModal, setShowMailModal] = useState(false);
+  const [showImageEditor, setShowImageEditor] = useState(false);
 
   // Scanner integration hooks
   const {
@@ -97,92 +99,123 @@ export default function ScannerApp() {
     canUndo,
     canRedo,
     updateScannerCapabilities,
-  } = useScannerIntegration()
+  } = useScannerIntegration();
 
+  useEffect(() => {
+    const saved = localStorage.getItem("scannedImages");
+    if (saved) {
+      try {
+        const savedImages = JSON.parse(saved);
+        if (Array.isArray(savedImages) && savedImages.length > 0) {
+          addImportedImages(savedImages);
+        }
+      } catch (error) {
+        console.error("Failed to parse saved scanned images:", error);
+      }
+    }
+  }, [addImportedImages]);
+
+  // Save scannedImages to localStorage whenever it changes
+  useEffect(() => {
+    if (scannedImages.length > 0) {
+      try {
+        localStorage.setItem("scannedImages", JSON.stringify(scannedImages));
+      } catch (error) {
+        console.error("Failed to save scanned images:", error);
+      }
+    } else {
+      localStorage.removeItem("scannedImages");
+    }
+  }, [scannedImages]);
   // Fetch username from Sanity on email change
   useEffect(() => {
-    if (!userInfo?.email) return
+    if (!userInfo?.email) return;
 
     async function fetchUsername() {
       try {
-        const query = `*[_type == "user" && email == $email]{username}`
-        const results = await client.fetch(query, { email: userInfo?.email })
-        setUserName(results?.[0]?.username ?? null)
+        const query = `*[_type == "user" && email == $email]{username}`;
+        const results = await client.fetch(query, { email: userInfo?.email });
+        setUserName(results?.[0]?.username ?? null);
       } catch (err) {
-        console.error("Sanity fetch error:", err)
+        console.error("Sanity fetch error:", err);
       }
     }
-    fetchUsername()
-  }, [userInfo?.email])
+    fetchUsername();
+  }, [userInfo?.email]);
 
   // Redirect if not logged in
-  if (!userInfo?.email) return <LoginRequired />
+  if (!userInfo?.email) return <LoginRequired />;
 
   // Selected image from scanned images
-  const selectedImage = getSelectedImage()
+  const selectedImage = getSelectedImage();
 
   // Handlers
   const handleDropdownToggle = (menu: string) => {
-    setActiveDropdown((current) => (current === menu ? null : menu))
-    if (menu !== "user") setShowUserDropdown(false)
-  }
+    setActiveDropdown((current) => (current === menu ? null : menu));
+    if (menu !== "user") setShowUserDropdown(false);
+  };
 
   const handleUserDropdownToggle = () => {
-    setShowUserDropdown((prev) => !prev)
-    if (!showUserDropdown) setActiveDropdown(null)
-  }
+    setShowUserDropdown((prev) => !prev);
+    if (!showUserDropdown) setActiveDropdown(null);
+  };
 
   const handleLogout = async () => {
     try {
-      await firebaseSignOut(auth)
-      dispatch(signOut())
-      setShowUserDropdown(false)
-      router.push("/signin")
+      await firebaseSignOut(auth);
+      dispatch(signOut());
+      setShowUserDropdown(false);
+      router.push("/signin");
     } catch (err) {
-      console.error("Error signing out:", err)
+      console.error("Error signing out:", err);
     }
-  }
+  };
 
   // Toolbar action handlers
-  const handleScanClick = () => scannerName && !isScanning && startScan()
-  const handleSaveClick = async () => scannedImages.length && !isProcessing && saveToPDF()
-  const handlePrintClick = async () => scannedImages.length && !isProcessing && printDocument()
-  const handleMailClick = () => setShowMailModal(true)
-  const handleEditClick = () => selectedImage && setShowImageEditor(true)
+  const handleScanClick = () => scannerName && !isScanning && startScan();
+  const handleSaveClick = async () =>
+    scannedImages.length && !isProcessing && saveToPDF();
+  const handlePrintClick = async () =>
+    scannedImages.length && !isProcessing && printDocument();
+  const handleMailClick = () => setShowMailModal(true);
+  const handleEditClick = () => selectedImage && setShowImageEditor(true);
 
   const handleImageSave = (editedImage: typeof selectedImage) => {
     if (editedImage) {
-      updateImage(editedImage)
+      updateImage(editedImage);
     }
-  }
+  };
 
   const handleNewDocument = () => {
-    createNewDocument()
-    setActiveDropdown(null)
-  }
+    createNewDocument();
+    setActiveDropdown(null);
+  };
 
   const handleImportImages = (importedImages: typeof scannedImages) => {
-    addImportedImages(importedImages)
-    setActiveDropdown(null)
-  }
+    addImportedImages(importedImages);
+    setActiveDropdown(null);
+  };
 
   const handleDeleteImage = async (imageId: string) => {
-    await deleteImage(imageId)
-  }
+    await deleteImage(imageId);
+  };
 
   const handleUndo = () => {
-    undo()
-    setActiveDropdown(null)
-  }
+    undo();
+    setActiveDropdown(null);
+  };
 
   const handleRedo = () => {
-    redo()
-    setActiveDropdown(null)
-  }
+    redo();
+    setActiveDropdown(null);
+  };
 
-  const handleCapabilitiesChange = (resolution?: number, pixelType?: number) => {
-    updateScannerCapabilities(resolution, pixelType)
-  }
+  const handleCapabilitiesChange = (
+    resolution?: number,
+    pixelType?: number
+  ) => {
+    updateScannerCapabilities(resolution, pixelType);
+  };
 
   // Menu items config
   const menuItems: Record<string, DropdownItem[]> = {
@@ -304,37 +337,27 @@ export default function ScannerApp() {
         disabled: true,
       },
     ],
-    extras: [
-      {
-        label: "Preferences",
-        icon: <Settings className="w-4 h-4" />,
-        shortcut: "Ctrl+,",
-        disabled: true,
-      },
-      {
-        label: "Scanner Settings",
-        icon: <FileText className="w-4 h-4" />,
-        disabled: true,
-      },
-      {
-        label: "OCR Settings",
-        icon: <Eye className="w-4 h-4" />,
-        disabled: true,
-      },
-      {
-        label: "Plugins",
-        icon: <Grid3X3 className="w-4 h-4" />,
-        disabled: true,
-      },
+    "?": [
       {
         label: "Help",
         icon: <HelpCircle className="w-4 h-4" />,
-        shortcut: "F1",
-        disabled: true,
+        href: "/help",
+        disabled: false,
       },
-      { label: "About", icon: <Info className="w-4 h-4" />, disabled: true },
+      {
+        label: "About",
+        icon: <Info className="w-4 h-4" />,
+        href: "/about",
+        disabled: false,
+      },
+      {
+        label: "Impressum",
+        icon: <BookOpenCheck className="w-4 h-4" />,
+        href: "/impressum",
+        disabled: false,
+      },
     ],
-  }
+  };
 
   // Loading state UI
   if (isLoadingImages) {
@@ -345,7 +368,7 @@ export default function ScannerApp() {
           <p className="text-gray-600">Loading saved images...</p>
         </div>
       </div>
-    )
+    );
   }
 
   // Main UI render
@@ -396,7 +419,10 @@ export default function ScannerApp() {
             <section className="mt-4 pt-4 border-t border-gray-300">
               <div className="text-sm text-gray-700 mb-2">Selected:</div>
               <div className="text-xs text-gray-600">
-                {selectedImage.id.startsWith("import-") ? "Imported" : "Scanned"} Image
+                {selectedImage.id.startsWith("import-")
+                  ? "Imported"
+                  : "Scanned"}{" "}
+                Image
               </div>
             </section>
           )}
@@ -427,7 +453,11 @@ export default function ScannerApp() {
       </div>
 
       {/* Modals */}
-      <MailModal isOpen={showMailModal} onClose={() => setShowMailModal(false)} scannedImages={getImagesForEmail()} />
+      <MailModal
+        isOpen={showMailModal}
+        onClose={() => setShowMailModal(false)}
+        scannedImages={getImagesForEmail()}
+      />
       <ImageEditor
         isOpen={showImageEditor}
         onClose={() => setShowImageEditor(false)}
@@ -440,11 +470,11 @@ export default function ScannerApp() {
         <div
           className="fixed inset-0 z-40"
           onClick={() => {
-            setActiveDropdown(null)
-            setShowUserDropdown(false)
+            setActiveDropdown(null);
+            setShowUserDropdown(false);
           }}
         />
       )}
     </div>
-  )
+  );
 }

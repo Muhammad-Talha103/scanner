@@ -9,6 +9,7 @@ interface DropdownItem {
   shortcut?: string
   onClick?: () => void
   disabled?: boolean
+  href?: string
 }
 
 
@@ -42,7 +43,7 @@ export const MenuBar = ({ menuItems, activeDropdown, onDropdownToggle, onImagesI
                 />
               </div>
             ))}
-            <button className="px-3 py-1 text-sm hover:bg-gray-300 rounded">?</button>
+          
           </div>
         </div>
         <div className="text-sm text-gray-700 hidden lg:block">Full Screen</div>

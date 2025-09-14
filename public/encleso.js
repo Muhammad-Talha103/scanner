@@ -1,7 +1,6 @@
 if (!window.__ENCLESO_INITIALIZED__) {
   window.__ENCLESO_INITIALIZED__ = true;
 
-
   const EMPTY_COMBOSELECT = "<option selected>Choose...</option>";
   const CAPCTL_UNSUPPORTED_INNERHTML = "Unsupported";
   const CAPCOMBO_UNSUPPORTEDCAP_INNERHTML = `<option selected>- ${CAPCTL_UNSUPPORTED_INNERHTML} -</option>`;
@@ -17,7 +16,11 @@ if (!window.__ENCLESO_INITIALIZED__) {
       $("#btnScan").prop("disabled", jsonCaps == null ? true : false);
       $("#chkShowUI").attr("disabled", jsonCaps == null ? true : false);
 
-      if (jsonCaps && jsonCaps.Resolution && jsonCaps.Resolution.Values.length > 0) {
+      if (
+        jsonCaps &&
+        jsonCaps.Resolution &&
+        jsonCaps.Resolution.Values.length > 0
+      ) {
         let options = "";
         for (let i = 0; i < jsonCaps.Resolution.Values.length; i++) {
           options +=
@@ -27,12 +30,20 @@ if (!window.__ENCLESO_INITIALIZED__) {
             jsonCaps.Resolution.Values[i] +
             `</option>`;
         }
-        $("#resolution").html(options).attr("disabled", !jsonCaps.Resolution.ChangeAllowed);
+        $("#resolution")
+          .html(options)
+          .attr("disabled", !jsonCaps.Resolution.ChangeAllowed);
       } else {
-        $("#resolution").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
+        $("#resolution")
+          .html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML)
+          .attr("disabled", true);
       }
 
-      if (jsonCaps && jsonCaps.PixelType && jsonCaps.PixelType.Values.length > 0) {
+      if (
+        jsonCaps &&
+        jsonCaps.PixelType &&
+        jsonCaps.PixelType.Values.length > 0
+      ) {
         let options = "";
         for (let i = 0; i < jsonCaps.PixelType.Values.length; i++) {
           const val = jsonCaps.PixelType.Values[i];
@@ -41,9 +52,13 @@ if (!window.__ENCLESO_INITIALIZED__) {
             Encleso.PixelTypeToString(val) +
             `</option>`;
         }
-        $("#colorMode").html(options).attr("disabled", !jsonCaps.PixelType.ChangeAllowed);
+        $("#colorMode")
+          .html(options)
+          .attr("disabled", !jsonCaps.PixelType.ChangeAllowed);
       } else {
-        $("#colorMode").html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML).attr("disabled", true);
+        $("#colorMode")
+          .html(CAPCOMBO_UNSUPPORTEDCAP_INNERHTML)
+          .attr("disabled", true);
       }
 
       if (jsonCaps && jsonCaps.Duplex && jsonCaps.Duplex.Supported) {
@@ -63,17 +78,27 @@ if (!window.__ENCLESO_INITIALIZED__) {
   function ShowScannedImage(bValid, imgIndex = 0, msgError = "") {
     if (bValid == false) {
       if (msgError == "") {
-        $("#alert-warn-error").addClass("d-none").removeClass("d-block").html(msgError);
+        $("#alert-warn-error")
+          .addClass("d-none")
+          .removeClass("d-block")
+          .html(msgError);
       } else {
-        $("#alert-warn-error").removeClass("d-none").addClass("d-block").html(msgError);
+        $("#alert-warn-error")
+          .removeClass("d-none")
+          .addClass("d-block")
+          .html(msgError);
       }
       $("#imageFormat").prop("disabled", true);
       $("#btnSave").prop("disabled", true);
     } else {
       Encleso.GetImagePreview(imgIndex).then((ret) => {
-        if (ret == null || ret.length < 1 || ret == "") return ShowScannedImage(false, 0, "Invalid Image!");
+        if (ret == null || ret.length < 1 || ret == "")
+          return ShowScannedImage(false, 0, "Invalid Image!");
 
-        $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
+        $("#alert-warn-error")
+          .removeClass("d-block")
+          .addClass("d-none")
+          .html("");
         $("#ScanOutput").removeClass("d-none").addClass("d-block");
         $("#ScanOutput").attr("src", ret);
 
@@ -111,7 +136,8 @@ if (!window.__ENCLESO_INITIALIZED__) {
       const numericPix = Number(pixVal);
       if (!isNaN(numericPix)) Caps.PixelType = numericPix;
     }
-    if ($("#chkDuplex").prop("disabled") === false) Caps.Duplex = $("#chkDuplex").prop("checked");
+    if ($("#chkDuplex").prop("disabled") === false)
+      Caps.Duplex = $("#chkDuplex").prop("checked");
 
     try {
       // apply capabilities
@@ -126,9 +152,12 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
     try {
       const ret = await Encleso.StartScan(ScannerName, ShowUI);
-      
 
-      if (!ret || typeof ret.ScannedImagesCount !== "number" || ret.ScannedImagesCount < 1) {
+      if (
+        !ret ||
+        typeof ret.ScannedImagesCount !== "number" ||
+        ret.ScannedImagesCount < 1
+      ) {
         ShowScannedImage(false, 0, "Scan was cancelled or no images scanned!");
         throw new Error("Scan was cancelled or no images scanned");
       }
@@ -149,45 +178,43 @@ if (!window.__ENCLESO_INITIALIZED__) {
     }
   }
 
-  async function GetScannerCaps() {
-    const scanners = window.ExportedScannerNames;
-    if (!scanners || scanners.length < 1) {
-      console.warn("No scanner available");
-      SetScannerCapsControlsState(true, null);
-      return;
-    }
+  // async function GetScannerCaps() {
+  //   const scanners = window.ExportedScannerNames;
+  //   if (!scanners || scanners.length < 1) {
+  //     console.warn("No scanner available");
+  //     SetScannerCapsControlsState(true, null);
+  //     return;
+  //   }
 
-    const selectedFromDom = $("#ScannerName").val();
-    const selectedScanner = selectedFromDom || scanners[0];
-    SetScannerCapsControlsState(false);
+  //   const selectedFromDom = $("#ScannerName").val();
+  //   const selectedScanner = selectedFromDom || scanners[0];
+  //   SetScannerCapsControlsState(false);
 
-    try {
-      const ret = await Encleso.GetCapabilities(selectedScanner);
+  //   try {
+  //     const ret = await Encleso.GetCapabilities(selectedScanner);
 
-      if (!ret) {
-        console.error("Encleso.GetCapabilities returned undefined for", selectedScanner);
-        SetScannerCapsControlsState(true, null);
-        return;
-      }
+  //     if (!ret) {
+  //       console.error("Encleso.GetCapabilities returned undefined for", selectedScanner);
+  //       SetScannerCapsControlsState(true, null);
+  //       return;
+  //     }
 
-      SetScannerCapsControlsState(true, ret);
+  //     SetScannerCapsControlsState(true, ret);
 
-      // Duplex
-      if (ret.Duplex && ret.Duplex.Supported) {
-        $("#chkDuplex").attr("disabled", false);
-        $("#chkDuplex").prop("checked", ret.Duplex.Enabled);
-      } else {
-        $("#chkDuplex").attr("disabled", true);
-      }
-    } catch (err) {
-      console.error("Failed to fetch scanner capabilities for", selectedScanner, err);
-      SetScannerCapsControlsState(true, null);
-    }
-  }
+  //     // Duplex
+  //     if (ret.Duplex && ret.Duplex.Supported) {
+  //       $("#chkDuplex").attr("disabled", false);
+  //       $("#chkDuplex").prop("checked", ret.Duplex.Enabled);
+  //     } else {
+  //       $("#chkDuplex").attr("disabled", true);
+  //     }
+  //   } catch (err) {
+  //     console.error("Failed to fetch scanner capabilities for", selectedScanner, err);
+  //     SetScannerCapsControlsState(true, null);
+  //   }
+  // }
 
   if (typeof window !== "undefined") {
-
-
     let retryCount = 0;
     const maxRetries = 100;
 
@@ -200,120 +227,146 @@ if (!window.__ENCLESO_INITIALIZED__) {
           );
           return;
         }
-    
+
         setTimeout(setHandlers, 50);
         return;
       }
 
       if (Encleso === false) {
-  let connectionAttempts = 0;
-  const maxAttempts = 200;
+        let connectionAttempts = 0;
+        const maxAttempts = 200;
 
-  const waitForConnection = () => {
-    if (Encleso === true) {
-     
-      setupEnclesoHandlers();
-      setupConnectionMonitor();
-    } else if (connectionAttempts >= maxAttempts) {
-      console.error("[Encleso Demo] Failed to connect after attempts. Client app may not be running.");
-      $("#alert-warn-error")
-        .removeClass("d-none")
-        .addClass("d-block")
-        .html("Cannot connect to Encleso client app. Please ensure it's running and try again.");
-      return;
-    } else {
-      connectionAttempts++;
-      setTimeout(waitForConnection, 50);
-    }
-  };
+        const waitForConnection = () => {
+          if (Encleso === true) {
+            setupEnclesoHandlers();
+            setupConnectionMonitor();
+          } else if (connectionAttempts >= maxAttempts) {
+            console.error(
+              "[Encleso Demo] Failed to connect after attempts. Client app may not be running."
+            );
+            $("#alert-warn-error")
+              .removeClass("d-none")
+              .addClass("d-block")
+              .html(
+                "Cannot connect to Encleso client app. Please ensure it's running and try again."
+              );
+            return;
+          } else {
+            connectionAttempts++;
+            setTimeout(waitForConnection, 50);
+          }
+        };
 
-  waitForConnection();
-  return;
-}
-
-      setupConnectionMonitor();
-      setupEnclesoHandlers();
-
-     function setupConnectionMonitor() {
-  let lastConnected = true;
-
-  setInterval(async () => {
-    try {
-      await Encleso.ImageLibGetCount();
-      if (!lastConnected) {
-        lastConnected = true;
-        
-        $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
-        setupEnclesoHandlers();
+        waitForConnection();
+        return;
       }
-    } catch (err) {
-      if (lastConnected) {
-        lastConnected = false;
-        console.warn("[Monitor] Connection lost ❌");
-        $("#ScannerName").html("<option selected>Choose...</option>");
-        SetScannerCapsControlsState(true, null);
-        $("#alert-warn-error")
-          .removeClass("d-none")
-          .addClass("d-block")
-          .html("Connection lost. Please check Encleso client app.");
 
-        delete window.StartScanning;
-        delete window.SaveImageToFilesystem;
-        delete window.scan;
+      setupConnectionMonitor();
+      setupEnclesoHandlers();
 
-        attemptReconnection();
+      function setupConnectionMonitor() {
+        let lastConnected = true;
+
+        setInterval(async () => {
+          try {
+            await Encleso.ImageLibGetCount();
+            if (!lastConnected) {
+              lastConnected = true;
+
+              $("#alert-warn-error")
+                .removeClass("d-block")
+                .addClass("d-none")
+                .html("");
+              setupEnclesoHandlers();
+            }
+          } catch (err) {
+            if (lastConnected) {
+              lastConnected = false;
+              console.warn("[Monitor] Connection lost ❌");
+              $("#ScannerName").html("<option selected>Choose...</option>");
+              SetScannerCapsControlsState(true, null);
+              $("#alert-warn-error")
+                .removeClass("d-none")
+                .addClass("d-block")
+                .html("Connection lost. Please check Encleso client app.");
+
+              delete window.StartScanning;
+              delete window.SaveImageToFilesystem;
+              delete window.scan;
+
+              attemptReconnection();
+            }
+          }
+        }, 1000);
       }
-    }
-  }, 1000);
-}
 
       function attemptReconnection() {
-  
-  setTimeout(async () => {
-    try {
-      await Encleso.ImageLibGetCount();
-      
-    } catch (e) {
-      $("#alert-warn-error").html("Still not connected. Please restart Encleso client app.");
-    }
-  }, 3000);
-}
+        setTimeout(async () => {
+          try {
+            await Encleso.ImageLibGetCount();
+          } catch (e) {
+            $("#alert-warn-error").html(
+              "Still not connected. Please restart Encleso client app."
+            );
+          }
+        }, 3000);
+      }
 
       function setupEnclesoHandlers() {
         Encleso.OnError = (err) => {
           $("#ScannerName").html(EMPTY_COMBOSELECT);
           SetScannerCapsControlsState(true, null);
-          $("#alert-warn-error").removeClass("d-none").addClass("d-block").html(err.Message);
+          $("#alert-warn-error")
+            .removeClass("d-none")
+            .addClass("d-block")
+            .html(err.Message);
         };
 
         Encleso.OnReady = async (ret) => {
           try {
             // fetch token from our Next.js API
-            const resp = await fetch("/api/encleso", { method: "GET", credentials: "same-origin" });
+            const resp = await fetch("/api/encleso", {
+              method: "GET",
+              credentials: "same-origin",
+            });
             const json = await resp.json();
 
             if (!resp.ok) {
               console.error("[Encleso Demo] /api/encleso returned error", json);
-              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("License server error: " + (json?.error || resp.status));
+              $("#alert-warn-error")
+                .removeClass("d-none")
+                .addClass("d-block")
+                .html("License server error: " + (json?.error || resp.status));
               return;
             }
 
             if (!json || !json.token) {
               console.error("[Encleso Demo] No token in response", json);
-              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to fetch license token.");
+              $("#alert-warn-error")
+                .removeClass("d-none")
+                .addClass("d-block")
+                .html("Failed to fetch license token.");
               return;
             }
 
             try {
               await Encleso.SetLicense(json.token);
-              
             } catch (e) {
-              $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Failed to apply license: " + (e?.message || e));
+              $("#alert-warn-error")
+                .removeClass("d-none")
+                .addClass("d-block")
+                .html("Failed to apply license: " + (e?.message || e));
               return;
             }
           } catch (fetchErr) {
-            console.error("[Encleso Demo] Failed to fetch license token:", fetchErr);
-            $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("Could not contact license server.");
+            console.error(
+              "[Encleso Demo] Failed to fetch license token:",
+              fetchErr
+            );
+            $("#alert-warn-error")
+              .removeClass("d-none")
+              .addClass("d-block")
+              .html("Could not contact license server.");
             return;
           }
 
@@ -324,7 +377,9 @@ if (!window.__ENCLESO_INITIALIZED__) {
             $("#alert-warn-error")
               .removeClass("d-none")
               .addClass("d-block")
-              .html("No scanners were found! Check that your scanner is connected and turned on.");
+              .html(
+                "No scanners were found! Check that your scanner is connected and turned on."
+              );
             return;
           }
 
@@ -336,14 +391,15 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
           $("#ScannerName").on("change", (event) => {
             ShowScannedImage(false);
-            $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
-            GetScannerCaps();
-
-          
+            $("#alert-warn-error")
+              .removeClass("d-block")
+              .addClass("d-none")
+              .html("");
+            // GetScannerCaps();
           });
 
           SetScannerCapsControlsState(false);
-          GetScannerCaps();
+          // GetScannerCaps();
 
           window.StartScanning = StartScanning;
           window.SaveImageToFilesystem = SaveImageToFilesystem;
@@ -356,3 +412,8 @@ if (!window.__ENCLESO_INITIALIZED__) {
     setHandlers();
   }
 }
+
+
+
+
+
