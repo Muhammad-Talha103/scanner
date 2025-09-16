@@ -128,6 +128,10 @@ export const Toolbar = ({
 
       {/* Right side: User dropdown */}
       <div className="relative">
+        <div className="flex items-center space-x-4">
+          <span className="text-sm text-gray-600 font-medium">
+            Version <b>1.00</b>
+          </span>
         <button
           className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer border border-gray-400"
           onClick={onUserDropdownToggle}
@@ -135,6 +139,7 @@ export const Toolbar = ({
         >
           <User className="w-6 h-6 text-gray-600" />
         </button>
+        </div>
 
         <UserDropdown
           isOpen={showUserDropdown}

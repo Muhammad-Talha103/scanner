@@ -97,20 +97,28 @@
 //   };
 
 
-"use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
-import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react"
-import type { EnclesoType } from "@/hooks/useScannerIntegration"
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react";
+import type { EnclesoType } from "@/hooks/useScannerIntegration";
+import DeleteAllImages from "./DeleteAllImages";
+import { ScannedImage } from "./scanner/Dropdown";
 
 interface ScannerStatusProps {
-  isReady: boolean
-  scanners: string[]
-  selectedScanner: string | null
-  onSelectScanner: (name: string) => void
-  error: string | null
-  onCapabilitiesChange?: (resolution?: number, pixelType?: number) => void
+  isReady: boolean;
+  scanners: string[];
+  selectedScanner: string | null;
+  onSelectScanner: (name: string) => void;
+  error: string | null;
+  onCapabilitiesChange?: (
+    resolution?: number,
+    pixelType?: number,
+    duplex?: boolean
+  ) => void;
+  deleteAllImages?: () => void;
+  images: ScannedImage[];
 }
 
 export const ScannerStatus: React.FC<ScannerStatusProps> = ({
@@ -120,137 +128,173 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   onSelectScanner,
   error,
   onCapabilitiesChange,
+  deleteAllImages,
+  images,
 }) => {
-  const [isScannerOpen, setIsScannerOpen] = useState(false)
-  const [isResolutionOpen, setIsResolutionOpen] = useState(false)
-  const [isColorModeOpen, setIsColorModeOpen] = useState(false)
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [isResolutionOpen, setIsResolutionOpen] = useState(false);
+  const [isColorModeOpen, setIsColorModeOpen] = useState(false);
+  const [isDuplexOpen, setIsDuplexOpen] = useState(false);
 
-  const [resolutions, setResolutions] = useState<string[]>([])
-  const [colorModes, setColorModes] = useState<string[]>([])
-  const [resolutionValues, setResolutionValues] = useState<number[]>([])
-  const [pixelTypeValues, setPixelTypeValues] = useState<number[]>([])
-  const [selectedResolution, setSelectedResolution] = useState<string>("")
-  const [selectedColorMode, setSelectedColorMode] = useState<string>("")
+  const [resolutions, setResolutions] = useState<string[]>([]);
+  const [resolutionValues, setResolutionValues] = useState<number[]>([]);
+  const [colorModes, setColorModes] = useState<string[]>([]);
+  const [pixelTypeValues, setPixelTypeValues] = useState<number[]>([]);
+  const [duplexOptions, setDuplexOptions] = useState<string[]>([]);
+
+  const [selectedResolution, setSelectedResolution] = useState<string>("");
+  const [selectedColorMode, setSelectedColorMode] = useState<string>("");
+  const [selectedDuplexLabel, setSelectedDuplexLabel] = useState<string>("");
+
+  const [duplexValue, setDuplexValue] = useState<boolean | null>(false);
+  const [duplexChangeAllowed, setDuplexChangeAllowed] = useState(false);
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const closeAllDropdowns = () => {
-    setIsScannerOpen(false)
-    setIsResolutionOpen(false)
-    setIsColorModeOpen(false)
-  }
+    setIsScannerOpen(false);
+    setIsResolutionOpen(false);
+    setIsColorModeOpen(false);
+    setIsDuplexOpen(false);
+  };
 
-  // ✅ whenever scanner changes → reset old selections
   useEffect(() => {
     if (!selectedScanner) {
-      setResolutions([])
-      setColorModes([])
-      setResolutionValues([])
-      setPixelTypeValues([])
-      setSelectedResolution("")
-      setSelectedColorMode("")
-    } else {
-      // // reset so we fetch fresh caps for new scanner
-      setSelectedResolution("")
-      setSelectedColorMode("")
+      setResolutions([]);
+      setResolutionValues([]);
+      setColorModes([]);
+      setPixelTypeValues([]);
+      setSelectedResolution("");
+      setSelectedColorMode("");
+      setDuplexOptions([]);
+      setSelectedDuplexLabel("");
+      setDuplexValue(null);
+      setDuplexChangeAllowed(false);
+      return;
     }
-  }, [selectedScanner])
 
-// === fetch scanner capabilities ===
+    const Encleso: EnclesoType | undefined = window.Encleso;
+    if (!Encleso) return;
 
-useEffect(() => {
-  const Encleso: EnclesoType | undefined = window.Encleso
-  if (!selectedScanner || !Encleso) return
+    const fetchCapabilities = async () => {
+      try {
+        setResolutions([]);
+        setResolutionValues([]);
+        setColorModes([]);
+        setPixelTypeValues([]);
+        setSelectedResolution("");
+        setSelectedColorMode("");
+        setDuplexOptions([]);
+        setSelectedDuplexLabel("");
+        setDuplexValue(null);
+        setDuplexChangeAllowed(false);
 
-  const fetchCapabilities = async () => {
-    try {
-      const caps = await Encleso.GetCapabilities?.(selectedScanner)
-      
-      if (!caps) return
+        const caps = await Encleso.GetCapabilities?.(selectedScanner);
+        if (!caps) return;
 
-      // === Resolution ===
-      if (caps.Resolution?.Values?.length) {
-        const resValues = caps.Resolution.Values.map(Number)
-        const labels = resValues.map((r) => `${r} x ${r}`)
+        if (caps.Resolution?.Values?.length) {
+          const resVals = caps.Resolution.Values.map(Number);
+          const resLabels = resVals.map((v) => `${v} x ${v}`);
+          setResolutionValues(resVals);
+          setResolutions(resLabels);
 
-        setResolutionValues(resValues)
-        setResolutions(labels)
-
-        
-        if (!selectedResolution) {
-          setSelectedResolution(labels[0])
-          onCapabilitiesChange?.(resValues[0], undefined)
+          if (!selectedResolution) {
+            setSelectedResolution(resLabels[0]);
+            onCapabilitiesChange?.(resVals[0]);
+          }
         }
+
+        if (caps.PixelType?.Values?.length) {
+          const pixVals = caps.PixelType.Values.map(Number);
+          const pixLabels = pixVals.map(
+            (val) => Encleso.PixelTypeToString?.(val) ?? val.toString()
+          );
+          setPixelTypeValues(pixVals);
+          setColorModes(pixLabels);
+
+          if (!selectedColorMode) {
+            setSelectedColorMode(pixLabels[0]);
+            onCapabilitiesChange?.(undefined, pixVals[0]);
+          }
+        }
+
+        if (caps.Duplex?.Supported) {
+          const enabled = !!caps.Duplex.Enabled;
+          setDuplexValue(enabled);
+          setDuplexChangeAllowed(!!caps.Duplex.ChangeAllowed);
+
+          const options = ["Off", "On"];
+          setDuplexOptions(options);
+          setSelectedDuplexLabel(enabled ? "On" : "Off");
+
+          // onCapabilitiesChange?.(undefined, undefined, enabled);
+        }
+      } catch (err) {
+        console.error("Error fetching capabilities:", err);
       }
+    };
 
-      // === Color Modes ===
-      if (caps.PixelType?.Values?.length) {
-        const pixelValues = caps.PixelType.Values.map(Number)
-        const labels = pixelValues.map((val: number) =>
-          Encleso.PixelTypeToString ? Encleso.PixelTypeToString(val) : String(val),
-        )
+    fetchCapabilities();
+  }, [selectedScanner]);
 
-        setPixelTypeValues(pixelValues)
-        setColorModes(labels)
+  const updateCapabilities = async (
+    resolutionLabel: string,
+    colorLabel: string,
+    duplexLabel?: string
+  ) => {
+    const Encleso: EnclesoType | undefined = window.Encleso;
+    if (!Encleso || !selectedScanner) return;
 
-        // ✅ only set first if nothing already selected
-        if (!selectedColorMode) {
-          setSelectedColorMode(labels[0])
-          onCapabilitiesChange?.(undefined, pixelValues[0])
-        }
+    try {
+      const resIdx = resolutions.indexOf(resolutionLabel);
+      const pixIdx = colorModes.indexOf(colorLabel);
+
+      const caps: {
+        Resolution?: number;
+        PixelType?: number;
+        Duplex?: boolean;
+      } = {};
+
+      if (resIdx >= 0) caps.Resolution = resolutionValues[resIdx];
+      if (pixIdx >= 0) caps.PixelType = pixelTypeValues[pixIdx];
+      if (duplexLabel) caps.Duplex = duplexLabel === "On";
+
+      await Encleso.SetCapabilities(caps);
+
+      if (caps.Resolution !== undefined) {
+        setSelectedResolution(resolutionLabel);
+        onCapabilitiesChange?.(caps.Resolution);
+      }
+      if (caps.PixelType !== undefined) {
+        setSelectedColorMode(colorLabel);
+        onCapabilitiesChange?.(undefined, caps.PixelType);
+      }
+      if (caps.Duplex !== undefined) {
+        setSelectedDuplexLabel(caps.Duplex ? "On" : "Off");
+        setDuplexValue(caps.Duplex);
+        onCapabilitiesChange?.(undefined, undefined, caps.Duplex);
       }
     } catch (err) {
-      console.error("Failed to fetch capabilities for", selectedScanner, err)
+      console.error("Failed to update capabilities:", err);
     }
-  }
+  };
 
-  fetchCapabilities()
-}, [selectedScanner, onCapabilitiesChange]) // ✅ removed selectedResolution, selectedColorMode from deps
+  const handleResolutionChange = (value: string) => {
+    updateCapabilities(value, selectedColorMode, selectedDuplexLabel);
+    setIsResolutionOpen(false);
+  };
 
-  // === Capability Update ===
-  const updateCapabilities = async (resolutionLabel: string, colorModeLabel: string) => {
-    const Encleso: EnclesoType | undefined = window.Encleso
-    if (!Encleso || !selectedScanner) return
+  const handleColorModeChange = (value: string) => {
+    updateCapabilities(selectedResolution, value, selectedDuplexLabel);
+    setIsColorModeOpen(false);
+  };
 
-    try {
-      const resIndex = resolutions.indexOf(resolutionLabel)
-      const pixIndex = colorModes.indexOf(colorModeLabel)
-
-      const resolutionNumber = resolutionValues[resIndex] ?? undefined
-      const pixelNumber = pixelTypeValues[pixIndex] ?? undefined
-
-      const caps: { Resolution?: number; PixelType?: number } = {}
-      if (resolutionNumber !== undefined) caps.Resolution = resolutionNumber
-      if (pixelNumber !== undefined) caps.PixelType = pixelNumber
-
-      if (Object.keys(caps).length > 0) {
-        await Encleso.SetCapabilities(caps)
-
-        // ✅ preserve UI + update hook state
-        if (caps.Resolution !== undefined) {
-          setSelectedResolution(resolutionLabel)
-          onCapabilitiesChange?.(caps.Resolution, undefined)
-        }
-        if (caps.PixelType !== undefined) {
-          setSelectedColorMode(colorModeLabel)
-          onCapabilitiesChange?.(undefined, caps.PixelType)
-        }
-      }
-    } catch (err) {
-      console.error("Failed to set capabilities:", err)
-    }
-  }
-
- const handleResolutionChange = (value: string) => {
-  setSelectedResolution(value) // ✅ update immediately
-  updateCapabilities(value, selectedColorMode)
-  setIsResolutionOpen(false)
-}
-
-const handleColorModeChange = (value: string) => {
-  setSelectedColorMode(value) // ✅ update immediately
-  updateCapabilities(selectedResolution, value)
-  setIsColorModeOpen(false)
-}
-
+  const handleDuplexChange = (value: string) => {
+    const isOn = value === "On"; // ✅ true for "On", false for "Off"
+    updateCapabilities(selectedResolution, selectedColorMode, value);
+    onCapabilitiesChange?.(undefined, undefined, isOn);
+    setIsDuplexOpen(false);
+  };
 
   const getStatusDisplay = () => {
     if (error) {
@@ -259,7 +303,7 @@ const handleColorModeChange = (value: string) => {
           <AlertCircle className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Error</span>
         </div>
-      )
+      );
     }
 
     if (!isReady) {
@@ -268,7 +312,7 @@ const handleColorModeChange = (value: string) => {
           <WifiOff className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Initializing...</span>
         </div>
-      )
+      );
     }
 
     if (scanners.length > 0) {
@@ -277,7 +321,7 @@ const handleColorModeChange = (value: string) => {
           <Wifi className="w-4 h-4 animate-pulse" />
           <span className="text-xs">Connected ({scanners.length})</span>
         </div>
-      )
+      );
     }
 
     return (
@@ -285,8 +329,8 @@ const handleColorModeChange = (value: string) => {
         <WifiOff className="w-4 h-4" />
         <span className="text-xs">No Scanner</span>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="flex flex-col gap-y-2">
@@ -298,13 +342,15 @@ const handleColorModeChange = (value: string) => {
         <div className="relative">
           <button
             onClick={() => {
-              closeAllDropdowns()
-              setIsScannerOpen(!isScannerOpen)
+              closeAllDropdowns();
+              setIsScannerOpen(!isScannerOpen);
             }}
             className="w-full border rounded p-2 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
             <span className="truncate">{selectedScanner || scanners[0]}</span>
-            <ChevronDown className={`w-3 h-3 ml-2 ${isScannerOpen ? "rotate-180" : "rotate-0"}`} />
+            <ChevronDown
+              className={`w-3 h-3 ml-2 ${isScannerOpen ? "rotate-180" : "rotate-0"}`}
+            />
           </button>
 
           {isScannerOpen && (
@@ -314,12 +360,13 @@ const handleColorModeChange = (value: string) => {
                   <button
                     key={index}
                     onClick={() => {
-                      onSelectScanner(scanner)
-                      setIsScannerOpen(false)
+                      onSelectScanner(scanner);
+                      setIsScannerOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-[11px] hover:bg-gray-100 ${
-                      selectedScanner === scanner ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                    }`}
+                    className={`w-full text-left px-3 py-2 text-[11px] hover:bg-gray-100 ${selectedScanner === scanner
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700"
+                      }`}
                     title={scanner}
                   >
                     {scanner}
@@ -337,13 +384,17 @@ const handleColorModeChange = (value: string) => {
           <span className="font-semibold">Resolutions:</span>
           <button
             onClick={() => {
-              closeAllDropdowns()
-              setIsResolutionOpen(!isResolutionOpen)
+              closeAllDropdowns();
+              setIsResolutionOpen(!isResolutionOpen);
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span className="text-xs">{selectedResolution || "Select resolution"}</span>
-            <ChevronDown className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`} />
+            <span className="text-xs">
+              {selectedResolution || "Select resolution"}
+            </span>
+            <ChevronDown
+              className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`}
+            />
           </button>
 
           {isResolutionOpen && (
@@ -353,12 +404,13 @@ const handleColorModeChange = (value: string) => {
                   <button
                     key={i}
                     onClick={() => {
-                      handleResolutionChange(res)
-                      setIsResolutionOpen(false)
+                      handleResolutionChange(res);
+                      setIsResolutionOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
-                      selectedResolution === res ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                    }`}
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${selectedResolution === res
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700"
+                      }`}
                   >
                     {res}
                   </button>
@@ -375,13 +427,17 @@ const handleColorModeChange = (value: string) => {
           <span className="font-semibold">Color Modes:</span>
           <button
             onClick={() => {
-              closeAllDropdowns()
-              setIsColorModeOpen(!isColorModeOpen)
+              closeAllDropdowns();
+              setIsColorModeOpen(!isColorModeOpen);
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span className="text-[11px]">{selectedColorMode || "Select color mode"}</span>
-            <ChevronDown className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`} />
+            <span className="text-[11px]">
+              {selectedColorMode || "Select color mode"}
+            </span>
+            <ChevronDown
+              className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`}
+            />
           </button>
 
           {isColorModeOpen && (
@@ -391,12 +447,13 @@ const handleColorModeChange = (value: string) => {
                   <button
                     key={i}
                     onClick={() => {
-                      handleColorModeChange(mode)
-                      setIsColorModeOpen(false)
+                      handleColorModeChange(mode);
+                      setIsColorModeOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
-                      selectedColorMode === mode ? "bg-blue-50 text-blue-700" : "text-gray-700"
-                    }`}
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${selectedColorMode === mode
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-gray-700"
+                      }`}
                   >
                     {mode}
                   </button>
@@ -407,11 +464,74 @@ const handleColorModeChange = (value: string) => {
         </div>
       )}
 
+
+      {/* Duplex Toggle */}
+      {duplexChangeAllowed && isReady && selectedScanner && (
+        <div className="flex flex-col text-xs text-gray-600">
+          <span className="font-semibold mb-1">Duplex:</span>
+
+          {duplexChangeAllowed ? (
+            <button
+              onClick={() => {
+                const newValue = !duplexValue;
+                setDuplexValue(newValue);
+                setSelectedDuplexLabel(newValue ? "On" : "Off");
+                updateCapabilities(selectedResolution, selectedColorMode, newValue ? "On" : "Off");
+                onCapabilitiesChange?.(undefined, undefined, newValue);
+              }}
+              className={`relative w-[50px] h-7 flex items-center rounded-full transition-colors duration-300 ${duplexValue ? "bg-green-500" : "bg-red-500"
+                }`}
+            >
+              {/* Labels */}
+              <span className="absolute left-1 text-[11px] font-semibold text-white">
+                Off
+              </span>
+              <span className="absolute right-1 text-[11px] font-semibold text-white">
+                On
+              </span>
+
+              {/* Knob */}
+              <span
+                className={`absolute w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300 ${duplexValue ? "translate-x-[24px]" : "translate-x-0.5"
+                  }`}
+              />
+            </button>
+          ) : (
+            <div className="border rounded p-2 mt-1 text-xs text-gray-500 bg-gray-50">
+              {selectedDuplexLabel || "Simplex only"}
+            </div>
+          )}
+        </div>
+      )}
+
+
+
       {error && (
-        <div className="text-xs text-red-500 max-w-full lg:max-w-40 truncate" title={error}>
+        <div
+          className="text-xs text-red-500 max-w-full lg:max-w-40 truncate"
+          title={error}
+        >
           {error}
         </div>
       )}
+      {images.length > 0 && (
+        <>
+          <hr className="w-full" />
+
+          <button
+            onClick={() => setIsDeleteModalOpen(true)}
+            className="mt-2 w-full text-xs cursor-pointer font-semibold text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 transition-colors"
+          >
+            Clear All Images
+          </button>
+        </>
+      )}
+
+      <DeleteAllImages
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={deleteAllImages || (() => { })}
+      />
 
       <style jsx>{`
         .custom-scroll::-webkit-scrollbar {
@@ -426,5 +546,5 @@ const handleColorModeChange = (value: string) => {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};

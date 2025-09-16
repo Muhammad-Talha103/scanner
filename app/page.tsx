@@ -11,7 +11,6 @@ import {
   Scissors,
   ZoomIn,
   ZoomOut,
-  Settings,
   HelpCircle,
   Copy,
   Castle as Paste,
@@ -21,7 +20,6 @@ import {
   Download,
   Send,
   LogOut,
-  Eye,
   Monitor,
   Info,
   Loader2,
@@ -86,6 +84,7 @@ export default function ScannerApp() {
     error,
     addImportedImages,
     createNewDocument,
+    deleteAllImages,
     updateImage,
     toggleImageSelection,
     deleteImage,
@@ -174,6 +173,10 @@ export default function ScannerApp() {
     await deleteImage(imageId);
   };
 
+  const handleDeleteAllImages = () => {
+    deleteAllImages();
+  }
+
   const handleUndo = () => {
     undo();
     setActiveDropdown(null);
@@ -186,9 +189,10 @@ export default function ScannerApp() {
 
   const handleCapabilitiesChange = (
     resolution?: number,
-    pixelType?: number
+    pixelType?: number,
+    duplex?: boolean
   ) => {
-    updateScannerCapabilities(resolution, pixelType);
+    updateScannerCapabilities(resolution, pixelType,duplex);
   };
 
   // Menu items config
@@ -387,6 +391,8 @@ export default function ScannerApp() {
             onSelectScanner={setScannerName}
             error={error}
             onCapabilitiesChange={handleCapabilitiesChange}
+            deleteAllImages={handleDeleteAllImages}
+            images={scannedImages}
           />
 
           {selectedImage && (
