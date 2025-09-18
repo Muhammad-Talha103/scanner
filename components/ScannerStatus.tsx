@@ -96,13 +96,12 @@
 //     updateCapabilities(selectedResolution, value);
 //   };
 
+
 "use client";
 
 import React, { useEffect, useState } from "react";
 import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react";
 import type { EnclesoType } from "@/hooks/useScannerIntegration";
-import DeleteAllImages from "./DeleteAllImages";
-import { ScannedImage } from "./scanner/Dropdown";
 
 interface ScannerStatusProps {
   isReady: boolean;
@@ -336,20 +335,22 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       {isReady && scanners.length > 0 && (
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-600">Show Scanner Driver UI:</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              className="sr-only peer"
-              checked={showScannerUI}
-              onChange={(e) => {
-                const checked = e.target.checked;
-                setShowScannerUI(checked);
-                onToggleUI?.(checked); // ✅ propagate upwards
-              }}
-            />
-            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-            <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
-          </label>
+        
+<label className="relative inline-flex items-center cursor-pointer">
+  <input
+    type="checkbox"
+    className="sr-only peer"
+    checked={showScannerUI}
+    onChange={(e) => {
+      const checked = e.target.checked;
+      setShowScannerUI(checked);
+      onToggleUI?.(checked);
+    }}
+  />
+  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+  <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+</label>
+
         </div>
       )}
 
@@ -485,42 +486,32 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
 
       {/* Duplex Toggle */}
       {isReady && selectedScanner && (
-        <div className="flex flex-col text-xs text-gray-600">
-          <span className="font-semibold mb-1">Duplex:</span>
-
-          <button
-            onClick={() => {
-              const newValue = !duplexValue;
-              setDuplexValue(newValue);
-              setSelectedDuplexLabel(newValue ? "On" : "Off");
-              updateCapabilities(
-                selectedResolution,
-                selectedColorMode,
-                newValue ? "On" : "Off"
-              );
-              onCapabilitiesChange?.(undefined, undefined, newValue);
-            }}
-            className={`relative w-[50px] h-7 flex items-center rounded-full transition-colors duration-300 ${
-              duplexValue ? "bg-green-500" : "bg-red-500"
-            }`}
-          >
-            {/* Labels */}
-            <span className="absolute left-1 text-[11px] font-semibold text-white">
-              Off
-            </span>
-            <span className="absolute right-1 text-[11px] font-semibold text-white">
-              On
-            </span>
-
-            {/* Knob */}
-            <span
-              className={`absolute w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300 ${
-                duplexValue ? "translate-x-[24px]" : "translate-x-0.5"
-              }`}
-            />
-          </button>
-        </div>
-      )}
+  <div className="flex flex-col text-xs text-gray-600">
+    <div className="flex items-center space-x-2 font-semibold mb-1">
+      <span>Duplex:</span>
+      <label className="relative inline-flex ml-2 items-center cursor-pointer">
+        <input
+          type="checkbox"
+          className="sr-only peer"
+          checked={!!duplexValue}
+          onChange={() => {
+            const newValue = !duplexValue;
+            setDuplexValue(newValue);
+            setSelectedDuplexLabel(newValue ? "On" : "Off");
+            updateCapabilities(
+              selectedResolution,
+              selectedColorMode,
+              newValue ? "On" : "Off"
+            );
+            onCapabilitiesChange?.(undefined, undefined, newValue);
+          }}
+        />
+        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+        <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+      </label>
+    </div>
+  </div>
+)}
 
       {error && (
         <div
