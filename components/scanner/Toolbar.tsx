@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { UserDropdown } from "@/components/scanner/UserDropdown"
 import { ScannedImage } from "./Dropdown"
+import VERSION from "@/version"
 
 interface ToolbarProps {
   scannerName: string | null
@@ -130,7 +131,7 @@ export const Toolbar = ({
       <div className="relative">
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-600 font-medium">
-            Version <b>1.00</b>
+            Version <b>{VERSION}</b>
           </span>
         <button
           className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer border border-gray-400"

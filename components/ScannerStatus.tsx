@@ -96,8 +96,6 @@
 //     updateCapabilities(selectedResolution, value);
 //   };
 
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -119,8 +117,6 @@ interface ScannerStatusProps {
     showUI?: boolean
   ) => void;
   onToggleUI: (value: boolean) => void;
-
- 
 }
 
 export const ScannerStatus: React.FC<ScannerStatusProps> = ({
@@ -131,8 +127,6 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   error,
   onCapabilitiesChange,
   onToggleUI,
-
-
 }) => {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isResolutionOpen, setIsResolutionOpen] = useState(false);
@@ -152,8 +146,6 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   const [duplexValue, setDuplexValue] = useState<boolean | null>(false);
   const [duplexChangeAllowed, setDuplexChangeAllowed] = useState(false);
   const [showScannerUI, setShowScannerUI] = useState(true);
-
-
 
   const closeAllDropdowns = () => {
     setIsScannerOpen(false);
@@ -294,7 +286,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   };
 
   const handleDuplexChange = (value: string) => {
-    const isOn = value === "On"; 
+    const isOn = value === "On";
     updateCapabilities(selectedResolution, selectedColorMode, value);
     onCapabilitiesChange?.(undefined, undefined, isOn);
     setIsDuplexOpen(false);
@@ -341,29 +333,25 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       <div className="text-sm text-gray-700">Scan Mode:</div>
       {getStatusDisplay()}
 
-        
-    {isReady && scanners.length > 0 && (
-
-      <div className="flex items-center gap-2">
-        <span className="text-xs text-gray-600">Show Scanner Driver UI:</span>
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            checked={showScannerUI}
-            onChange={(e) => {
-              const checked = e.target.checked;
-              setShowScannerUI(checked);
-              onToggleUI?.(checked); // ✅ propagate upwards
-            }}
-          />
-          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-          <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
-        </label>
-      </div>
-    )}
-
-
+      {isReady && scanners.length > 0 && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-600">Show Scanner Driver UI:</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={showScannerUI}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setShowScannerUI(checked);
+                onToggleUI?.(checked); // ✅ propagate upwards
+              }}
+            />
+            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+            <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+          </label>
+        </div>
+      )}
 
       {/* Scanner Dropdown */}
       {scanners.length > 0 && (
@@ -391,10 +379,11 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                       onSelectScanner(scanner);
                       setIsScannerOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-[11px] hover:bg-gray-100 ${selectedScanner === scanner
+                    className={`w-full text-left px-3 py-2 text-[11px] hover:bg-gray-100 ${
+                      selectedScanner === scanner
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700"
-                      }`}
+                    }`}
                     title={scanner}
                   >
                     {scanner}
@@ -435,10 +424,11 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                       handleResolutionChange(res);
                       setIsResolutionOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${selectedResolution === res
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
+                      selectedResolution === res
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700"
-                      }`}
+                    }`}
                   >
                     {res}
                   </button>
@@ -478,10 +468,11 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                       handleColorModeChange(mode);
                       setIsColorModeOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${selectedColorMode === mode
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-100 ${
+                      selectedColorMode === mode
                         ? "bg-blue-50 text-blue-700"
                         : "text-gray-700"
-                      }`}
+                    }`}
                   >
                     {mode}
                   </button>
@@ -492,47 +483,44 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         </div>
       )}
 
-
       {/* Duplex Toggle */}
-      {duplexChangeAllowed && isReady && selectedScanner && (
+      {isReady && selectedScanner && (
         <div className="flex flex-col text-xs text-gray-600">
           <span className="font-semibold mb-1">Duplex:</span>
 
-          {duplexChangeAllowed ? (
-            <button
-              onClick={() => {
-                const newValue = !duplexValue;
-                setDuplexValue(newValue);
-                setSelectedDuplexLabel(newValue ? "On" : "Off");
-                updateCapabilities(selectedResolution, selectedColorMode, newValue ? "On" : "Off");
-                onCapabilitiesChange?.(undefined, undefined, newValue);
-              }}
-              className={`relative w-[50px] h-7 flex items-center rounded-full transition-colors duration-300 ${duplexValue ? "bg-green-500" : "bg-red-500"
-                }`}
-            >
-              {/* Labels */}
-              <span className="absolute left-1 text-[11px] font-semibold text-white">
-                Off
-              </span>
-              <span className="absolute right-1 text-[11px] font-semibold text-white">
-                On
-              </span>
+          <button
+            onClick={() => {
+              const newValue = !duplexValue;
+              setDuplexValue(newValue);
+              setSelectedDuplexLabel(newValue ? "On" : "Off");
+              updateCapabilities(
+                selectedResolution,
+                selectedColorMode,
+                newValue ? "On" : "Off"
+              );
+              onCapabilitiesChange?.(undefined, undefined, newValue);
+            }}
+            className={`relative w-[50px] h-7 flex items-center rounded-full transition-colors duration-300 ${
+              duplexValue ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {/* Labels */}
+            <span className="absolute left-1 text-[11px] font-semibold text-white">
+              Off
+            </span>
+            <span className="absolute right-1 text-[11px] font-semibold text-white">
+              On
+            </span>
 
-              {/* Knob */}
-              <span
-                className={`absolute w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300 ${duplexValue ? "translate-x-[24px]" : "translate-x-0.5"
-                  }`}
-              />
-            </button>
-          ) : (
-            <div className="border rounded p-2 mt-1 text-xs text-gray-500 bg-gray-50">
-              {selectedDuplexLabel || "Simplex only"}
-            </div>
-          )}
+            {/* Knob */}
+            <span
+              className={`absolute w-6 h-6 bg-white rounded-full shadow transform transition-transform duration-300 ${
+                duplexValue ? "translate-x-[24px]" : "translate-x-0.5"
+              }`}
+            />
+          </button>
         </div>
       )}
-
-
 
       {error && (
         <div
@@ -542,8 +530,6 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           {error}
         </div>
       )}
-      
-
 
       <style jsx>{`
         .custom-scroll::-webkit-scrollbar {

@@ -1,5 +1,5 @@
 "use client"
-
+import VERSION from "@/version"
 import Link from "next/link"
 
 export default function AboutPage() {
@@ -325,7 +325,7 @@ export default function AboutPage() {
       <footer className="bg-blue-900 text-white py-12 px-4 mt-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="space-y-2 text-sm leading-relaxed">
-            <p className="font-semibold">GreweScan version 1.00</p>
+            <p className="font-semibold">GreweScan version {VERSION}</p>
             <p>Browser-based application for TWAIN scanning powered by Encleso SDK.</p>
             <p>(C) 2025 by JSE Imaging Solutions.</p>
             <p>
