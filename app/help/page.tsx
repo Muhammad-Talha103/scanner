@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "next/link"
 
 const sections = [
   {
@@ -12,7 +12,12 @@ const sections = [
         text: (
           <>
             Encleso Client must be installed. Download from{" "}
-            <Link href="https://encleso.com" className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://encleso.com"
+              className="text-blue-600 underline hover:text-blue-800"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               encleso.com
             </Link>
           </>
@@ -29,7 +34,12 @@ const sections = [
         text: (
           <>
             Visit{" "}
-            <Link href="https://encleso.com" className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://encleso.com"
+              className="text-blue-600 underline hover:text-blue-800"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               encleso.com
             </Link>{" "}
             and install the Encleso Client on your Windows machine.
@@ -70,6 +80,18 @@ const sections = [
         label: "Reinstall scanner?",
         text: "Remove device via Control Panel → Devices and Printers, then reconnect for automatic driver installation.",
       },
+      {
+        label: "TWAIN Connection Limitation",
+        text: (
+          <>
+            Please note that TWAIN can only connect to one application or one browser window at a time. If the scanner
+            list initialization does not finish, it means another application or another GreweScanner/Encleso browser
+            window is already using the scanner. 👉 <strong>Solution:</strong> Close all other scanning applications. If
+            multiple GreweScanner or Encleso browser windows are open, keep only the one you want to use. Then, try
+            initializing the scanner list again.
+          </>
+        ),
+      },
     ],
   },
   {
@@ -81,7 +103,12 @@ const sections = [
           <h3 className="text-xl font-semibold mb-3">Questions or feedback?</h3>
           <p className="text-blue-100 mb-2">
             Visit{" "}
-            <Link href="https://encleso.com" className="text-white underline hover:text-blue-200" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://encleso.com"
+              className="text-white underline hover:text-blue-200"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               encleso.com
             </Link>
           </p>
@@ -98,7 +125,7 @@ const sections = [
     ),
     bgBlue: true,
   },
-];
+]
 
 export default function HelpPage() {
   return (
@@ -132,10 +159,7 @@ export default function HelpPage() {
             {steps ? (
               <div className="space-y-6">
                 {steps.map(({ title: stepTitle, text }, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white border-l-4 border-blue-500 p-6 shadow-sm rounded-r-lg"
-                  >
+                  <div key={idx} className="bg-white border-l-4 border-blue-500 p-6 shadow-sm rounded-r-lg">
                     <h3 className="text-xl font-semibold text-blue-800 mb-3">{`${idx + 1}. ${stepTitle}`}</h3>
                     <p className="text-gray-700 leading-relaxed">{text}</p>
                   </div>
@@ -151,9 +175,7 @@ export default function HelpPage() {
                 ))}
               </div>
             ) : (
-              <div className={`${bgBlue ? "bg-blue-600 text-white" : "bg-blue-50"} rounded-lg p-6`}>
-                {content}
-              </div>
+              <div className={`${bgBlue ? "bg-blue-600 text-white" : "bg-blue-50"} rounded-lg p-6`}>{content}</div>
             )}
           </section>
         ))}
@@ -165,5 +187,5 @@ export default function HelpPage() {
         </div>
       </footer>
     </div>
-  );
+  )
 }
