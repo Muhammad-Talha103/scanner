@@ -5,6 +5,7 @@ import { useState } from "react";
 import { FileText, Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { ScannedImage } from "./scanner/Dropdown";
+import DeleteAllImages from "./DeleteAllImages";
 
 interface ScannedImagesProps {
   images: ScannedImage[];
@@ -14,6 +15,7 @@ interface ScannedImagesProps {
   isImageSelected?: (imageId: string) => boolean;
   onToggleSelection?: (imageId: string) => void;
   onDeleteImage?: (imageId: string) => void;
+   deleteAllImages?: () => void;
 }
 
 export const ScannedImages: React.FC<ScannedImagesProps> = ({
@@ -24,8 +26,10 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
   isImageSelected,
   onToggleSelection,
   onDeleteImage,
+    deleteAllImages,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<{
     id: string;
     index: number;
@@ -101,6 +105,19 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
   return (
     <>
       <div className="p-4 h-full overflow-auto">
+      {images.length > 0 && !isScanning && (
+        <>
+        <div className="flex items-center justify-end">
+         <button
+            onClick={() => setIsDeleteModalOpen(true)}
+            className=" w-fit text-xs cursor-pointer font-semibold text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 transition-colors"
+          >
+            Clear All Images
+          </button>
+        </div>
+        <hr className="my-2"/>
+        </>
+      )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {images.map((image, index) => {
             const isCurrentlySelected = selectedImageId === image.id;
@@ -193,6 +210,13 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
         imageIndex={imageToDelete?.index || 1}
         isDeleting={isDeleting}
       />
+
+      
+            <DeleteAllImages
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={deleteAllImages || (() => { })}
+            />
     </>
   );
 };

@@ -80,7 +80,7 @@ interface ExtendedScannedImage extends ScannedImage {
   timestamp: number;
 }
 
-export const useScannerIntegration = () => {
+export const useScannerIntegration = (showScannerUI: boolean) => {
   const [isReady, setIsReady] = useState(false);
   const [scanners, setScanners] = useState<string[]>([]);
   const [scannerName, setScannerName] = useState<string | null>(null);
@@ -123,6 +123,10 @@ export const useScannerIntegration = () => {
   } = useDocumentHistory();
 
   const restoredRef = useRef(false);
+
+  // useEffect(() => {
+  //   console.log("TWAIN Driver UI Toggle Value:", showScannerUI);
+  // }, [showScannerUI]);
 
   // Poll Encleso SDK availability
   useEffect(() => {
@@ -203,8 +207,7 @@ export const useScannerIntegration = () => {
     return () => clearInterval(interval);
   }, [initializeEncleso, scriptLoaded]);
 
-  // ✅ Restore persisted images
-  useEffect(() => {
+
     const restoreImages = async () => {
       try {
         const Encleso = window.Encleso;
@@ -259,6 +262,8 @@ export const useScannerIntegration = () => {
       }
     };
 
+  useEffect(() => {
+  
     if (isReady && !restoredRef.current) {
       restoreImages();
     }
@@ -309,7 +314,9 @@ export const useScannerIntegration = () => {
         await Encleso.SetCapabilities({ Resolution: 300, PixelType: 1 });
       }
 
-      const ret = await Encleso.StartScan(scannerName, false);
+      const ret = await Encleso.StartScan(scannerName, showScannerUI);
+      await restoreImages();
+
       const newImages: ExtendedScannedImage[] = [];
 
       for (
@@ -366,6 +373,7 @@ export const useScannerIntegration = () => {
     currentResolution,
     currentPixelType,
     currentDuplex,
+     restoreImages,
   ]);
 
   // ✅ Persistent Delete

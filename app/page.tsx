@@ -67,6 +67,7 @@ export default function ScannerApp() {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showMailModal, setShowMailModal] = useState(false);
   const [showImageEditor, setShowImageEditor] = useState(false);
+   const [showScannerUI, setShowScannerUI] = useState(true);
 
   // Scanner integration hooks
   const {
@@ -98,7 +99,7 @@ export default function ScannerApp() {
     canUndo,
     canRedo,
     updateScannerCapabilities,
-  } = useScannerIntegration();
+  } = useScannerIntegration(showScannerUI);
 
   // Fetch username from Sanity on email change
   useEffect(() => {
@@ -391,8 +392,9 @@ export default function ScannerApp() {
             onSelectScanner={setScannerName}
             error={error}
             onCapabilitiesChange={handleCapabilitiesChange}
-            deleteAllImages={handleDeleteAllImages}
-            images={scannedImages}
+           
+            onToggleUI={setShowScannerUI}
+            
           />
 
           {selectedImage && (
@@ -428,6 +430,7 @@ export default function ScannerApp() {
             isImageSelected={isImageSelected}
             onToggleSelection={toggleImageSelection}
             onDeleteImage={handleDeleteImage}
+             deleteAllImages={handleDeleteAllImages}
           />
         </main>
       </div>

@@ -51,3 +51,38 @@ export const MenuBar = ({ menuItems, activeDropdown, onDropdownToggle, onImagesI
     </div>
   )
 }
+
+
+
+
+// "use client"
+
+// import type React from "react"
+
+// interface MenuBarProps {
+//   onMenuClick?: (menu: string) => void
+// }
+
+// export const MenuBar = ({ onMenuClick }: MenuBarProps) => {
+//   return (
+//     <div className="border-b border-gray-300 px-2 py-1">
+//       <div className="flex items-center justify-between">
+//         <div className="flex items-center space-x-2 z-50">
+//           {[ "help", "about", "impressum"].map((menu) => (
+//             <button
+//               key={menu}
+//               className="px-3 py-1 text-sm rounded  transition-colors uppercase duration-150 cursor-pointer hover:bg-gray-300"
+//               onClick={() => onMenuClick?.(menu)}
+//               type="button"
+//             >
+//               {menu.charAt(0).toUpperCase() + menu.slice(1)}
+//             </button>
+//           ))}
+//         </div>
+        
+
+//         <div className="text-sm text-gray-700 hidden lg:block">Full Screen</div>
+//       </div>
+//     </div>
+//   )
+// }
