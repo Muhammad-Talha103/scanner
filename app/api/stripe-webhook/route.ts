@@ -19,9 +19,10 @@ export async function POST(req: NextRequest) {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET!
     );
-  } catch (err: any) {
-    console.error("❌ Webhook verification error:", err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+  } catch (err) {
+    const errorMessage = typeof err === "object" && err !== null && "message" in err ? (err as { message: string }).message : String(err);
+    console.error("❌ Webhook verification error:", errorMessage);
+    return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 400 });
   }
 
   if (event.type === "checkout.session.completed") {

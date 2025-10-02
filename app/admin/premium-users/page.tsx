@@ -351,7 +351,7 @@ export default function PremiumUsersPage() {
               <select
                 id="sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as "premiumStart-desc" | "premiumStart-asc" | "createdAt-desc")}
                 className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all cursor-pointer"
               >
                 <option value="premiumStart-desc">
