@@ -11,12 +11,23 @@ import { RefreshCw, Search, ChevronDown, Calendar, CreditCard, AlertCircle, User
 // TYPESCRIPT INTERFACES
 // ============================================================================
 
+type PaymentStatus =
+  | "succeeded"
+  | "pending"
+  | "failed"
+  | "canceled"
+  | "refunded"
+  | "paid"
+  | "unpaid"
+
 interface Payment {
   createdAt?: string
   amount?: number
   currency?: string
   status?: string
-  [key: string]: any // Allow other unstructured fields
+   paymentMethod?: string 
+  transactionId?: string 
+  receiptUrl?: string 
 }
 
 interface ExpiredUser {
@@ -449,7 +460,7 @@ export default function ExpiredPremiumUsersPage() {
             {/* Sort Select */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as "movedAt-desc" | "movedAt-asc" | "premiumEnd-desc" | "premiumEnd-asc")}
               className="
                 px-4 py-2.5 bg-white rounded-xl border border-gray-200
                 focus:border-red-400 focus:ring-2 focus:ring-red-200
