@@ -36,7 +36,9 @@ export default function ImpressumPage() {
           </h1>
 
           <div className="space-y-6 text-gray-800">
-            {/* Company Information */}
+            {/* Comp
+            +
+             Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
                 {t("impressum.companyInformation.title")}
