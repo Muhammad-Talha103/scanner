@@ -2,8 +2,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { client } from "@/sanity/lib/client";
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs"; // ✅ important
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-08-27.basil", // or omit if default
+});
+
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature")!;
