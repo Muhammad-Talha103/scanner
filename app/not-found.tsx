@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function NotFound() {
   const [mounted, setMounted] = useState(false)
+    const { t } = useTranslation()
 
   useEffect(() => {
     setMounted(true)
@@ -38,9 +40,9 @@ export default function NotFound() {
 
         {/* Error Message */}
         <div className="animate-slide-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 text-balance">Page Not Found</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 text-balance">{t("pageNotFound")}</h2>
           <p className="text-lg md:text-xl text-secondary mb-8 max-w-md mx-auto text-pretty">
-            {"Oops! The page you're looking for doesn't exist."}
+            {t("oops_message")}
           </p>
         </div>
 
@@ -64,7 +66,7 @@ export default function NotFound() {
                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
               />
             </svg>
-            Go Home
+            {t("goHome")}
           </button>
         </div>
       </div>

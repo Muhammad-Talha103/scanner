@@ -8,12 +8,14 @@ import { setUserInfo } from "@/redux/slice";
 import { useDispatch } from "react-redux";
 import { useRouter } from 'next/navigation'
 import { FirebaseError } from 'firebase/app'
+import { useTranslation } from 'react-i18next'
 interface ValidationErrors {
   email?: string
   password?: string
 }
 
 export default function Login() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,16 +26,16 @@ export default function Login() {
   const dispatch = useDispatch();
 
   // Validation functions
-  const validateEmail = (email: string): string | undefined => {
-    if (!email.trim()) return 'Email is required'
+ const validateEmail = (email: string): string | undefined => {
+    if (!email.trim()) return t("signin.emailRequired")
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    if (!emailRegex.test(email)) return t("signin.emailInvalid")
     return undefined
   }
 
-  const validatePassword = (password: string): string | undefined => {
-    if (!password) return 'Password is required'
-    if (password.length < 6) return 'Password must be at least 6 characters'
+   const validatePassword = (password: string): string | undefined => {
+    if (!password) return t("signin.passwordRequired")
+    if (password.length < 6) return t("signin.passwordTooShort")
     return undefined
   }
 
@@ -69,38 +71,36 @@ export default function Login() {
   const getFirebaseErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
       case 'auth/user-not-found':
-        return 'No account found with this email address. Please check your email or create a new account.'
+        return t("signin.firebaseErrors.userNotFound")
       case 'auth/wrong-password':
-        return 'Incorrect password. Please try again or reset your password.'
+        return t("signin.firebaseErrors.wrongPassword")
       case 'auth/invalid-email':
-        return 'Please enter a valid email address.'
+        return t("signin.firebaseErrors.invalidEmail")
       case 'auth/user-disabled':
-        return 'This account has been disabled. Please contact support for assistance.'
+        return t("signin.firebaseErrors.userDisabled")
       case 'auth/too-many-requests':
-        return 'Too many failed login attempts. Please try again later or reset your password.'
+        return t("signin.firebaseErrors.tooManyRequests")
       case 'auth/network-request-failed':
-        return 'Network error. Please check your internet connection and try again.'
+        return t("signin.firebaseErrors.networkRequestFailed")
       case 'auth/invalid-credential':
-        return 'Invalid email or password. Please check your credentials and try again.'
+        return t("signin.firebaseErrors.invalidCredential")
       case 'auth/operation-not-allowed':
-        return 'Email/password sign-in is not enabled. Please contact support.'
+        return t("signin.firebaseErrors.operationNotAllowed")
       case 'auth/weak-password':
-        return 'Password is too weak. Please choose a stronger password.'
+        return t("signin.firebaseErrors.weakPassword")
       default:
-        return 'Login failed. Please check your credentials and try again.'
+        return t("signin.firebaseErrors.default")
     }
   }
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
 
-    // Clear previous messages
     setMessage('')
     setMessageType('')
 
-    // Validate form
     if (!validateForm()) {
-      setMessage('Please fix the errors below and try again.')
+      setMessage(t("signin.fixErrors"))
       setMessageType('error')
       return
     }
@@ -110,7 +110,6 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password)
         .then((value) => {
-
           const user = value.user;
           dispatch(
             setUserInfo({
@@ -122,7 +121,7 @@ export default function Login() {
             })
           );
 
-          setMessage('Login successful! Welcome back!')
+          setMessage(t("signin.loginSuccess"))
           setMessageType('success')
           setTimeout(() => {
             setIsLoading(false);
@@ -130,27 +129,17 @@ export default function Login() {
           }, 1500);
         })
 
-
-
-      // Clear form on success
       setEmail('')
       setPassword('')
       setErrors({})
-
-
-
     } catch (error: unknown) {
- 
-
-  let errorMessage = 'An unknown error occurred';
-
-  if (error instanceof FirebaseError) {
-    errorMessage = getFirebaseErrorMessage(error.code);
-  }
-
-  setMessage(errorMessage);
-  setMessageType('error');
-} finally {
+      let errorMessage = t("signin.firebaseErrors.default");
+      if (error instanceof FirebaseError) {
+        errorMessage = getFirebaseErrorMessage(error.code);
+      }
+      setMessage(errorMessage);
+      setMessageType('error');
+    } finally {
       setIsLoading(false)
     }
   }
@@ -167,16 +156,27 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
+     <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
+         <div className="fixed top-4 left-4 z-50">
+        <Link
+          href="/"
+          className="flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg shadow-sm transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        {t("helpCenter.backToHome")}
+        </Link>
+      </div>
       <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
-            GREWE Scanner Interface Cloud Version<br className="hidden sm:block" />
-          </h2>
+        {t("signin.appTitle")}<br className="hidden sm:block" />
+      </h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
+          {t("signin.pageTitle")}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Welcome back! Please enter your details
+          {t("signin.subtitle")}
         </p>
       </div>
 
@@ -203,7 +203,7 @@ export default function Login() {
                 <div className="ml-3">
                   <h3 className={`text-sm font-medium ${messageType === 'success' ? 'text-green-800' : 'text-red-800'
                     }`}>
-                    {messageType === 'success' ? 'Success!' : 'Error!'}
+                    {messageType === 'success' ? t("signin.successTitle") : t("signin.errorTitle")}
                   </h3>
                   <div className={`mt-1 text-sm ${messageType === 'success' ? 'text-green-700' : 'text-red-700'
                     }`}>
@@ -217,7 +217,7 @@ export default function Login() {
           <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
+                {t("signin.emailLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -227,7 +227,7 @@ export default function Login() {
                   onChange={(e) => handleEmailChange(e.target.value)}
                   value={email}
                   required
-                  placeholder="Enter your email"
+                  placeholder={t("signin.emailPlaceholder")}
                   className={getInputClassName('email')}
                   disabled={isLoading}
                 />
@@ -244,7 +244,7 @@ export default function Login() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                {t("signin.passwordLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -254,7 +254,7 @@ export default function Login() {
                   required
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   value={password}
-                  placeholder="Enter your password"
+                  placeholder={t("signin.passwordPlaceholder")}
                   className={getInputClassName('password')}
                   disabled={isLoading}
                 />
@@ -279,7 +279,7 @@ export default function Login() {
                   disabled={isLoading}
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
+                  {t("signin.rememberMe")}
                 </label>
               </div>
 
@@ -288,7 +288,7 @@ export default function Login() {
                   href="/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500 transition duration-150 ease-in-out"
                 >
-                  Forgot your password?
+                  {t("signin.forgotPassword")}
                 </Link>
               </div>
             </div>
@@ -308,10 +308,10 @@ export default function Login() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Signing in...
+                    {t("signin.signingIn")}
                   </div>
                 ) : (
-                  'Sign in'
+                  t("signin.signIn")
                 )}
               </button>
             </div>
@@ -323,7 +323,9 @@ export default function Login() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">{"Don't have an account?"}</span>
+                <span className="px-2 bg-white text-gray-500">
+                  {t("signin.noAccount")}
+                </span>
               </div>
             </div>
 
@@ -332,7 +334,7 @@ export default function Login() {
                 href="/signup"
                 className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
               >
-                Create new account
+                {t("signin.createAccount")}
               </a>
             </div>
           </div>

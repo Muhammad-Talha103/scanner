@@ -1,18 +1,12 @@
 "use client"
-import React from "react"
-import {
-  FileText,
-  Save,
-  Printer,
-  Mail,
-  Plus,
-  Scissors,
-  Grid3X3,
-  User,
-} from "lucide-react"
+import type React from "react"
+import { useEffect, useState } from "react"
+import { FileText, Save, Printer, Mail, Plus, Scissors, Grid3X3, User } from "lucide-react"
 import { UserDropdown } from "@/components/scanner/UserDropdown"
-import { ScannedImage } from "./Dropdown"
+import type { ScannedImage } from "./Dropdown"
 import VERSION from "@/version"
+import i18n from "@/app/i18n/config"
+import { useTranslation } from "react-i18next"
 
 interface ToolbarProps {
   scannerName: string | null
@@ -21,7 +15,7 @@ interface ToolbarProps {
   isProcessing: boolean
   selectedImage: ScannedImage | null
   onScanClick: () => void
-  onSaveClick: () => void
+  onSaveClick: (format: string, savePath: string) => void // Updated to accept format and savePath
   onPrintClick: () => void
   onMailClick: () => void
   onNewDocument: () => void
@@ -53,102 +47,140 @@ export const Toolbar = ({
   onUserDropdownToggle,
   onLogout,
 }: ToolbarProps) => {
-  return (
-    <div className="border-b border-gray-300 px-2 py-2 flex justify-between items-center">
-      {/* Left side buttons */}
-      <div className="flex items-center space-x-1 min-w-max">
-        {/* Scan */}
-        <button
-          className={`flex flex-col items-center px-3 py-2 cursor-pointer ${
-            scannerName && !isScanning
-              ? "hover:bg-gray-100 cursor-pointer"
-              : "cursor-not-allowed opacity-50"
-          }`}
-          onClick={onScanClick}
-        >
-          <FileText className="w-6 h-6 text-blue-600 mb-1" />
-          <span className="text-xs">Scan</span>
-        </button>
-        {/* Save */}
-        <button
-          className={`flex flex-col items-center px-3 py-2 ${ scannedImages.length > 0 && "cursor-pointer"} ${
-            scannedImages.length > 0 && !isProcessing
-              ? "hover:bg-gray-100"
-              : "cursor-not-allowed opacity-50"
-          }`}
-          onClick={onSaveClick}
-        >
-          <Save className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">Save</span>
-        </button>
-        {/* Print */}
-        <button
-          className={`flex flex-col items-center px-3 py-2 ${ scannedImages.length > 0 && "cursor-pointer"} ${
-            scannedImages.length > 0 && !isProcessing
-              ? "hover:bg-gray-100"
-              : "cursor-not-allowed opacity-50"
-          }`}
-          onClick={onPrintClick}
-        >
-          <Printer className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">Print</span>
-        </button>
-        {/* Mail */}
-        <button
-          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-          onClick={onMailClick}
-        >
-          <Mail className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">Mail</span>
-        </button>
-        {/* New */}
-        <button
-          className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-          onClick={onNewDocument}
-        >
-          <Plus className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">New</span>
-        </button>
-        {/* Edit */}
-        <button
-          className={`flex flex-col items-center px-3 py-2 ${
-            selectedImage ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
-          }`}
-          onClick={onEditClick}
-          disabled={!selectedImage}
-        >
-          <Scissors className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">Edit</span>
-        </button>
-        {/* Symbols */}
-        <button className="flex flex-col items-center px-3 py-2 hover:bg-gray-100">
-          <Grid3X3 className="w-6 h-6 text-gray-600 mb-1" />
-          <span className="text-xs">Symbols</span>
-        </button>
-      </div>
+  const { t } = useTranslation()
 
-      {/* Right side: User dropdown */}
-      <div className="relative">
-        <div className="flex items-center space-x-4">
-          <span className="text-sm text-gray-600 font-medium">
-            Version <b>{VERSION}</b>
-          </span>
-        <button
-          className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer border border-gray-400"
-          onClick={onUserDropdownToggle}
-          aria-label="User menu"
-        >
-          <User className="w-6 h-6 text-gray-600" />
-        </button>
+  const [language, setLanguage] = useState<string>(i18n.language || "en")
+  const [isMounted, setIsMounted] = useState(false) // check if client-side
+  const [showSaveModal, setShowSaveModal] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true) // component is now mounted
+    const savedLanguage = localStorage.getItem("app-language")
+    if (savedLanguage) {
+      setLanguage(savedLanguage)
+      i18n.changeLanguage(savedLanguage)
+    }
+  }, [])
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLang = e.target.value
+    setLanguage(newLang)
+    i18n.changeLanguage(newLang)
+    localStorage.setItem("app-language", newLang)
+  }
+
+  const handleSaveButtonClick = () => {
+    if (scannedImages.length > 0 && !isProcessing) {
+      setShowSaveModal(true)
+    }
+  }
+
+  const handleSaveWithOptions = (format: string, savePath: string) => {
+    onSaveClick(format, savePath)
+    setShowSaveModal(false)
+  }
+
+  return (
+    <>
+      <div className="border-b border-gray-300 px-2 py-2 flex justify-between items-center">
+        {/* Left side buttons */}
+        <div className="flex items-center space-x-1 min-w-max">
+          {/* Scan */}
+          <button
+            className={`flex flex-col items-center px-3 py-2 cursor-pointer ${
+              scannerName && !isScanning ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
+            }`}
+            onClick={onScanClick}
+          >
+            <FileText className="w-6 h-6 text-blue-600 mb-1" />
+            <span className="text-xs">{t("scan")}</span>
+          </button>
+          {/* Save */}
+          <button
+            className={`flex flex-col items-center px-3 py-2 ${scannedImages.length > 0 && "cursor-pointer"} ${
+              scannedImages.length > 0 && !isProcessing ? "hover:bg-gray-100" : "cursor-not-allowed opacity-50"
+            }`}
+            onClick={handleSaveButtonClick}
+          >
+            <Save className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("save")}</span>
+          </button>
+          {/* Print */}
+          <button
+            className={`flex flex-col items-center px-3 py-2 ${scannedImages.length > 0 && "cursor-pointer"} ${
+              scannedImages.length > 0 && !isProcessing ? "hover:bg-gray-100" : "cursor-not-allowed opacity-50"
+            }`}
+            onClick={onPrintClick}
+          >
+            <Printer className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("print")}</span>
+          </button>
+          {/* Mail */}
+          <button
+            className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            onClick={onMailClick}
+          >
+            <Mail className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("mail")}</span>
+          </button>
+          {/* New */}
+          <button
+            className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
+            onClick={onNewDocument}
+          >
+            <Plus className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("new")}</span>
+          </button>
+          {/* Edit */}
+          <button
+            className={`flex flex-col items-center px-3 py-2 ${
+              selectedImage ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
+            }`}
+            onClick={onEditClick}
+            disabled={!selectedImage}
+          >
+            <Scissors className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("edit")}</span>
+          </button>
+          {/* Symbols */}
+          <button className="flex flex-col items-center px-3 py-2 hover:bg-gray-100">
+            <Grid3X3 className="w-6 h-6 text-gray-600 mb-1" />
+            <span className="text-xs">{t("symbols")}</span>
+          </button>
         </div>
 
-        <UserDropdown
-          isOpen={showUserDropdown}
-          userName={userName}
-          userEmail={userEmail}
-          onLogout={onLogout}
-        />
+        {/* Right side: User dropdown */}
+        <div className="relative">
+          <div className="flex items-center space-x-4">
+            {isMounted && (
+              <select
+                onChange={handleLanguageChange}
+                value={language}
+                className="border border-gray-400 rounded px-2 py-1 text-sm"
+              >
+                <option value="en">🇬🇧 English</option>
+                <option value="de">🇩🇪 Deutsch</option>
+              </select>
+            )}
+
+            <span className="text-sm text-gray-600 font-medium">
+              {t("version")} <b>{VERSION}</b>
+            </span>
+            <button
+              className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer border border-gray-400"
+              onClick={onUserDropdownToggle}
+              aria-label="User menu"
+            >
+              <User className="w-6 h-6 text-gray-600" />
+            </button>
+          </div>
+
+          <UserDropdown isOpen={showUserDropdown} userName={userName} userEmail={userEmail} onLogout={onLogout} />
+        </div>
       </div>
-    </div>
+
+     
+    </>
   )
 }
+

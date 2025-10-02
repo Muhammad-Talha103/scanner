@@ -1,0 +1,629 @@
+{
+  "scan": "Scan",
+  "save": "Save",
+  "print": "Print",
+  "mail": "Mail",
+  "new": "New",
+  "edit": "Edit",
+  "symbols": "Symbols",
+  "version": "Version",
+  "userMenu": "User menu",
+  "scrollingText": "GreweScanner is using the encleso TWAIN web scan component from encleso.com.",
+  "authRequired": "Authentication Required",
+  "loginMessage": "Please log in to access the GREWE Scanner Interface. You will be redirected to the login page shortly.",
+  "redirecting": "Redirecting to login",
+  "loginNow": "Login Now",
+  "secureAccess": "Secure access to your scanning workspace",
+  "fullscreen": "Full Screen",
+  "deleteAllTitle": "Delete All Images?",
+  "deleteAllMessage": "This action cannot be undone. All images will be permanently deleted from your gallery. Are you sure you want to continue?",
+  "cancel": "Cancel",
+  "deleteAll": "Delete All",
+  "deleteImageTitle": "Delete Image",
+  "confirmDeletion": "Confirm Deletion",
+  "deleteImageMessage": "Do you really want to delete image Page {{imageIndex}}?",
+  "irreversibleAction": "This action cannot be undone.",
+  "confirmDelete": "Confirm Delete",
+  "deleting": "Deleting...",
+
+   "editImage": "Edit Image",
+    "rotateLeft": "Rotate Left",
+    "rotateRight": "Rotate Right",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "fitToScreen": "Fit to Screen",
+    "enterCropMode": "Enter Crop Mode",
+    "exitCropMode": "Exit Crop Mode",
+    "undo": "Undo",
+    "redo": "Redo",
+    "scale": "Scale",
+    "crop": "Crop",
+    "saving": "Saving...",
+    "loadingImage": "Loading image...",
+    "panInstruction": "Drag to pan • Use zoom controls to resize",
+    "cropInstruction": "Drag handles to resize crop area • Drag inside to move",
+
+
+
+     "invalidFiles": "Please select valid image files (PNG, JPG, JPEG, TIFF)",
+    "errorImporting": "Error importing images. Please try again.",
+
+
+
+    "title": "Send Email",
+    "to": "To",
+    "toPlaceholder": "recipient@example.com",
+    "subject": "Subject",
+    "subjectPlaceholder": "Email subject",
+    "message": "Message",
+    "messagePlaceholder": "Your message here...",
+    "fileAttachment": "File Attachment",
+    "chooseFile": "Choose File",
+    "includePDF": "Include scanned/imported images as PDF ({{count}} page{{plural}})",
+    "pdfName": "PDF Name",
+    "pdfNamePlaceholder": "Document name",
+    "sendFrom": "Send From",
+    "ownEmail": "Own Email",
+    "grewScannerEmail": "GrewScanner Email",
+    "send": "Send",
+    "sending": "Sending...",
+    "errorRecipientRequired": "Recipient email is required",
+    "errorInvalidEmail": "Please enter a valid email address",
+    "errorSubjectRequired": "Subject is required",
+    "errorPdfNameRequired": "PDF name is required when including scanned images",
+    "successTitle": "Email sent successfully!",
+    "successMessage": "Your email has been delivered to {{email}}",
+    "downloadPDF": "Download PDF: {{url}}",
+  "attachments": "Attachments:",
+ "failedToLoadImage": "Failed to load image",
+
+  "noDocumentLoaded": "No Document Loaded",
+  "clickScanOrImport": "Click Scan to start scanning or Import to load images",
+  "clearAllImages": "Clear All Images",
+  "page": "Page {{index}}",
+  "imported": "Imported",
+  "scanned": "Scanned",
+  "deleteImage": "Delete image",
+  "selected": "Selected",
+  "selectedForOperations": "Selected for operations",
+
+
+  "scanMode": "Scan Mode:",
+  "showScannerUI": "Show Scanner Driver UI:",
+  "error": "Error",
+  "initializing": "Initializing...",
+  "connected": "Connected ",
+  "noScanner": "No Scanner",
+  "resolutions": "Resolutions:",
+  "selectResolution": "Select resolution",
+  "colorModes": "Color Modes:",
+  "selectColorMode": "Select color mode",
+  "duplex": "Duplex",
+  "on": "On",
+  "off": "Off",
+
+
+  "pageNotFound": "Page Not Found",
+  "goHome": "Go Home",
+  "oops_message":"Oops! The page you're looking for doesn't exist.",
+
+  "backToHome": "Back to Home",
+    "heroTitle": "GreweScan",
+    "heroDescription": "Professional browser-based TWAIN scanning solution powered by Encleso SDK",
+    "heroBadge": "Browser-Based • Requires Encleso Client Installation",
+    "whatIsGreweScanTitle": "What is GreweScan?",
+    "whatIsGreweScanDescription1": "GreweScan is a revolutionary browser-based application that enables TWAIN scanning directly from web browsers using the powerful Encleso SDK. While the web interface requires no installation, the Encleso client software must be installed on the local machine to bridge browser and scanner communication.",
+    "whatIsGreweScanDescription2": "This hybrid approach provides the convenience of web-based access while maintaining direct hardware communication for optimal scanning performance. GreweScan supports nearly all TWAIN-compatible scanners and works seamlessly across Chrome, Firefox, Edge, and Opera browsers on Windows systems.",
+    "keyBenefitsTitle": "Key Benefits",
+    "keyBenefitsList": [
+      "Web interface with no browser plugins required",
+      "Direct scanner communication via Encleso client",
+      "Support for nearly all TWAIN-compatible scanners",
+      "Compatible with Windows 7 through Windows 11"
+    ],
+    "howItWorksTitle": "How It Works",
+    "architectureTitle": "Client-Server Architecture",
+    "architectureDescription": "GreweScan uses a hybrid architecture where the web application runs in your browser while the Encleso client software installed on your machine handles direct scanner communication through TWAIN drivers.",
+    "webInterfaceTitle": "Web Interface",
+    "webInterfaceDesc": "Browser-based UI with no plugins required. Works with Chrome, Firefox, Edge, and Opera",
+    "enclesoClientTitle": "Encleso Client",
+    "enclesoClientDesc": "Local software that bridges browser and scanner via REST API communication",
+    "twainScannerTitle": "TWAIN Scanner",
+    "twainScannerDesc": "Direct hardware communication with nearly all TWAIN-compatible scanners",
+    "supportedFormatsTitle": "Supported Formats",
+    "supportedFormatsList": ["PDF", "JPEG", "TIFF", "Multi-page TIFF", "PNG", "BMP"],
+    "systemRequirementsTitle": "System Requirements",
+    "systemRequirementsList": [
+      "Windows 7 through Windows 11 (32-bit and 64-bit)",
+      "TWAIN-compatible scanner with drivers installed",
+      "Encleso client software installation required",
+      "Modern web browser (Chrome, Firefox, Edge, Opera)"
+    ],
+    "aboutJSETitle": "About JSE Imaging Solutions",
+    "30YearsOfInnovation": "30 Years of TWAIN Innovation ",
+    "aboutJSEDesc1": "JSE Imaging Solutions is a leading developer of TWAIN development toolkits, TWAIN drivers, TWAIN utilities, and imaging tools with 30 years of innovation in scan and image solutions. They specialize in creating OEM TWAIN and WIA drivers for various manufacturers and provide comprehensive imaging solutions for businesses worldwide.",
+    "aboutJSEDesc2": "JSE developed the Encleso SDK that powers GreweScan, bringing their decades of TWAIN expertise to modern web-based applications. Their solutions bridge the gap between traditional desktop scanning and contemporary web technologies.",
+    "visitJSE": "Visit JSE Imaging Solutions",
+    "products": {
+      "SnapTwain": "TWAIN driver for Fujitsu and Ricoh ScanSnap scanners (iX100, iX500, iX1300, iX1400, iX1500, iX1600)",
+      "TWAINCommander": "Command line scan utility for batch scanning from any TWAIN compliant device",
+      "EnclesoSDK": "Web TWAIN SDK enabling browser-based scanning applications"
+    },
+    "poweredByEnclesoTitle": "Powered by Encleso SDK",
+    "poweredByEnclesoDesc": "GreweScan is powered by the Encleso SDK, a TWAIN scanning component designed specifically for browser-based web applications. Encleso enables users to select connected scanners, configure settings like resolution and color, and view scanned pages directly within web pages through its JavaScript Library integration.",
+    "poweredByEnclesoFeatures": [
+      {
+        "title": "Browser Integration",
+        "desc": "JavaScript Library for seamless web integration"
+      },
+      {
+        "title": "High Performance",
+        "desc": "Direct TWAIN communication for optimal scanning speed"
+      },
+      {
+        "title": "Wide Compatibility",
+        "desc": "Supports nearly all TWAIN-compatible scanners"
+      },
+      {
+        "title": "Developer Friendly",
+        "desc": "Easy integration with comprehensive documentation"
+      }
+    ],
+    "learnMoreEncleso": "Learn More About Encleso SDK",
+    "footerVersion": "GreweScan version",
+    "footerDescription": "Browser-based application for TWAIN scanning powered by Encleso SDK.",
+    "footerCopyright": "(C) 2025 by JSE Imaging Solutions.",
+    "footerEncleso": "Using Encleso web TWAIN SDK from",
+
+    
+  
+  "helpCenter": {
+    "title": "GreweScanner Help Center",
+    "subtitle": "Everything you need to get started with GreweScanner",
+   "backToHome": "Back to Home",
+
+    "systemRequirements": {
+      "title": "System Requirements",
+      "os": "Operating System",
+      "scanner": "Scanner",
+      "client": "Client Software",
+      "osText": "Windows 10 or later",
+      "scannerText": "TWAIN-compliant scanner or any other image capture device",
+      "clientText": "Encleso Client must be installed. Download from"
+    },
+
+    "gettingStarted": {
+      "title": "Getting Started",
+      "steps": {
+        "installClient": {
+          "title": "Install Encleso Client",
+          "text": "Visit encleso.com and install the Encleso Client on your Windows machine."
+        },
+        "connectScanner": {
+          "title": "Connect Your Scanner",
+          "text": "Plug in a TWAIN-compliant scanner or supported image capture device; ensure it's powered and connected via USB or network."
+        },
+        "openApp": {
+          "title": "Open GreweScanner in Your Browser",
+          "text": "Launch the GreweScanner web app. It should auto-detect your scanner if all requirements are met."
+        },
+        "checkVersion": {
+          "title": "Check the Version",
+          "text": "Version number (e.g., v1.00) is visible in the header near the 'User Icon' button and updates with new releases."
+        }
+      }
+    },
+
+    "troubleshooting": {
+      "title": "Troubleshooting (if needed)",
+      "scannerNotDetected": {
+        "title": "Scanner not detected?",
+        "text": "Ensure scanner is TWAIN-compliant and Encleso Client is running."
+      },
+      "stillNotWorking": {
+        "title": "Still not working?",
+        "text": "Restart browser and client; check no other app is using scanner."
+      },
+      "clientNotStart": {
+        "title": "Client won't start?",
+        "text": "Reinstall from official site, run as Administrator if needed."
+      },
+      "reinstallScanner": {
+        "title": "Reinstall scanner?",
+        "text": "Remove device via Control Panel → Devices and Printers, then reconnect for automatic driver installation."
+      },
+      "twainLimit": {
+        "title": "TWAIN Connection Limitation",
+        "text": "TWAIN can only connect to one application or one browser window at a time. Close other scanning apps or browser windows, then retry."
+      }
+    },
+
+    "contact": {
+      "title": "Contact & Feedback",
+      "questions": "Questions or feedback?",
+      "visit": "Visit",
+      "emailSupport": "Email Support"
+    },
+
+    "footer": "© 2025 GreweScanner. Powered by Encleso Client."
+  },
+
+   "impressum": {
+      "title": "Impressum",
+      "backToHome": "Back to Home",
+
+      "companyInformation": {
+        "title": "Company Information",
+        "name": "JSE Imaging Solutions UG (haftungsbeschränkt)",
+        "managingDirector": "Managing Director: Kai Jungclaus",
+        "street": "Kolpingstr. 11",
+        "zipCity": "40764 Langenfeld",
+        "country": "Germany"
+      },
+
+      "contact": {
+        "title": "Contact",
+        "phone": "Phone: +49 2173 168 882",
+        "email": "Email: sales@jse.de"
+      },
+
+      "legalInformation": {
+        "title": "Legal Information",
+        "register": "HRB 92542 Local Court Düsseldorf",
+        "vatId": "VAT-Id.: DE341751063"
+      },
+
+      "editorialResponsibility": {
+        "title": "Editorial Responsibility",
+        "text": "Responsible for journalistic-editorial content according to § 55 (2) RStV: K. Jungclaus at company address."
+      },
+
+      "footer": "© 2025 JSE Imaging Solutions UG. All rights reserved."
+    },
+
+    "upgrade": {
+  "hero": {
+    "offerBadge": "Limited Time Offer",
+    "title": "Upgrade to {{product}} Premium",
+    "subtitle": "Unlock professional scanning features and take your productivity to the next level",
+    "price": "€1",
+    "perMonth": "per month",
+    "button": "Upgrade Now"
+  },
+  "features": {
+    "title": "Premium Features",
+    "subtitle": "Everything you need for professional scanning",
+    "items": [
+      { "title": "No Encleso Watermark", "description": "Clean, professional scans without any watermarks or branding.", "icon": "✨" },
+      { "title": "24/7 Technical Support", "description": "Get instant help whenever you need it with our dedicated support team.", "icon": "🛟" },
+      { "title": "Faster Uploads & Priority Servers", "description": "Lightning-fast processing with dedicated premium infrastructure.", "icon": "⚡" },
+      { "title": "Decorative Preview Mode", "description": "Beautiful preview layouts that make your scans look professional.", "icon": "🎨" },
+      { "title": "Premium Profile Badge", "description": "Show off your premium status with an exclusive profile badge.", "icon": "👑" },
+      { "title": "Early Access to New Features", "description": "Be the first to try new features and improvements before anyone else.", "icon": "🚀" }
+    ]
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      { "q": "Can I get technical support with Premium?", "a": "Yes — with Premium you get 24/7 technical support, so our team is always ready to assist you whenever you need help." },
+      { "q": "What payment methods do you accept?", "a": "We accept all major credit cards, debit cards, and digital payment methods through our secure Stripe payment processor." },
+      { "q": "Do I get access to new features before others?", "a": "Yes — Premium members enjoy early access to upcoming features, so you can try out the latest tools before anyone else." },
+      { "q": "Will my scans still have the Encleso watermark?", "a": "No — Premium completely removes the Encleso watermark, giving you clean, professional-quality scans." },
+      { "q": "Is the Premium plan really only €1 per month?", "a": "Yes — the Premium subscription costs just €1 per month, making it affordable for everyone." },
+      { "q": "Do I get a Premium badge on my profile?", "a": "Yes — Premium members receive a special profile badge, showing that you’re supporting GreweScanner and unlocking exclusive perks." }
+    ]
+  },
+  "cta": {
+    "title": "Ready to Go Premium?",
+    "subtitle": "Join thousands of professionals who trust {{product}} Premium for their scanning needs",
+    "button": "Start Your Premium Journey",
+    "note": "Secure payment • Instant activation"
+  }
+},
+  "signin": {
+    "appTitle": "GREWE Scanner Interface Cloud Version",
+    "pageTitle": "Sign in to your account",
+    "subtitle": "Welcome back! Please enter your details",
+
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create new account",
+
+    "successTitle": "Success!",
+    "errorTitle": "Error!",
+    "loginSuccess": "Login successful! Welcome back!",
+    "loginFailed": "Login failed. Please check your credentials and try again.",
+    "fixErrors": "Please fix the errors below and try again.",
+
+    "emailRequired": "Email is required",
+    "emailInvalid": "Please enter a valid email address",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 6 characters",
+
+    "firebaseErrors": {
+      "userNotFound": "No account found with this email address. Please check your email or create a new account.",
+      "wrongPassword": "Incorrect password. Please try again or reset your password.",
+      "invalidEmail": "Please enter a valid email address.",
+      "userDisabled": "This account has been disabled. Please contact support for assistance.",
+      "tooManyRequests": "Too many failed login attempts. Please try again later or reset your password.",
+      "networkRequestFailed": "Network error. Please check your internet connection and try again.",
+      "invalidCredential": "Invalid email or password. Please check your credentials and try again.",
+      "operationNotAllowed": "Email/password sign-in is not enabled. Please contact support.",
+      "weakPassword": "Password is too weak. Please choose a stronger password.",
+      "default": "Login failed. Please check your credentials and try again."
+    }
+  },
+   "signup": {
+      "appTitle": "GREWE Scanner Interface Cloud Version",
+      "pageTitle": "Create your account",
+      "subtitle": "Join us today and get started",
+
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Enter your full name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create a password",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm your password",
+
+      "createAccount": "Create Account",
+      "creatingAccount": "Creating Account...",
+      "alreadyHaveAccount": "Already have an account?",
+      "signInInstead": "Sign in instead",
+
+      "successTitle": "Success!",
+      "errorTitle": "Error!",
+      "accountCreated": "Account created successfully! Welcome aboard! You can now login.",
+      "fixErrors": "Please fix the errors below and try again.",
+
+      "nameRequired": "Full name is required",
+      "nameTooShort": "Name must be at least 2 characters",
+      "nameTooLong": "Name must be less than 50 characters",
+
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+
+      "passwordRequired": "Password is required",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "passwordTooLong": "Password must be less than 128 characters",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordNumber": "Password must contain at least one number",
+
+      "confirmPasswordRequired": "Please confirm your password",
+      "confirmPasswordMismatch": "Passwords do not match",
+
+      "firebaseErrors": {
+        "emailAlreadyInUse": "This email address is already registered. Please use a different email or try signing in.",
+        "invalidEmail": "Please enter a valid email address.",
+        "operationNotAllowed": "Email/password accounts are not enabled. Please contact support.",
+        "weakPassword": "Password is too weak. Please choose a stronger password.",
+        "networkRequestFailed": "Network error. Please check your internet connection and try again.",
+        "tooManyRequests": "Too many failed attempts. Please try again later.",
+        "default": "An unexpected error occurred. Please try again."
+      }
+    },
+    "login_admin": {
+  "appTitle": "GREWE Scanner Interface Cloud-Version",
+  "pageTitle": "Welcome Back",
+  "subtitle": "Sign in to access your admin dashboard",
+
+  "emailLabel": "Email Address",
+  "emailPlaceholder": "Enter your email",
+
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Enter your password",
+
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+
+  "signIn": "Sign In",
+  "signingIn": "Signing In...",
+
+  "successTitle": "Success!",
+  "errorTitle": "Error!",
+  "invalidCredentials": "Invalid email or password",
+  "fixErrors": "Please fix the errors below and try again.",
+
+  "emailRequired": "Email is required",
+  "passwordRequired": "Password is required",
+
+  "footerNote": "Protected by enterprise-grade security"
+},
+"changePassword_admin": {
+  "pageTitle": "Change Admin Password",
+  "step1": "Verify Current Credentials",
+  "step2": "Set New Credentials",
+
+  "currentUsernameLabel": "Current Username",
+  "currentUsernamePlaceholder": "Enter current username",
+
+  "currentPasswordLabel": "Current Password",
+  "currentPasswordPlaceholder": "Enter current password",
+
+  "newUsernameLabel": "New Username",
+  "newUsernamePlaceholder": "Enter new username",
+
+  "newPasswordLabel": "New Password",
+  "newPasswordPlaceholder": "Enter new password",
+  "passwordHint": "Password must be at least 6 characters long",
+
+  "verifyButton": "Verify Credentials",
+  "verifying": "Verifying...",
+  "updateButton": "Update Password",
+  "updating": "Updating...",
+  "backButton": "Back",
+
+  "successTitle": "Success!",
+  "successMessage": "Admin credentials have been updated successfully.",
+  "goToDashboard": "Go to Admin Dashboard",
+
+  "errorInvalid": "Invalid username or password",
+  "errorNotFound": "Admin credentials not found in database",
+  "errorGeneric": "An error occurred"
+},
+"deleteUser": {
+  "successTitle": "Successfully Deleted",
+  "successMessageP1": "User ",
+  "successMessageP2": "successfully deleted",
+
+  "confirmTitle": "Confirm Delete",
+  "confirmMessageP1": "Are you sure you want to delete",
+  "confirmMessageP2": " This action cannot be undone.",
+
+  "cancelButton": "Cancel",
+  "deleteButton": "Delete",
+  "deleting": "Deleting..."
+},
+"admin":{
+  "verifying":"Verifying Access",
+  "checkadminCredentials":"Checking your admin credentials and permissions...",
+  "accessDenied":"Access Denied",
+  "redirecting":"Redirecting to login..",
+  "admin_dashboard":"Admin Dashboard",
+  "loadingDashboard":"Loading your dashboard...",
+  "loadingUsers":"Loading Users",
+  "fetchingUsers":"Fetching user data from the database...",
+  "manage_users":"Manage users and their information",
+  "change_credentials":"Change Credentials",
+  "logout":"Logout",
+  "user_management":"User Management"
+},
+  "userTable": {
+    "searchPlaceholder": "Search users by name or email...",
+    "showing": "Showing",
+    "of": "of",
+    "users": "users",
+    "all": "all",
+    "noUsersFoundFor": "- No users found matching ",
+
+    "columnSerial": "#",
+    "columnName": "Name",
+    "columnEmail": "Email",
+    "columnPassword": "Password",
+    "columnAction": "Action",
+    "columnUserType": "User Type",
+
+    "noResultsTitle": "No users found",
+    "noResultsDescription": "Try adjusting your search terms or",
+    "noResultsClearSearch": "clear search",
+    "deletion_failed":"Deletion failed",
+    "unknownError":"An unknown error occurred",
+    "error":"Error"
+
+
+  },
+  "user_row": {
+    "updated": "AKTUALISIERT",
+    "delete": "Löschen",
+    "deleteUser": "Benutzer löschen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "serialNumberPrefix": "#"
+  },
+ "forget_password": {
+  "appTitle": "GREWE Scanner Interface Cloud Version",
+  "resetPasswordHeading": "Reset your password",
+  "resetPasswordSubtext": "Enter your email address and we'll send you a link to reset your password",
+  "emailLabel": "Email Address",
+  "emailPlaceholder": "Enter your email address",
+  "emailHelp": "We'll send a password reset link to this email address",
+  "validationEmailRequired": "Email is required",
+  "validationEmailInvalid": "Please enter a valid email address",
+  "formErrorMessage": "Please fix the errors below and try again.",
+  "buttonSendReset": "Send Reset Link",
+  "buttonSendingReset": "Sending Reset Link...",
+  "messageSuccessTitle": "Success!",
+  "messageErrorTitle": "Error!",
+  "messageSuccessDefault": "If an account with this email exists, you will receive a password reset link shortly.",
+  "messageErrorDefault": "Failed to send password reset email. Please try again.",
+  "errormessage":"An unknown error occurred",
+  "firebaseErrors": {
+    "user-not-found": "No account found with this email address. Please check your email or create a new account.",
+    "invalid-email": "Please enter a valid email address.",
+    "too-many-requests": "Too many password reset requests. Please wait a few minutes before trying again.",
+    "network-request-failed": "Network error. Please check your internet connection and try again.",
+    "operation-not-allowed": "Password reset is not enabled. Please contact support.",
+    "invalid-action-code": "The password reset link is invalid or has expired. Please request a new one.",
+    "expired-action-code": "The password reset link has expired. Please request a new one.",
+    "weak-password": "Please choose a stronger password.",
+    "default": "Failed to send password reset email. Please try again."
+  },
+  "rememberPassword": "Remember your password?",
+  "backToSignIn": "Back to Sign in",
+  "infoBoxTitle": "What to expect",
+  "infoBoxItems": {
+    "line1": "You'll receive an email with a password reset link",
+    "line2": "The link will expire in 1 hour for security",
+    "line3": "Check your spam folder if you don't see the email",
+    "line4": "Contact support if you continue having issues"
+  },
+  "securityNoticeTitle": "Security Reminder",
+  "securityNoticeText": "For your security, we've logged this password reset request. If you didn't request this, please contact support immediately."
+},
+"reset_password": {
+  "verifyingResetLink": "Verifying reset link...",
+  "code_verification_error":"Code verification error:",
+  "invalidOrMissingCode": "Invalid or missing reset code. Please request a new password reset link.",
+  "unknownError": "An unknown error occurred",
+  "expiredActionCode": "The password reset link has expired. Please request a new password reset email.",
+  "invalidActionCode": "The password reset link is invalid or has already been used. Please request a new one.",
+  "userDisabled": "This account has been disabled. Please contact support for assistance.",
+  "userNotFound": "No account found. The user may have been deleted.",
+  "weakPassword": "Password is too weak. Please choose a stronger password.",
+  "networkError": "Network error. Please check your internet connection and try again.",
+  "tooManyRequests": "Too many requests. Please wait a few minutes before trying again.",
+  "failedReset": "Failed to reset password. Please try again or request a new reset link.",
+  "invalidResetCode": "Invalid reset code. Please request a new password reset link.",
+  "passwordResetSuccess": "Password reset successful! You can now sign in with your new password.",
+  "passwordRequired": "Password is required",
+  "passwordMinLength": "Password must be at least 6 characters",
+  "passwordMaxLength": "Password must be less than 128 characters",
+  "passwordLowercase": "Password must contain at least one lowercase letter",
+  "passwordUppercase": "Password must contain at least one uppercase letter",
+  "passwordNumber": "Password must contain at least one number",
+  "confirmPasswordRequired": "Please confirm your password",
+  "confirmPasswordMismatch": "Passwords do not match",
+  "fixErrors": "Please fix the errors below and try again.",
+  "setNewPassword": "Set New Password",
+  "enterNewPasswordFor": "Enter your new password for",
+  "invalidResetLink": "Invalid Reset Link",
+  "error": "Error!",
+  "success": "Success!",
+  "requestNewResetLink": "Request New Reset Link",
+  "backToSignIn": "Back to Sign In",
+  "newPassword": "New Password",
+  "enterNewPassword": "Enter your new password",
+  "confirmNewPassword": "Confirm New Password",
+  "confirmYourPassword": "Confirm your new password",
+  "updatingPassword": "Updating Password...",
+  "updatePassword": "Update Password",
+  "signInNow": "Sign In Now",
+  "passwordRequirements": "Password Requirements",
+  "requirementMinLength": "At least 6 characters long",
+  "requirementUppercase": "Contains at least one uppercase letter",
+  "requirementLowercase": "Contains at least one lowercase letter",
+  "requirementNumber": "Contains at least one number"
+}
+
+
+
+
+
+}
+
+
+
+
+

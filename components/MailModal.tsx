@@ -1,42 +1,49 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
-import type { ScannedImage } from "./scanner/Dropdown"
-import { client } from "@/sanity/lib/client" // <-- Sanity client for frontend upload
-import emailjs from "@emailjs/browser"
-import { uploadFileToSanity } from "@/sanity/lib/uploadFile"
+import type React from "react";
+import { useState, useEffect, useRef } from "react";
+import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react";
+import type { ScannedImage } from "./scanner/Dropdown";
+import { client } from "@/sanity/lib/client"; //
+import emailjs from "@emailjs/browser";
+import { uploadFileToSanity } from "@/sanity/lib/uploadFile";
+import { useTranslation } from "next-i18next";
 
 interface MailModalProps {
-  isOpen: boolean
-  onClose: () => void
-  scannedImages: ScannedImage[]
+  isOpen: boolean;
+  onClose: () => void;
+  scannedImages: ScannedImage[];
 }
 
 interface FormData {
-  to: string
-  subject: string
-  message: string
-  attachFiles: File[]
-  includePDF: boolean
-  pdfName: string
+  to: string;
+  subject: string;
+  message: string;
+  attachFiles: File[];
+  includePDF: boolean;
+  pdfName: string;
 }
 
-export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedImages }) => {
-    const [formData, setFormData] = useState<FormData>({
+export const MailModal: React.FC<MailModalProps> = ({
+  isOpen,
+  onClose,
+  scannedImages,
+}) => {
+  const { t } = useTranslation();
+
+  const [formData, setFormData] = useState<FormData>({
     to: "",
     subject: "",
     message: "",
     attachFiles: [],
     includePDF: false,
     pdfName: "",
-  })
-  const [senderType, setSenderType] = useState<"own" | "grewscanner">("own")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  });
+  const [senderType, setSenderType] = useState<"own" | "grewscanner">("own");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -47,205 +54,222 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         attachFiles: [],
         includePDF: false,
         pdfName: "",
-      })
-      setSenderType("own")
-      setIsLoading(false)
-      setIsSuccess(false)
-      setError(null)
+      });
+      setSenderType("own");
+      setIsLoading(false);
+      setIsSuccess(false);
+      setError(null);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  const handleInputChange = (field: keyof FormData, value: string | boolean | File | null) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    setError(null)
-  }
+  const handleInputChange = (
+    field: keyof FormData,
+    value: string | boolean | File | null
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError(null);
+  };
 
-  const handleFileSelect = () => fileInputRef.current?.click()
-   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+  const handleFileSelect = () => fileInputRef.current?.click();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
     if (files.length > 0) {
       setFormData((prev) => ({
         ...prev,
         attachFiles: [...prev.attachFiles, ...files],
-      }))
+      }));
     }
-  }
+  };
   const generatePDF = async (): Promise<Blob> => {
-    const jsPDFModule = await import("jspdf")
-    const jsPDF = jsPDFModule.default
-    const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
-    const pageWidth = pdf.internal.pageSize.getWidth()
-    const pageHeight = pdf.internal.pageSize.getHeight()
-    const margin = 10
+    const jsPDFModule = await import("jspdf");
+    const jsPDF = jsPDFModule.default;
+    const pdf = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 10;
 
     for (let i = 0; i < scannedImages.length; i++) {
-      const image = scannedImages[i]
-      if (i > 0) pdf.addPage()
+      const image = scannedImages[i];
+      if (i > 0) pdf.addPage();
 
-      const img = new Image()
-      img.crossOrigin = "anonymous"
+      const img = new Image();
+      img.crossOrigin = "anonymous";
       await new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve()
-        img.onerror = () => reject(new Error("Failed to load image"))
-        img.src = image.dataUrl
-      })
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error(t("failedToLoadImage")));
+        img.src = image.dataUrl;
+      });
 
-      const imgWidth = img.width
-      const imgHeight = img.height
-      const availableWidth = pageWidth - 2 * margin
-      const availableHeight = pageHeight - 2 * margin
+      const imgWidth = img.width;
+      const imgHeight = img.height;
+      const availableWidth = pageWidth - 2 * margin;
+      const availableHeight = pageHeight - 2 * margin;
 
-      let finalWidth = availableWidth
-      let finalHeight = (imgHeight * availableWidth) / imgWidth
+      let finalWidth = availableWidth;
+      let finalHeight = (imgHeight * availableWidth) / imgWidth;
       if (finalHeight > availableHeight) {
-        finalHeight = availableHeight
-        finalWidth = (imgWidth * availableHeight) / imgHeight
+        finalHeight = availableHeight;
+        finalWidth = (imgWidth * availableHeight) / imgHeight;
       }
 
-      const x = (pageWidth - finalWidth) / 2
-      const y = (pageHeight - finalHeight) / 2
-      pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight)
+      const x = (pageWidth - finalWidth) / 2;
+      const y = (pageHeight - finalHeight) / 2;
+      pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight);
     }
 
-    return pdf.output("blob")
-  }
+    return pdf.output("blob");
+  };
 
   const validateForm = (): boolean => {
     if (!formData.to.trim()) {
-      setError("Recipient email is required")
-      return false
+      setError(t("errorRecipientRequired"));
+      return false;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.to)) {
-      setError("Please enter a valid email address")
-      return false
+      setError(t("errorInvalidEmail"));
+      return false;
     }
     if (!formData.subject.trim()) {
-      setError("Subject is required")
-      return false
+      setError(t("errorSubjectRequired"));
+      return false;
     }
     if (formData.includePDF && !formData.pdfName.trim()) {
-      setError("PDF name is required when including scanned images")
-      return false
+      setError(t("errorPdfNameRequired"));
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const handleSendWithUserEmail = async () => {
-    if (!validateForm()) return
-    setIsLoading(true)
+    if (!validateForm()) return;
+    setIsLoading(true);
     // console.log("Sending email to:", formData.to)
     try {
-      let pdfUrl: string | null = null
-      let fileUrl: string[]  = []
+      let pdfUrl: string | null = null;
+      let fileUrl: string[] = [];
 
       if (formData.includePDF && scannedImages.length > 0) {
-        const pdfBlob = await generatePDF()
+        const pdfBlob = await generatePDF();
         const asset = await client.assets.upload("file", pdfBlob, {
           filename: `${formData.pdfName || "document"}.pdf`,
-        })
+        });
 
-        pdfUrl = asset.url
+        pdfUrl = asset.url;
       }
- if (formData.attachFiles.length > 0) {
-          fileUrl = await Promise.all(
-          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
-        )
+      if (formData.attachFiles.length > 0) {
+        fileUrl = await Promise.all(
+          formData.attachFiles.map((file) =>
+            uploadFileToSanity(file, file.name)
+          )
+        );
       }
 
-      let body = formData.message
+      let body = formData.message;
       if (pdfUrl) {
-        body += `\n\nDownload PDF: ${pdfUrl}`
+         body += `\n\n${t("downloadPDF", { url: pdfUrl })}`;
       }
-        if (fileUrl.length > 0) {
-      body += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`
-    }
+      if (fileUrl.length > 0) {
+        body += `\n\n${t("attachments")}:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
+      }
 
       const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
-        formData.subject,
-      )}&body=${encodeURIComponent(body)}`
+        formData.subject
+      )}&body=${encodeURIComponent(body)}`;
 
-      const a = document.createElement("a")
-      a.href = mailtoLink
-      a.style.display = "none"
-      document.body.appendChild(a)
+      const a = document.createElement("a");
+      a.href = mailtoLink;
+      a.style.display = "none";
+      document.body.appendChild(a);
 
-      a.click()
-      document.body.removeChild(a)
+      a.click();
+      document.body.removeChild(a);
 
-      setTimeout(() => setIsSuccess(true), 25000)
-      setIsLoading(false)
+      setTimeout(() => setIsSuccess(true), 25000);
+      setIsLoading(false);
     } catch (err) {
-      const message = err instanceof Error ? err.message : String(err)
-      setError(message)
-      setIsLoading(false)
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSendWithGrewScannerEmail = async () => {
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
     try {
-      setIsLoading(true)
-      setError(null)
+      setIsLoading(true);
+      setError(null);
 
-      let finalMessage = formData.message
-      let pdfUrl: string | null = null
-      let fileUrl: string[] | null = null
+      let finalMessage = formData.message;
+      let pdfUrl: string | null = null;
+      let fileUrl: string[] | null = null;
 
       if (formData.includePDF && scannedImages.length > 0) {
-        const pdfBlob = await generatePDF()
+        const pdfBlob = await generatePDF();
 
-        const asset = await client.assets.upload("file", pdfBlob, { filename: `${formData.pdfName || "document"}.pdf` })
-        pdfUrl = asset.url
+        const asset = await client.assets.upload("file", pdfBlob, {
+          filename: `${formData.pdfName || "document"}.pdf`,
+        });
+        pdfUrl = asset.url;
 
-        finalMessage += `\n\nDownload PDF: ${pdfUrl}`
+        finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
       }
 
-        if (formData.attachFiles.length > 0) {
-          fileUrl = await Promise.all(
-          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
-        )
-        finalMessage += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`
+      if (formData.attachFiles.length > 0) {
+        fileUrl = await Promise.all(
+          formData.attachFiles.map((file) =>
+            uploadFileToSanity(file, file.name)
+          )
+        );
+        finalMessage += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
       }
-
 
       const templateParams = {
         to_email: formData.to,
         subject: formData.subject,
         message: finalMessage,
-      }
+      };
 
-      await emailjs.send("service_slh2t1t", "template_rhbj1ta", templateParams, "yElbkX08frFpeH4BD")
+      await emailjs.send(
+        "service_slh2t1t",
+        "template_rhbj1ta",
+        templateParams,
+        "yElbkX08frFpeH4BD"
+      );
 
-      setIsSuccess(true)
+      setIsSuccess(true);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err)
-      setError(message)
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSend = () => {
     if (senderType === "own") {
-      handleSendWithUserEmail()
+      handleSendWithUserEmail();
     } else {
-      handleSendWithGrewScannerEmail()
+      handleSendWithGrewScannerEmail();
     }
-  }
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose()
-  }
-  if (!isOpen) return null
+    if (e.key === "Escape") onClose();
+  };
+  if (!isOpen) return null;
 
   const removeFile = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       attachFiles: prev.attachFiles.filter((_, i) => i !== index),
-    }))
-  }
+    }));
+  };
 
   return (
     <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50 p-4">
@@ -258,7 +282,9 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-gray-900">Send Email</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {t("title")}
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -272,47 +298,54 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
         <div className="p-6">
           {!isSuccess ? (
             <div className="space-y-4">
-              
-
               <div>
-                <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-2">
-                  To <span className="text-red-500">*</span>
+                <label
+                  htmlFor="to"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  {t("to")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="to"
                   type="email"
                   value={formData.to}
                   onChange={(e) => handleInputChange("to", e.target.value)}
-                  placeholder="recipient@example.com"
+                  placeholder={t("toPlaceholder")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   disabled={isLoading}
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject <span className="text-red-500">*</span>
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  {t("subject")} <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="subject"
                   type="text"
                   value={formData.subject}
                   onChange={(e) => handleInputChange("subject", e.target.value)}
-                  placeholder="Email subject"
+                  placeholder={t("subjectPlaceholder")}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   disabled={isLoading}
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  {t("message")}
                 </label>
                 <textarea
                   id="message"
                   value={formData.message}
                   onChange={(e) => handleInputChange("message", e.target.value)}
-                  placeholder="Your message here..."
+                  placeholder={t("messagePlaceholder")}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                   disabled={isLoading}
@@ -320,19 +353,19 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">File Attachment</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {t("fileAttachment")}
+                </label>
                 <div className="flex items-center space-x-3">
                   <button
                     type="button"
                     onClick={handleFileSelect}
-                    
                     className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                     disabled={isLoading}
                   >
                     <Paperclip className="w-4 h-4" />
-                    <span className="text-sm">Choose File</span>
+                    <span className="text-sm">{t("chooseFile")}</span>
                   </button>
-                
                 </div>
                 <input
                   ref={fileInputRef}
@@ -344,24 +377,29 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                 />
               </div>
               {formData.attachFiles.length > 0 && (
-              <div className="space-y-2">
-                {formData.attachFiles.map((file, idx) => (
-                  <div key={idx} className="flex items-center justify-between text-sm text-gray-600">
-                    <div className="flex items-center space-x-2">
-                      <FileText className="w-4 h-4" />
-                      <span className="truncate max-w-[180px]">{file.name}</span>
-                    </div>
-                    <button
-                      onClick={() => removeFile(idx)}
-                      className="text-red-500 hover:text-red-700"
-                      disabled={isLoading}
+                <div className="space-y-2">
+                  {formData.attachFiles.map((file, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between text-sm text-gray-600"
                     >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
+                      <div className="flex items-center space-x-2">
+                        <FileText className="w-4 h-4" />
+                        <span className="truncate max-w-[180px]">
+                          {file.name}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => removeFile(idx)}
+                        className="text-red-500 hover:text-red-700"
+                        disabled={isLoading}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {scannedImages.length > 0 && (
                 <div className="border-t border-gray-200 pt-4">
@@ -370,28 +408,40 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                       id="includePDF"
                       type="checkbox"
                       checked={formData.includePDF}
-                      onChange={(e) => handleInputChange("includePDF", e.target.checked)}
+                      onChange={(e) =>
+                        handleInputChange("includePDF", e.target.checked)
+                      }
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label htmlFor="includePDF" className="text-sm font-medium text-gray-700">
-                      Include scanned/imported images as PDF ({scannedImages.length} page
-                      {scannedImages.length !== 1 ? "s" : ""})
+                    <label
+                      htmlFor="includePDF"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      {t("includePDF", {
+                        count: scannedImages.length,
+                        plural: scannedImages.length !== 1 ? "n" : "",
+                      })}
                     </label>
                   </div>
 
                   {formData.includePDF && (
                     <div>
-                      <label htmlFor="pdfName" className="block text-sm font-medium text-gray-700 mb-2">
-                        PDF Name <span className="text-red-500">*</span>
+                      <label
+                        htmlFor="pdfName"
+                        className="block text-sm font-medium text-gray-700 mb-2"
+                      >
+                        {t("pdfName")} <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                         <input
                           id="pdfName"
                           type="text"
                           value={formData.pdfName}
-                          onChange={(e) => handleInputChange("pdfName", e.target.value)}
-                          placeholder="Document name"
+                          onChange={(e) =>
+                            handleInputChange("pdfName", e.target.value)
+                          }
+                          placeholder={t("pdfNamePlaceholder")}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           disabled={isLoading}
                         />
@@ -404,8 +454,10 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                 </div>
               )}
 
-<div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">Send From</label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  {t("sendFrom")}{" "}
+                </label>
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <input
@@ -414,12 +466,17 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                       name="senderType"
                       value="own"
                       checked={senderType === "own"}
-                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
+                      onChange={(e) =>
+                        setSenderType(e.target.value as "own" | "grewscanner")
+                      }
                       className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label htmlFor="own-email" className="ml-2 text-sm text-gray-700">
-                      Own Email
+                    <label
+                      htmlFor="own-email"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      {t("ownEmail")}
                     </label>
                   </div>
                   <div className="flex items-center">
@@ -429,12 +486,17 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                       name="senderType"
                       value="grewscanner"
                       checked={senderType === "grewscanner"}
-                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
+                      onChange={(e) =>
+                        setSenderType(e.target.value as "own" | "grewscanner")
+                      }
                       className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label htmlFor="grewscanner-email" className="ml-2 text-sm text-gray-700">
-                      GrewScanner Email
+                    <label
+                      htmlFor="grewscanner-email"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      {t("grewScannerEmail")}
                     </label>
                   </div>
                 </div>
@@ -451,7 +513,7 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
                   disabled={isLoading}
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   onClick={handleSend}
@@ -461,12 +523,12 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Sending...</span>
+                      <span>{t("sending")} </span>
                     </>
                   ) : (
                     <>
                       <Mail className="w-4 h-4" />
-                      <span>Send</span>
+                      <span>{t("send")} </span>
                     </>
                   )}
                 </button>
@@ -477,12 +539,17 @@ export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedIm
               <div className="mx-auto flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Email sent successfully!</h3>
-              <p className="text-sm text-gray-600">Your email has been delivered to {formData.to}</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {t("successTitle")}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {" "}
+                {t("successMessage", { email: formData.to })}
+              </p>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

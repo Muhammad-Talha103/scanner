@@ -6,6 +6,7 @@ import { FileText, Trash2 } from "lucide-react";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { ScannedImage } from "./scanner/Dropdown";
 import DeleteAllImages from "./DeleteAllImages";
+import { useTranslation } from "react-i18next";
 
 interface ScannedImagesProps {
   images: ScannedImage[];
@@ -15,7 +16,7 @@ interface ScannedImagesProps {
   isImageSelected?: (imageId: string) => boolean;
   onToggleSelection?: (imageId: string) => void;
   onDeleteImage?: (imageId: string) => void;
-   deleteAllImages?: () => void;
+  deleteAllImages?: () => void;
 }
 
 export const ScannedImages: React.FC<ScannedImagesProps> = ({
@@ -26,10 +27,11 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
   isImageSelected,
   onToggleSelection,
   onDeleteImage,
-    deleteAllImages,
+  deleteAllImages,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const { t } = useTranslation();
   const [imageToDelete, setImageToDelete] = useState<{
     id: string;
     index: number;
@@ -93,10 +95,8 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
       <div className="flex items-center justify-center h-full p-8">
         <div className="text-gray-500 text-center">
           <FileText className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-          <p className="text-lg font-medium mb-2">No Document Loaded</p>
-          <p className="text-sm">
-            Click Scan to start scanning or Import to load images
-          </p>
+          <p className="text-lg font-medium mb-2">{t("noDocumentLoaded")}</p>
+          <p className="text-sm">{t("clickScanOrImport")}</p>
         </div>
       </div>
     );
@@ -105,19 +105,19 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
   return (
     <>
       <div className="p-4 h-full overflow-auto">
-      {images.length > 0 && !isScanning && (
-        <>
-        <div className="flex items-center justify-end">
-         <button
-            onClick={() => setIsDeleteModalOpen(true)}
-            className=" w-fit text-xs cursor-pointer font-semibold text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 transition-colors"
-          >
-            Clear All Images
-          </button>
-        </div>
-        <hr className="my-2"/>
-        </>
-      )}
+        {images.length > 0 && !isScanning && (
+          <>
+            <div className="flex items-center justify-end">
+              <button
+                onClick={() => setIsDeleteModalOpen(true)}
+                className=" w-fit text-xs cursor-pointer font-semibold text-white bg-red-600 hover:bg-red-700 rounded px-4 py-2 transition-colors"
+              >
+                {t("clearAllImages")}
+              </button>
+            </div>
+            <hr className="my-2" />
+          </>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {images.map((image, index) => {
             const isCurrentlySelected = selectedImageId === image.id;
@@ -149,13 +149,15 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                     }}
                   />
                   <div className="absolute top-2 left-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
-                    Page {index + 1}
+                    {t("page", { index: index + 1 })}
                   </div>
                   <div
                     className={`absolute top-2 right-2 text-white text-xs px-2 py-1 rounded
                  ${image.id.startsWith("import-") ? "bg-blue-600" : "bg-green-600"}`}
                   >
-                    {image.id.startsWith("import-") ? "Imported" : "Scanned"}
+                    {image.id.startsWith("import-")
+                      ? t("imported")
+                      : t("scanned")}
                   </div>
 
                   {/* Delete button - only visible on hover */}
@@ -163,7 +165,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                     <button
                       className="delete-button absolute bottom-2 right-2 bg-red-600 hover:bg-red-700 text-white p-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                       onClick={(e) => handleDeleteClick(image.id, index, e)}
-                      title="Delete image"
+                      title={t("deleteImage")}
                     >
                       <Trash2 className="w-3 h-3" />
                     </button>
@@ -173,7 +175,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                   {isCurrentlySelected && (
                     <div className="absolute inset-0 bg-opacity-10 flex items-center justify-center">
                       <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-                        Selected
+                        {t("selected")}
                       </div>
                     </div>
                   )}
@@ -192,7 +194,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                   </p>
                   {isToggleSelected && (
                     <p className="text-xs text-green-600 font-medium">
-                      Selected for operations
+                      {t("selectedForOperations")}
                     </p>
                   )}
                 </div>
@@ -211,12 +213,11 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
         isDeleting={isDeleting}
       />
 
-      
-            <DeleteAllImages
-              isOpen={isDeleteModalOpen}
-              onClose={() => setIsDeleteModalOpen(false)}
-              onConfirm={deleteAllImages || (() => { })}
-            />
+      <DeleteAllImages
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={deleteAllImages || (() => {})}
+      />
     </>
   );
 };

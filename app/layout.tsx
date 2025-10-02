@@ -4,6 +4,10 @@ import "./globals.css";
 import ClientProvider from "./ClientProvider";
 import Script from "next/script";
 
+// 🟢 i18n imports
+import { dir } from "i18next";
+import I18nProvider from "./i18n-provider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -11,13 +15,19 @@ export const metadata: Metadata = {
   description: "GREWE Scanner Interface Cloud Version",
 };
 
+// 🟢 Default language (agar params nahi hain)
+const defaultLocale = "en";
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Future me agar aapko dynamic locale chahiye to URL/params se lang pick kar lena
+  const lng = defaultLocale;
+
   return (
-    <html lang="en">
+    <html lang={lng} dir={dir(lng)}>
       <head>
         {/* Add Script Tags Here */}
         <Script
@@ -34,19 +44,14 @@ export default function RootLayout({
           src="https://encleso.com/Assets/scripts/encleso.min.js"
           strategy="afterInteractive"
         />
-        <Script
-          src="/encleso.js"
-          strategy="afterInteractive"
-        />
-       
-
+        <Script src="/encleso.js" strategy="afterInteractive" />
       </head>
       <body className={inter.className}>
         <ClientProvider>
-
-        {children}
+        
+          <I18nProvider>{children}</I18nProvider>
         </ClientProvider>
-        </body>
+      </body>
     </html>
   );
 }

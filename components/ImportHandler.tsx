@@ -1,81 +1,96 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useRef } from "react"
-import { ScannedImage } from "./scanner/Dropdown"
-
+import type React from "react";
+import { useRef } from "react";
+import { ScannedImage } from "./scanner/Dropdown";
+import { useTranslation } from "react-i18next";
 
 interface ImportHandlerProps {
-  onImagesImported: (images: ScannedImage[]) => void
-  children: React.ReactNode
+  onImagesImported: (images: ScannedImage[]) => void;
+  children: React.ReactNode;
 }
 
-export const ImportHandler: React.FC<ImportHandlerProps> = ({ onImagesImported, children }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null)
+export const ImportHandler: React.FC<ImportHandlerProps> = ({
+  onImagesImported,
+  children,
+}) => {
+  const { t } = useTranslation();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImportClick = () => {
-    fileInputRef.current?.click()
-  }
+    fileInputRef.current?.click();
+  };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files
-    if (!files || files.length === 0) return
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
 
     // Add "image/tiff" and "image/tif" to valid types
-    const validImageTypes = ["image/png", "image/jpg", "image/jpeg", "image/tiff", "image/tif"]
-    const validFiles = Array.from(files).filter((file) => validImageTypes.includes(file.type))
+    const validImageTypes = [
+      "image/png",
+      "image/jpg",
+      "image/jpeg",
+      "image/tiff",
+      "image/tif",
+    ];
+    const validFiles = Array.from(files).filter((file) =>
+      validImageTypes.includes(file.type)
+    );
 
     if (validFiles.length === 0) {
-      alert("Please select valid image files (PNG, JPG, JPEG, TIFF)")
-      return
+      alert(t("invalidFiles"));
+      return;
     }
 
     try {
-      const importedImages: ScannedImage[] = []
+      const importedImages: ScannedImage[] = [];
 
       for (const file of validFiles) {
         try {
-          const dataUrl = await fileToDataUrl(file)
+          const dataUrl = await fileToDataUrl(file);
           const importedImage: ScannedImage = {
             id: `import-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
             dataUrl,
             timestamp: Date.now(),
-          }
-          importedImages.push(importedImage)
+          };
+          importedImages.push(importedImage);
         } catch (error) {
-          console.error("Error processing file:", file.name, error)
+          console.error("Error processing file:", file.name, error);
           // Continue with other files
         }
       }
 
       if (importedImages.length > 0) {
-        onImagesImported(importedImages)
+        onImagesImported(importedImages);
       }
     } catch (error) {
-      console.error("Error importing images:", error)
-      alert("Error importing images. Please try again.")
+      console.error("Error importing images:", error);
+      alert(t("errorImporting"));
     }
 
     // Reset file input
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""
+      fileInputRef.current.value = "";
     }
-  }
+  };
 
   const fileToDataUrl = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onload = (e) => {
         if (e.target?.result) {
-          resolve(e.target.result as string)
+          resolve(e.target.result as string);
         } else {
-          reject(new Error("Failed to read file"))
+          reject(new Error("Failed to read file"));
         }
-      }
-      reader.onerror = () => reject(new Error("File reading error"))
-      reader.readAsDataURL(file)
-    })
-  }
+      };
+      reader.onerror = () => reject(new Error("File reading error"));
+      reader.readAsDataURL(file);
+    });
+  };
 
   return (
     <>
@@ -91,5 +106,5 @@ export const ImportHandler: React.FC<ImportHandlerProps> = ({ onImagesImported, 
       />
       <div onClick={handleImportClick}>{children}</div>
     </>
-  )
-}
+  );
+};

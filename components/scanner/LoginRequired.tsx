@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react"
 import { Lock, ArrowRight } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 export const LoginRequired = () => {
   const [countdown, setCountdown] = useState(5)
   const router = useRouter()
+   const { t } = useTranslation();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,12 +49,12 @@ export const LoginRequired = () => {
 
           {/* Title */}
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-transparent bg-clip-text mb-4 animate-gradient">
-            Authentication Required
+            {t("authRequired")}
           </h1>
 
           {/* Description */}
           <p className="text-gray-600 mb-8 leading-relaxed">
-            Please log in to access the GREWE Scanner Interface. You&apos;ll be redirected to the login page shortly.
+            {t("loginMessage")}
           </p>
 
           {/* Countdown Circle */}
@@ -89,7 +91,7 @@ export const LoginRequired = () => {
 
           {/* Redirect Message */}
           <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-            <span>Redirecting to login</span>
+            <span>{t("redirecting")}</span>
             <ArrowRight className="w-4 h-4 animate-bounce-horizontal" />
           </div>
 
@@ -98,13 +100,13 @@ export const LoginRequired = () => {
             onClick={() => router.push("/signin")}
             className="mt-6 w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Login Now
+             {t("loginNow")}
           </button>
         </div>
 
         {/* Footer */}
         <div className="text-center mt-6 text-sm text-gray-500">
-          <p>Secure access to your scanning workspace</p>
+          <p>{t("secureAccess")}</p>
         </div>
       </div>
 

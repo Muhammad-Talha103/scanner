@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { FirebaseError } from 'firebase/app'
 import { client } from '@/sanity/lib/client'
+import { useTranslation } from 'react-i18next'
 
 interface ValidationErrors {
   password?: string
@@ -14,6 +15,7 @@ interface ValidationErrors {
 }
 
 export default function ResetPassword() {
+  const { t } = useTranslation();
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [message, setMessage] = useState('')
@@ -31,7 +33,7 @@ export default function ResetPassword() {
   useEffect(() => {
     const verifyCode = async () => {
       if (!oobCode) {
-        setMessage('Invalid or missing reset code. Please request a new password reset link.')
+        setMessage(t("reset_password.invalidOrMissingCode"))
         setMessageType('error')
         setIsVerifying(false)
         return
@@ -45,9 +47,9 @@ export default function ResetPassword() {
         setMessage('')
         setMessageType('')
       } catch (error: unknown) {
-        console.error('Code verification error:', error);
+        console.error(t("reset_password.code_verification_error"), error);
 
-        let errorMessage = 'An unknown error occurred';
+        let errorMessage = t("reset_password.unknownError");
 
         if (error instanceof FirebaseError) {
           errorMessage = getFirebaseErrorMessage(error.code);
@@ -66,18 +68,18 @@ export default function ResetPassword() {
 
   // Validation functions
   const validatePassword = (password: string): string | undefined => {
-    if (!password) return 'Password is required'
-    if (password.length < 6) return 'Password must be at least 6 characters'
-    if (password.length > 128) return 'Password must be less than 128 characters'
-    if (!/(?=.*[a-z])/.test(password)) return 'Password must contain at least one lowercase letter'
-    if (!/(?=.*[A-Z])/.test(password)) return 'Password must contain at least one uppercase letter'
-    if (!/(?=.*\d)/.test(password)) return 'Password must contain at least one number'
+    if (!password) return t("reset_password.passwordRequired");
+    if (password.length < 6) return t("reset_password.passwordMinLength")
+    if (password.length > 128) return t("reset_password.passwordMaxLength")
+    if (!/(?=.*[a-z])/.test(password)) return t("reset_password.passwordLowercase")
+    if (!/(?=.*[A-Z])/.test(password)) return t("reset_password.passwordUppercase")
+    if (!/(?=.*\d)/.test(password)) return t("reset_password.passwordNumber")
     return undefined
   }
 
   const validateConfirmPassword = (password: string, confirmPassword: string): string | undefined => {
-    if (!confirmPassword) return 'Please confirm your password'
-    if (password !== confirmPassword) return 'Passwords do not match'
+    if (!confirmPassword) return t("reset_password.confirmPasswordRequired")
+    if (password !== confirmPassword) return t("reset_password.confirmPasswordMismatch")
     return undefined
   }
 
@@ -117,21 +119,21 @@ export default function ResetPassword() {
   const getFirebaseErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
       case 'auth/expired-action-code':
-        return 'The password reset link has expired. Please request a new password reset email.'
+        return t("reset_password.expiredActionCode")
       case 'auth/invalid-action-code':
-        return 'The password reset link is invalid or has already been used. Please request a new one.'
+        return  t("reset_password.invalidActionCode")
       case 'auth/user-disabled':
-        return 'This account has been disabled. Please contact support for assistance.'
+        return  t("reset_password.userDisabled")
       case 'auth/user-not-found':
-        return 'No account found. The user may have been deleted.'
+        return t("reset_password.userNotFound")
       case 'auth/weak-password':
-        return 'Password is too weak. Please choose a stronger password.'
+        return t("reset_password.weakPassword")
       case 'auth/network-request-failed':
-        return 'Network error. Please check your internet connection and try again.'
+        return t("reset_password.networkError")
       case 'auth/too-many-requests':
-        return 'Too many requests. Please wait a few minutes before trying again.'
+        return t("reset_password.tooManyRequests")
       default:
-        return 'Failed to reset password. Please try again or request a new reset link.'
+        return t("reset_password.failedReset")
     }
   }
 
@@ -139,7 +141,7 @@ export default function ResetPassword() {
     e.preventDefault()
 
     if (!isValidCode || !oobCode) {
-      setMessage('Invalid reset code. Please request a new password reset link.')
+      setMessage(t("reset_password.invalidOrMissingCode"))
       setMessageType('error')
       return
     }
@@ -148,7 +150,7 @@ export default function ResetPassword() {
     setMessageType('')
 
     if (!validateForm()) {
-      setMessage('Please fix the errors below and try again.')
+      setMessage(t("reset_password.fixErrors"))
       setMessageType('error')
       return
     }
@@ -159,7 +161,7 @@ export default function ResetPassword() {
       // ✅ Reset the password using Firebase Auth only
       await confirmPasswordReset(auth, oobCode, password)
 
-      setMessage('Password reset successful! You can now sign in with your new password.')
+      setMessage(t("reset_password.passwordResetSuccess"))
       setMessageType('success')
 
       await client.create({
@@ -176,7 +178,7 @@ export default function ResetPassword() {
     } catch (error: unknown) {
       console.error('Password reset error:', error);
 
-      let errorMessage = 'An unknown error occurred';
+      let errorMessage = t("reset_password.unknownError");
 
       if (error instanceof FirebaseError) {
         errorMessage = getFirebaseErrorMessage(error.code);
@@ -212,7 +214,7 @@ export default function ResetPassword() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              <p className="text-sm text-gray-600">Verifying reset link...</p>
+              <p className="text-sm text-gray-600">{t("reset_password.verifyingResetLink")}</p>
             </div>
           </div>
         </div>
@@ -226,7 +228,7 @@ export default function ResetPassword() {
       <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Invalid Reset Link
+            {t("reset_password.invalidOrMissingCode")}
           </h2>
           <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
             <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
@@ -251,13 +253,13 @@ export default function ResetPassword() {
                   href="/forgot-password"
                   className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                 >
-                  Request New Reset Link
+                  {t("reset_password.requestNewResetLink")}
                 </Link>
                 <Link
                   href="/signin"
                   className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                 >
-                  Back to Sign In
+                  {t("reset_password.backToSignIn")}
                 </Link>
               </div>
             </div>
@@ -271,10 +273,10 @@ export default function ResetPassword() {
     <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Set New Password
+          {t("reset_password.setNewPassword")}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Enter your new password for <span className="font-medium text-gray-900">{userEmail}</span>
+        {t("reset_password.enterNewPasswordFor")}<span className="font-medium text-gray-900">{userEmail}</span>
         </p>
       </div>
 
@@ -301,7 +303,7 @@ export default function ResetPassword() {
                 <div className="ml-3">
                   <h3 className={`text-sm font-medium ${messageType === 'success' ? 'text-green-800' : 'text-red-800'
                     }`}>
-                    {messageType === 'success' ? 'Success!' : 'Error!'}
+                    {messageType === 'success' ? t("reset_password.success") :  t("reset_password.error")}
                   </h3>
                   <div className={`mt-1 text-sm ${messageType === 'success' ? 'text-green-700' : 'text-red-700'
                     }`}>
@@ -315,7 +317,7 @@ export default function ResetPassword() {
           <form className="space-y-6" onSubmit={handleResetPassword}>
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                New Password
+               {t("reset_password.newPassword")}
               </label>
               <div className="mt-1">
                 <input
@@ -325,7 +327,7 @@ export default function ResetPassword() {
                   required
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   value={password}
-                  placeholder="Enter your new password"
+                  placeholder={t("reset_password.enterNewPassword") }
                   className={getInputClassName('password')}
                   disabled={isLoading}
                 />
@@ -342,7 +344,7 @@ export default function ResetPassword() {
 
             <div>
               <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
-                Confirm New Password
+               {t("reset_password.confirmNewPassword") }
               </label>
               <div className="mt-1">
                 <input
@@ -352,7 +354,7 @@ export default function ResetPassword() {
                   required
                   onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                   value={confirmPassword}
-                  placeholder="Confirm your new password"
+                  placeholder= {t("reset_password.confirmYourPassword") }
                   className={getInputClassName('confirmPassword')}
                   disabled={isLoading}
                 />
@@ -382,10 +384,10 @@ export default function ResetPassword() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Updating Password...
+                    {t("reset_password.updatingPassword") }
                   </div>
                 ) : (
-                  'Update Password'
+                  t("reset_password.updatePassword") 
                 )}
               </button>
             </div>
@@ -398,7 +400,7 @@ export default function ResetPassword() {
                 href="/signin"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150 ease-in-out"
               >
-                Sign In Now
+               {t("reset_password.signInNow")}
               </Link>
             </div>
           )}
@@ -413,14 +415,14 @@ export default function ResetPassword() {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-gray-800">
-                  Password Requirements
+                  {t("reset_password.passwordRequirements")}
                 </h3>
                 <div className="mt-2 text-sm text-gray-600">
                   <ul className="list-disc list-inside space-y-1">
-                    <li>At least 6 characters long</li>
-                    <li>Contains at least one uppercase letter</li>
-                    <li>Contains at least one lowercase letter</li>
-                    <li>Contains at least one number</li>
+                    <li>{t("reset_password.requirementMinLength")}</li>
+                    <li>{t("reset_password.requirementUppercase")}</li>
+                    <li>{t("reset_password.requirementLowercase")}</li>
+                    <li>{t("reset_password.requirementNumber`")}</li>
                   </ul>
                 </div>
               </div>

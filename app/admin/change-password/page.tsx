@@ -3,6 +3,7 @@
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface FormData {
   currentUsername: string;
@@ -12,6 +13,7 @@ interface FormData {
 }
 
 export default function ChangePasswordForm() {
+    const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState<FormData>({
     currentUsername: "",
@@ -39,7 +41,7 @@ export default function ChangePasswordForm() {
       );
 
       if (!admin) {
-        throw new Error("Admin credentials not found in database");
+        throw new Error(t("changePassword_admin.errorNotFound"));
       }
 
       if (
@@ -48,10 +50,10 @@ export default function ChangePasswordForm() {
       ) {
         setStep(2);
       } else {
-        throw new Error("Invalid username or password");
+        throw new Error(t("changePassword_admin.errorInvalid"));
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : (t("changePassword_admin.errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export default function ChangePasswordForm() {
       const admin = await client.fetch(`*[_type == "admin"][0]{_id}`);
 
       if (!admin) {
-        throw new Error("Admin record not found");
+        throw new Error(t("changePassword_admin.errorNotFound"));
       }
 
       await client
@@ -79,7 +81,7 @@ export default function ChangePasswordForm() {
 
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : (t("changePassword_admin.errorGeneric")));
     } finally {
       setLoading(false);
     }
@@ -107,15 +109,15 @@ export default function ChangePasswordForm() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-blue-900 mb-2">Success!</h2>
+            <h2 className="text-2xl font-bold text-blue-900 mb-2">{t("changePassword_admin.successTitle")}</h2>
             <p className="text-blue-700 mb-6">
-              Admin credentials have been updated successfully.
+              {t("changePassword_admin.successMessage")}
             </p>
             <Link
               href="/admin"
               className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
             >
-              Go to Admin Dashboard
+             {t("changePassword_admin.goToDashboard")}
             </Link>
           </div>
         </div>
@@ -130,7 +132,7 @@ export default function ChangePasswordForm() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-blue-900 mb-2">
-              Change Admin Password
+              {t("changePassword_admin.pageTitle")}
             </h1>
             <div className="flex items-center justify-center space-x-2">
               <div
@@ -157,8 +159,8 @@ export default function ChangePasswordForm() {
             </div>
             <p className="text-blue-600 mt-2">
               {step === 1
-                ? "Verify Current Credentials"
-                : "Set New Credentials"}
+                ?  t("changePassword_admin.step1")
+                : t("changePassword_admin.step2")}
             </p>
           </div>
 
@@ -177,7 +179,7 @@ export default function ChangePasswordForm() {
                   htmlFor="currentUsername"
                   className="block text-sm font-medium text-blue-900 mb-2"
                 >
-                  Current Username
+                 {t("changePassword_admin.currentUsernameLabel")}
                 </label>
                 <input
                   type="text"
@@ -187,7 +189,7 @@ export default function ChangePasswordForm() {
                     handleInputChange("currentUsername", e.target.value)
                   }
                   className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter current username"
+                  placeholder= {t("changePassword_admin.currentUsernamePlaceholder")}
                   required
                 />
               </div>
@@ -197,7 +199,7 @@ export default function ChangePasswordForm() {
                   htmlFor="currentPassword"
                   className="block text-sm font-medium text-blue-900 mb-2"
                 >
-                  Current Password
+                  {t("changePassword_admin.currentPasswordLabel")}
                 </label>
                 <input
                   type="password"
@@ -207,7 +209,7 @@ export default function ChangePasswordForm() {
                     handleInputChange("currentPassword", e.target.value)
                   }
                   className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter current password"
+                  placeholder={t("changePassword_admin.currentPasswordPlaceholder")}
                   required
                 />
               </div>
@@ -217,7 +219,7 @@ export default function ChangePasswordForm() {
                 disabled={loading}
                 className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
               >
-                {loading ? "Verifying..." : "Verify Credentials"}
+                {loading ? t("changePassword_admin.verifying")  :t("changePassword_admin.verifyButton") }
               </button>
             </form>
           )}
@@ -230,7 +232,7 @@ export default function ChangePasswordForm() {
                   htmlFor="newUsername"
                   className="block text-sm font-medium text-blue-900 mb-2"
                 >
-                  New Username
+                  {t("changePassword_admin.newUsernameLabel")}
                 </label>
                 <input
                   type="text"
@@ -240,7 +242,7 @@ export default function ChangePasswordForm() {
                     handleInputChange("newUsername", e.target.value)
                   }
                   className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter new username"
+                  placeholder= {t("changePassword_admin.newUsernamePlaceholder")}
                   required
                 />
               </div>
@@ -250,7 +252,7 @@ export default function ChangePasswordForm() {
                   htmlFor="newPassword"
                   className="block text-sm font-medium text-blue-900 mb-2"
                 >
-                  New Password
+                   {t("changePassword_admin.newPasswordLabel")}
                 </label>
                 <input
                   type="password"
@@ -260,12 +262,12 @@ export default function ChangePasswordForm() {
                     handleInputChange("newPassword", e.target.value)
                   }
                   className="w-full px-4 py-3 border-2 border-blue-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors"
-                  placeholder="Enter new password"
+                  placeholder= {t("changePassword_admin.newPasswordPlaceholder")}
                   required
                   minLength={6}
                 />
                 <p className="text-sm text-blue-600 mt-1">
-                  Password must be at least 6 characters long
+                 {t("changePassword_admin.passwordHint")}
                 </p>
               </div>
 
@@ -275,14 +277,14 @@ export default function ChangePasswordForm() {
                   onClick={() => setStep(1)}
                   className="flex-1 bg-white text-blue-500 py-3 px-4 rounded-lg font-medium border-2 border-blue-500 hover:bg-blue-50 transition-colors"
                 >
-                  Back
+                   {t("changePassword_admin.backButton")}
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
                   className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                 >
-                  {loading ? "Updating..." : "Update Password"}
+                  {loading ? t("changePassword_admin.updating") : t("changePassword_admin.updateButton")  }
                 </button>
               </div>
             </form>

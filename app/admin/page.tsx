@@ -6,8 +6,10 @@ import UserTable from "./UserTable";
 import { useRouter } from "next/navigation";
 import { Shield, Users, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function AdminPage() {
+   const { t } = useTranslation()
   const router = useRouter();
   const [users, setUsers] = useState<Userr[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,10 +76,10 @@ export default function AdminPage() {
 
           <div className="space-y-4">
             <h2 className="text-2xl font-bold text-gray-800">
-              Verifying Access
+              {t("admin.verifying")}
             </h2>
             <p className="text-gray-600 max-w-md mx-auto">
-              Checking your admin credentials and permissions...
+               {t("admin.checkadminCredentials")}
             </p>
 
             <div className="flex items-center justify-center space-x-2 mt-6">
@@ -105,9 +107,9 @@ export default function AdminPage() {
             <Shield className="w-8 h-8 text-red-600" />
           </div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Access Denied
+           {t("admin.accessDenied")}
           </h2>
-          <p className="text-gray-600">Redirecting to login...</p>
+          <p className="text-gray-600">{t("admin.redirecting")}</p>
         </div>
       </div>
     );
@@ -126,9 +128,9 @@ export default function AdminPage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  Admin Dashboard
+                 {t("admin.admin_dashboard")}
                 </h1>
-                <p className="text-gray-600">Loading your dashboard...</p>
+                <p className="text-gray-600"> {t("admin.loadingDashboard")}</p>
               </div>
             </div>
           </div>
@@ -158,10 +160,10 @@ export default function AdminPage() {
 
                 <div className="space-y-4">
                   <h3 className="text-xl font-semibold text-gray-800">
-                    Loading Users
+                   {t("admin.loadingUsers")}
                   </h3>
                   <p className="text-gray-600 max-w-md mx-auto">
-                    Fetching user data from the database...
+                     {t("admin.fetchingUsers")}
                   </p>
 
                   <div className="flex items-center justify-center space-x-2 mt-6">
@@ -216,21 +218,21 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-  <div className="max-w-7xl mx-auto">
-    <div className="mb-8 animate-fade-in flex items-center justify-between">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Admin Dashboard
-        </h1>
-        <p className="text-gray-600">Manage users and their information</p>
-      </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8 animate-fade-in flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {t("admin.admin_dashboard")}
+            </h1>
+            <p className="text-gray-600">{t("admin.manage_users")} </p>
+          </div>
 
-      {/* Buttons container */}
-      <div className="flex gap-4">
-        {/* Change Credentials Button */}
-        <Link href="/admin/change-password"
-          
-          className="
+          {/* Buttons container */}
+          <div className="flex gap-4">
+            {/* Change Credentials Button */}
+            <Link
+              href="/admin/change-password"
+              className="
             px-6 py-3 
             bg-blue-600 
             text-white 
@@ -249,14 +251,14 @@ export default function AdminPage() {
             active:scale-95
             select-none
           "
-        >
-          Change Credentials
-        </Link>
+            >
+              {t("admin.change_credentials")}
+            </Link>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="
             px-6 py-3 
             bg-green-600 
             text-white 
@@ -275,23 +277,22 @@ export default function AdminPage() {
             active:scale-95
             select-none
           "
-        >
-          Logout
-        </button>
+            >
+              {t("admin.logout")}
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 animate-fade-in">
+          <div className="px-6 py-4 border-b border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800">
+               {t("admin.user_management")}
+            </h2>
+          </div>
+
+          <UserTable users={users} />
+        </div>
       </div>
     </div>
-
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 animate-fade-in">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">
-          User Management
-        </h2>
-      </div>
-
-      <UserTable users={users} />
-    </div>
-  </div>
-</div>
-
   );
 }

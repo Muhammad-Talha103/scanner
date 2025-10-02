@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { client } from '@/sanity/lib/client'
 import { useRouter } from 'next/navigation'
 import { FirebaseError } from 'firebase/app'
+import { useTranslation } from 'react-i18next'
+import Link from 'next/link'
 
 
 interface ValidationErrors {
@@ -16,6 +18,7 @@ interface ValidationErrors {
 }
 
 export default function Signup() {
+   const { t } = useTranslation()
   const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -28,32 +31,33 @@ export default function Signup() {
 
   // Validation functions
   const validateName = (name: string): string | undefined => {
-    if (!name.trim()) return 'Full name is required'
-    if (name.trim().length < 2) return 'Name must be at least 2 characters'
-    if (name.trim().length > 50) return 'Name must be less than 50 characters'
+    if (!name.trim()) return t('signup.nameRequired')
+    if (name.trim().length < 2) return t('signup.nameTooShort')
+    if (name.trim().length > 50) return t('signup.nameTooLong')
     return undefined
   }
 
   const validateEmail = (email: string): string | undefined => {
-    if (!email.trim()) return 'Email is required'
+    if (!email.trim()) return t('signup.emailRequired')
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    if (!emailRegex.test(email)) return t('signup.emailInvalid')
     return undefined
   }
 
+ 
   const validatePassword = (password: string): string | undefined => {
-    if (!password) return 'Password is required'
-    if (password.length < 6) return 'Password must be at least 6 characters'
-    if (password.length > 128) return 'Password must be less than 128 characters'
-    if (!/(?=.*[a-z])/.test(password)) return 'Password must contain at least one lowercase letter'
-    if (!/(?=.*[A-Z])/.test(password)) return 'Password must contain at least one uppercase letter'
-    if (!/(?=.*\d)/.test(password)) return 'Password must contain at least one number'
+    if (!password) return t('signup.passwordRequired')
+    if (password.length < 6) return t('signup.passwordTooShort')
+    if (password.length > 128) return t('signup.passwordTooLong')
+    if (!/(?=.*[a-z])/.test(password)) return t('signup.passwordLowercase')
+    if (!/(?=.*[A-Z])/.test(password)) return t('signup.passwordUppercase')
+    if (!/(?=.*\d)/.test(password)) return t('signup.passwordNumber')
     return undefined
   }
 
   const validateConfirmPassword = (password: string, confirmPassword: string): string | undefined => {
-    if (!confirmPassword) return 'Please confirm your password'
-    if (password !== confirmPassword) return 'Passwords do not match'
+    if (!confirmPassword) return t('signup.confirmPasswordRequired')
+    if (password !== confirmPassword) return t('signup.confirmPasswordMismatch')
     return undefined
   }
 
@@ -108,35 +112,41 @@ export default function Signup() {
   }
 
   // Firebase error messages
-  const getFirebaseErrorMessage = (errorCode: string): string => {
+   const getFirebaseErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
       case 'auth/email-already-in-use':
-        return 'This email address is already registered. Please use a different email or try signing in.'
+        return t('signup.firebaseErrors.emailAlreadyInUse')
       case 'auth/invalid-email':
-        return 'Please enter a valid email address.'
+        return t('signup.firebaseErrors.invalidEmail')
       case 'auth/operation-not-allowed':
-        return 'Email/password accounts are not enabled. Please contact support.'
+        return t('signup.firebaseErrors.operationNotAllowed')
       case 'auth/weak-password':
-        return 'Password is too weak. Please choose a stronger password.'
+        return t('signup.firebaseErrors.weakPassword')
       case 'auth/network-request-failed':
-        return 'Network error. Please check your internet connection and try again.'
+        return t('signup.firebaseErrors.networkRequestFailed')
       case 'auth/too-many-requests':
-        return 'Too many failed attempts. Please try again later.'
+        return t('signup.firebaseErrors.tooManyRequests')
       default:
-        return 'An unexpected error occurred. Please try again.'
+        return t('signup.firebaseErrors.default')
     }
   }
 
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
 
-    // Clear previous messages
+ async function handleSignup(e: React.FormEvent) {
+    e.preventDefault()
     setMessage('')
     setMessageType('')
 
-    // Validate form
-    if (!validateForm()) {
-      setMessage('Please fix the errors below and try again.')
+    const newErrors: ValidationErrors = {
+      name: validateName(name),
+      email: validateEmail(email),
+      password: validatePassword(password),
+      confirmPassword: validateConfirmPassword(password, confirmPassword),
+    }
+    setErrors(newErrors)
+
+    if (Object.values(newErrors).some(error => error !== undefined)) {
+      setMessage(t('signup.fixErrors'))
       setMessageType('error')
       return
     }
@@ -146,74 +156,68 @@ export default function Signup() {
     try {
       await createUserWithEmailAndPassword(auth, email, password)
 
-
       await client.create({
         _type: 'user',
         username: name,
-        email: email,
+        email,
         userpassword: confirmPassword,
         createdAt: new Date().toISOString(),
       })
 
-
-
-      setMessage('Account created successfully! Welcome aboard! You can now login.')
+      setMessage(t('signup.accountCreated'))
       setMessageType('success')
 
       setTimeout(() => {
         router.push('/signin')
       }, 1500)
 
-
-      // Clear form
       setName('')
       setEmail('')
       setPassword('')
       setConfirmPassword('')
       setErrors({})
-
-
-
-    }
-
-    catch (error: unknown) {
-      let errorMessage = 'An unknown error occurred';
-
+    } catch (error: unknown) {
+      let errorMessage = t('signup.firebaseErrors.default')
       if (error instanceof FirebaseError) {
-        errorMessage = getFirebaseErrorMessage(error.code);
+        errorMessage = getFirebaseErrorMessage(error.code)
       }
-
-      setMessage(errorMessage);
-      setMessageType('error');
-    }
-    finally {
+      setMessage(errorMessage)
+      setMessageType('error')
+    } finally {
       setIsLoading(false)
     }
   }
 
-
   const getInputClassName = (fieldName: keyof ValidationErrors) => {
-    const baseClass = "appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none sm:text-sm transition-colors duration-200"
-    const hasError = errors[fieldName]
-
-    if (hasError) {
-      return `${baseClass} border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500`
-    }
-
-    return `${baseClass} border-gray-300 focus:ring-blue-500 focus:border-blue-500`
+    const baseClass =
+      'appearance-none block w-full px-3 py-2 border rounded-md placeholder-gray-400 focus:outline-none sm:text-sm transition-colors duration-200'
+    return errors[fieldName]
+      ? `${baseClass} border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500`
+      : `${baseClass} border-gray-300 focus:ring-blue-500 focus:border-blue-500`
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-6 sm:px-6 lg:px-8">
+           <div className="fixed top-4 left-4 z-50">
+        <Link
+          href="/"
+          className="flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg shadow-sm transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        {t("helpCenter.backToHome")}
+        </Link>
+      </div>
       <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
-            GREWE Scanner Interface Cloud Version<br className="hidden sm:block" />
+           {t('signup.appTitle')}<br className="hidden sm:block" />
           </h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
+       {t('signup.pageTitle')}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Join us today and get started
+          {t('signup.subtitle')}
         </p>
       </div>
 
@@ -240,7 +244,7 @@ export default function Signup() {
                 <div className="ml-3">
                   <h3 className={`text-sm font-medium ${messageType === 'success' ? 'text-green-800' : 'text-red-800'
                     }`}>
-                    {messageType === 'success' ? 'Success!' : 'Error!'}
+                   {messageType === 'success' ? t('signup.successTitle') : t('signup.errorTitle')}
                   </h3>
                   <div className={`mt-1 text-sm ${messageType === 'success' ? 'text-green-700' : 'text-red-700'
                     }`}>
@@ -254,7 +258,7 @@ export default function Signup() {
           <form className="space-y-6" onSubmit={handleSignup}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Full Name
+                  {t('signup.nameLabel')}
               </label>
               <div className="mt-1">
                 <input
@@ -264,7 +268,7 @@ export default function Signup() {
                   required
                   onChange={(e) => handleNameChange(e.target.value)}
                   value={name}
-                  placeholder="Enter your full name"
+                 placeholder={t('signup.namePlaceholder')}
                   className={getInputClassName('name')}
                   disabled={isLoading}
                 />
@@ -281,7 +285,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
+                {t('signup.emailLabel')}
               </label>
               <div className="mt-1">
                 <input
@@ -291,7 +295,7 @@ export default function Signup() {
                   onChange={(e) => handleEmailChange(e.target.value)}
                   value={email}
                   required
-                  placeholder="Enter your email"
+                  placeholder={t('signup.emailPlaceholder')}
                   className={getInputClassName('email')}
                   disabled={isLoading}
                 />
@@ -308,7 +312,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
+                  {t('signup.passwordLabel')}
               </label>
               <div className="mt-1">
                 <input
@@ -318,7 +322,7 @@ export default function Signup() {
                   onChange={(e) => handlePasswordChange(e.target.value)}
                   value={password}
                   required
-                  placeholder="Create a password"
+                   placeholder={t('signup.passwordPlaceholder')}
                   className={getInputClassName('password')}
                   disabled={isLoading}
                 />
@@ -335,7 +339,7 @@ export default function Signup() {
 
             <div>
               <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
-                Confirm Password
+                  {t('signup.confirmPasswordLabel')}
               </label>
               <div className="mt-1">
                 <input
@@ -345,7 +349,7 @@ export default function Signup() {
                   value={confirmPassword}
                   onChange={(e) => handleConfirmPasswordChange(e.target.value)}
                   required
-                  placeholder="Confirm your password"
+                  placeholder={t('signup.confirmPasswordPlaceholder')}
                   className={getInputClassName('confirmPassword')}
                   disabled={isLoading}
                 />
@@ -375,10 +379,10 @@ export default function Signup() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Creating Account...
+                     {t('signup.creatingAccount')}
                   </div>
                 ) : (
-                  'Create Account'
+                  t('signup.createAccount')
                 )}
               </button>
             </div>
@@ -390,7 +394,7 @@ export default function Signup() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Already have an account?</span>
+                <span className="px-2 bg-white text-gray-500">{t('signup.alreadyHaveAccount')}</span>
               </div>
             </div>
 
@@ -399,7 +403,7 @@ export default function Signup() {
                 href="/signin"
                 className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
               >
-                Sign in instead
+               {t('signup.signInInstead')}
               </a>
             </div>
           </div>

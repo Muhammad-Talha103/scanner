@@ -1,17 +1,16 @@
 "use client"
 
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 
 interface ScrollingTextProps {
-  text?: string
   className?: string
 }
 
-export default function ScrollingText({
-  text = "GreweScanner is using the encleso TWAIN web scan component from encleso.com.",
-  className = "",
-}: ScrollingTextProps) {
-  // Replace "encleso.com" in the text with a link
+export default function ScrollingText({ className = "" }: ScrollingTextProps) {
+  const { t } = useTranslation()
+  const text = t("scrollingText")
+
   const linkedText = text.split("encleso.com").map((part, idx, arr) => (
     <span key={idx}>
       {part}

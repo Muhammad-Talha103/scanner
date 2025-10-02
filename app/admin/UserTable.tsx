@@ -4,6 +4,7 @@ import UserRow from "./UserRow";
 import ConfirmModal from "./ConfirmModal";
 import { Search, X } from "lucide-react";
 import { client } from "@/sanity/lib/client";
+import { useTranslation } from "react-i18next";
 
 interface User {
   id: string;
@@ -18,6 +19,7 @@ interface UserTableProps {
 }
 
 export default function UserTable({ users: initialUsers }: UserTableProps) {
+  const {t} = useTranslation();
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
@@ -73,7 +75,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
       const result = await res.json();
 
       if (!res.ok) {
-        throw new Error(result.error || "Deletion failed");
+        throw new Error(result.error || t("userTable.deletion_failed"));
       }
 
       if (deleteModal.userId) {
@@ -114,13 +116,13 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
         });
       }, 2000);
     } catch (error: unknown) {
-      let errorMessage = "An unknown error occurred";
+      let errorMessage =  t("userTable.unknownError");
 
       if (error instanceof Error) {
         errorMessage = error.message;
       }
 
-      alert(`Error: ${errorMessage}`);
+      alert(`${t("userTable.error")}: ${errorMessage}`);
       setDeleteModal((prev) => ({ ...prev, isDeleting: false }));
     }
   };
@@ -148,7 +150,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
           </div>
           <input
             type="text"
-            placeholder="Search users by name or email..."
+            placeholder={t("userTable.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -171,15 +173,15 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
         <div className="mt-3 text-sm text-gray-600">
           {searchTerm ? (
             <span>
-              Showing {filteredUsers.length} of {users.length} users
+              {t("userTable.showing")} {filteredUsers.length} {t("userTable.of")}  {users.length} {t("userTable.users")}
               {filteredUsers.length === 0 && (
                 <span className="text-gray-500 ml-2">
-                  - No users found matching {searchTerm}
+                  - {t("userTable.noUsersFoundFor")}{searchTerm}
                 </span>
               )}
             </span>
           ) : (
-            <span>Showing all {users.length} users</span>
+            <span> {t("userTable.showing")} {t("userTable.all")} {users.length} {t("userTable.users")}</span>
           )}
         </div>
       </div>
@@ -190,20 +192,21 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                #
+                {t("userTable.columnSerial")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
+                {t("userTable.columnName")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Email
+               {t("userTable.columnEmail")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Password
+               {t("userTable.columnPassword")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
+                {t("userTable.columnAction")}
               </th>
+            
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -225,15 +228,15 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
                       <div className="text-gray-500">
                         <Search className="mx-auto h-12 w-12 text-gray-300 mb-4" />
                         <h3 className="text-sm font-medium text-gray-900 mb-1">
-                          No users found
+                          {t("userTable.noResultsTitle")}
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Try adjusting your search terms or{" "}
+                          {t("userTable.noResultsDescription")}{" "}
                           <button
                             onClick={() => setSearchTerm("")}
                             className="text-blue-600 hover:text-blue-500 font-medium"
                           >
-                            clear search
+                             {t("userTable.noResultsClearSearch")}
                           </button>
                         </p>
                       </div>
@@ -262,16 +265,16 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
               <div className="px-4 py-12 text-center">
                 <Search className="mx-auto h-12 w-12 text-gray-300 mb-4" />
                 <h3 className="text-sm font-medium text-gray-900 mb-1">
-                  No users found
+                   {t("userTable.noResultsTitle")}
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  Try adjusting your search terms
+                 {t("userTable.noResultsDescription")}
                 </p>
                 <button
                   onClick={() => setSearchTerm("")}
                   className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
                 >
-                  Clear search
+                {t("userTable.noResultsClearSearch")}
                 </button>
               </div>
             )}

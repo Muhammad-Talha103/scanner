@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '@/firebase/firebase' 
 import { FirebaseError } from 'firebase/app'
+import { useTranslation } from 'react-i18next'
 
 interface ValidationErrors {
   email?: string
@@ -15,11 +16,12 @@ export default function ForgetPassword() {
   const [messageType, setMessageType] = useState<'success' | 'error' | ''>('')
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState<ValidationErrors>({})
+  const {t} = useTranslation()
 
   const validateEmail = (email: string): string | undefined => {
-    if (!email.trim()) return 'Email is required'
+    if (!email.trim()) return t("forget_password.validationEmailRequired")   
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) return 'Please enter a valid email address'
+    if (!emailRegex.test(email)) return t("forget_password.validationEmailInvalid")
     return undefined
   }
 
@@ -43,23 +45,23 @@ export default function ForgetPassword() {
   const getFirebaseErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
       case 'auth/user-not-found':
-        return 'No account found with this email address. Please check your email or create a new account.'
+        return t("forget_password.firebaseErrors.user-not-found")
       case 'auth/invalid-email':
-        return 'Please enter a valid email address.'
+        return t("forget_password.firebaseErrors.invalid-email")
       case 'auth/too-many-requests':
-        return 'Too many password reset requests. Please wait a few minutes before trying again.'
+        return t("forget_password.firebaseErrors.too-many-requests")
       case 'auth/network-request-failed':
-        return 'Network error. Please check your internet connection and try again.'
+        return t("forget_password.firebaseErrors.network-request-failed")
       case 'auth/operation-not-allowed':
-        return 'Password reset is not enabled. Please contact support.'
+        return t("forget_password.firebaseErrors.operation-not-allowed")
       case 'auth/invalid-action-code':
-        return 'The password reset link is invalid or has expired. Please request a new one.'
+        return t("forget_password.firebaseErrors.invalid-action-code")
       case 'auth/expired-action-code':
-        return 'The password reset link has expired. Please request a new one.'
+        return t("forget_password.firebaseErrors.expired-action-code")
       case 'auth/weak-password':
-        return 'Please choose a stronger password.'
+        return t("forget_password.firebaseErrors.weak-password")
       default:
-        return 'Failed to send password reset email. Please try again.'
+        return t("forget_password.firebaseErrors.default")
     }
   }
 
@@ -69,7 +71,7 @@ export default function ForgetPassword() {
     setMessageType('')
 
     if (!validateForm()) {
-      setMessage('Please fix the errors below and try again.')
+      setMessage(t("forget_password.formErrorMessage"))
       setMessageType('error')
       return
     }
@@ -82,14 +84,14 @@ export default function ForgetPassword() {
         handleCodeInApp: true,
       })
 
-      setMessage('If an account with this email exists, you will receive a password reset link shortly.')
+      setMessage(t("forget_password.messageSuccessDefault"))
       setMessageType('success')
       setEmail('')
       setErrors({})
     } catch (err: unknown) {
   console.error('Password reset error:', err);
 
-  let errorMessage = 'An unknown error occurred';
+  let errorMessage = t("forget_password.errormessage");
 
   if (err instanceof FirebaseError) {
     errorMessage = getFirebaseErrorMessage(err.code);
@@ -116,14 +118,14 @@ export default function ForgetPassword() {
   return (
     <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
      <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
-            GREWE Scanner Interface Cloud Version<br className="hidden sm:block" />
+           {t("forget_password.appTitle")}<br className="hidden sm:block" />
           </h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Reset your password
+           {t("forget_password.resetPasswordHeading")}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          {"Enter your email address and we'll send you a link to reset your password"}
+            {t("forget_password.resetPasswordSubtext")}
         </p>
       </div>
 
@@ -152,7 +154,7 @@ export default function ForgetPassword() {
                   <h3 className={`text-sm font-medium ${
                     messageType === 'success' ? 'text-green-800' : 'text-red-800'
                   }`}>
-                    {messageType === 'success' ? 'Success!' : 'Error!'}
+                    {messageType === 'success' ? t("forget_password.messageSuccessTitle") : t("forget_password.messageErrorTitle") }
                   </h3>
                   <div className={`mt-1 text-sm ${
                     messageType === 'success' ? 'text-green-700' : 'text-red-700'
@@ -167,7 +169,7 @@ export default function ForgetPassword() {
           <form className="space-y-6" onSubmit={handleForget}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email Address
+                 {t("forget_password.emailLabel")}
               </label>
               <div className="mt-1">
                 <input
@@ -177,7 +179,7 @@ export default function ForgetPassword() {
                   required
                   onChange={(e) => handleEmailChange(e.target.value)}
                   value={email}
-                  placeholder="Enter your email address"
+                  placeholder={t("forget_password.emailPlaceholder") }
                   className={getInputClassName('email')}
                   disabled={isLoading}
                 />
@@ -191,7 +193,7 @@ export default function ForgetPassword() {
                 )}
               </div>
               <p className="mt-2 text-sm text-gray-500">
-                {"We'll send a password reset link to this email address"}
+                {t("forget_password.emailHelp") }
               </p>
             </div>
 
@@ -211,10 +213,10 @@ export default function ForgetPassword() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Sending Reset Link...
+                    {t("forget_password.buttonSendingReset") }
                   </div>
                 ) : (
-                  'Send Reset Link'
+                    t("forget_password.buttonSendReset")   
                 )}
               </button>
             </div>
@@ -226,7 +228,7 @@ export default function ForgetPassword() {
                 <div className="w-full border-t border-gray-300" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Remember your password?</span>
+                <span className="px-2 bg-white text-gray-500">{t("forget_password.rememberPassword")}</span>
               </div>
             </div>
 
@@ -235,7 +237,7 @@ export default function ForgetPassword() {
                 href="/signin"
                 className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out"
               >
-                Back to Sign in
+               {t("forget_password.backToSignIn")}
               </a>
             </div>
           </div>
@@ -250,14 +252,14 @@ export default function ForgetPassword() {
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-blue-800">
-                  What to expect
+                  {t("forget_password.infoBoxTitle")}
                 </h3>
                 <div className="mt-2 text-sm text-blue-700">
                   <ul className="list-disc list-inside space-y-1">
-                    <li>You&apos;ll receive an email with a password reset link</li>
-                    <li>The link will expire in 1 hour for security</li>
-                    <li>Check your spam folder if you don&apos;t see the email</li>
-                    <li>Contact support if you continue having issues</li>
+                    <li>{t("forget_password.infoBoxItems.line1")}</li>
+                    <li>{t("forget_password.infoBoxItems.line2")}</li>
+                    <li>{t("forget_password.infoBoxItems.line3")}</li>
+                    <li>{t("forget_password.infoBoxItems.line4")}</li>
                   </ul>
                 </div>
               </div>
@@ -275,10 +277,10 @@ export default function ForgetPassword() {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-yellow-800">
-                    Security Reminder
+                  {t("forget_password.securityNoticeTitle")}
                   </h3>
                   <div className="mt-1 text-sm text-yellow-700">
-                    For your security, we&apos;ve logged this password reset request. If you didn&apos;t request this, please contact support immediately.
+                    {t("forget_password.securityNoticeText")}
                   </div>
                 </div>
               </div>

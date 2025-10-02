@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react'
 import { Check } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface ConfirmModalProps {
   isOpen: boolean
@@ -20,6 +21,7 @@ export default function ConfirmModal({
   isSuccess = false 
 }: ConfirmModalProps) {
   const [showSuccess, setShowSuccess] = useState(false)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (isSuccess) {
@@ -71,21 +73,22 @@ export default function ConfirmModal({
                   <Check className="w-8 h-8 text-green-600 animate-check-draw" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 animate-fade-in-up">
-                  Successfully Deleted
+                   {t("deleteUser.successTitle")}
                 </h3>
                 <p className="text-sm text-gray-600 animate-fade-in-up animation-delay-200">
-                  User <span className="font-medium text-gray-900">{userName}</span> successfully deleted
+              {t("deleteUser.successMessageP1")} <span className="font-medium text-gray-900">{userName}</span>?                
+                   {t("deleteUser.successMessageP2")}
                 </p>
               </div>
             ) : (
               // Confirmation State
               <>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Confirm Delete
+                  {t("deleteUser.confirmTitle")}
                 </h3>
                 <p className="text-sm text-gray-600 mb-6">
-                  Are you sure you want to delete <span className="font-medium text-gray-900">{userName}</span>?               
-                  This action cannot be undone.
+                   {t("deleteUser.confirmMessageP1")} <span className="font-medium text-gray-900">{userName}</span>?                
+                   {t("deleteUser.confirmMessageP2")}
                 </p>
                             
                 <div className="flex space-x-3 justify-end">

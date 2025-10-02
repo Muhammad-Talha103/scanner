@@ -102,6 +102,7 @@
 import React, { useEffect, useState } from "react";
 import { Wifi, WifiOff, AlertCircle, ChevronDown } from "lucide-react";
 import type { EnclesoType } from "@/hooks/useScannerIntegration";
+import { useTranslation } from "react-i18next";
 
 interface ScannerStatusProps {
   isReady: boolean;
@@ -127,6 +128,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   onCapabilitiesChange,
   onToggleUI,
 }) => {
+   const { t } = useTranslation();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isResolutionOpen, setIsResolutionOpen] = useState(false);
   const [isColorModeOpen, setIsColorModeOpen] = useState(false);
@@ -296,7 +298,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       return (
         <div className="flex items-center space-x-2 text-red-600">
           <AlertCircle className="w-4 h-4 animate-pulse" />
-          <span className="text-xs">Error</span>
+          <span className="text-xs">{t("error")}</span>
         </div>
       );
     }
@@ -305,7 +307,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       return (
         <div className="flex items-center space-x-2 text-gray-500">
           <WifiOff className="w-4 h-4 animate-pulse" />
-          <span className="text-xs">Initializing...</span>
+          <span className="text-xs">{t("initializing")}</span>
         </div>
       );
     }
@@ -314,7 +316,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       return (
         <div className="flex items-center space-x-2 text-green-600">
           <Wifi className="w-4 h-4 animate-pulse" />
-          <span className="text-xs">Connected ({scanners.length})</span>
+          <span className="text-xs">{t("connected")} ({scanners.length})</span>
         </div>
       );
     }
@@ -322,19 +324,19 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
     return (
       <div className="flex items-center space-x-2 text-gray-500">
         <WifiOff className="w-4 h-4" />
-        <span className="text-xs">No Scanner</span>
+        <span className="text-xs">{t("noScanner")}</span>
       </div>
     );
   };
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="text-sm text-gray-700">Scan Mode:</div>
+      <div className="text-sm text-gray-700">{t("scanMode")}:</div>
       {getStatusDisplay()}
 
       {isReady && scanners.length > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-600">Show Scanner Driver UI:</span>
+          <span className="text-xs text-gray-600">{t("showScannerUI")}:</span>
         
 <label className="relative inline-flex items-center cursor-pointer">
   <input
@@ -399,7 +401,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       {/* Resolutions Dropdown */}
       {isReady && selectedScanner && (
         <div className="flex flex-col text-xs text-gray-600 relative">
-          <span className="font-semibold">Resolutions:</span>
+          <span className="font-semibold">{t("resolutions")}</span>
           <button
             onClick={() => {
               closeAllDropdowns();
@@ -408,7 +410,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
             <span className="text-xs">
-              {selectedResolution || "Select resolution"}
+              {selectedResolution || t("selectResolution")}
             </span>
             <ChevronDown
               className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`}
@@ -443,7 +445,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       {/* Color Modes Dropdown */}
       {isReady && selectedScanner && (
         <div className="flex flex-col text-xs text-gray-600 relative">
-          <span className="font-semibold">Color Modes:</span>
+          <span className="font-semibold">{t("colorModes")}</span>
           <button
             onClick={() => {
               closeAllDropdowns();
@@ -452,7 +454,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
             <span className="text-[11px]">
-              {selectedColorMode || "Select color mode"}
+              {selectedColorMode || t("selectColorMode")}
             </span>
             <ChevronDown
               className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`}
@@ -488,7 +490,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       {isReady && selectedScanner && (
   <div className="flex flex-col text-xs text-gray-600">
     <div className="flex items-center space-x-2 font-semibold mb-1">
-      <span>Duplex:</span>
+      <span>{t("duplex")}:</span>
       <label className="relative inline-flex ml-2 items-center cursor-pointer">
         <input
           type="checkbox"
@@ -497,7 +499,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           onChange={() => {
             const newValue = !duplexValue;
             setDuplexValue(newValue);
-            setSelectedDuplexLabel(newValue ? "On" : "Off");
+            setSelectedDuplexLabel(newValue ?  t("on") :  t("off"));
             updateCapabilities(
               selectedResolution,
               selectedColorMode,

@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function ImpressumPage() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="fixed top-4 left-4 z-50">
@@ -21,39 +25,45 @@ export default function ImpressumPage() {
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Back to Home
+          {t("impressum.backToHome")}
         </Link>
       </div>
+
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-8 text-center">
-            Impressum
+            {t("impressum.title")}
           </h1>
 
           <div className="space-y-6 text-gray-800">
+            {/* Company Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Company Information
+                {t("impressum.companyInformation.title")}
               </h2>
               <div className="space-y-2 leading-relaxed">
                 <p className="font-medium">
-                  JSE Imaging Solutions UG (haftungsbeschränkt)
+                  {t("impressum.companyInformation.name")}
                 </p>
-                <p>Managing Director: Kai Jungclaus</p>
-                <p>Kolpingstr. 11</p>
-                <p>40764 Langenfeld</p>
-                <p>Germany</p>
+                <p>{t("impressum.companyInformation.managingDirector")}</p>
+                <p>{t("impressum.companyInformation.street")}</p>
+                <p>{t("impressum.companyInformation.zipCity")}</p>
+                <p>{t("impressum.companyInformation.country")}</p>
               </div>
             </div>
 
+            {/* Contact */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Contact
+                {t("impressum.contact.title")}
               </h2>
               <div className="space-y-2 leading-relaxed">
-                <p>Phone: +49 2173 168 882</p>
+                <p>{t("impressum.contact.phone")}</p>
                 <p>
-                  Email:{" "}
+                  {t("impressum.contact.email").replace(
+                    "sales@jse.de",
+                    ""
+                  )}
                   <a
                     href="mailto:sales@jse.de"
                     className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
@@ -64,32 +74,31 @@ export default function ImpressumPage() {
               </div>
             </div>
 
+            {/* Legal Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Legal Information
+                {t("impressum.legalInformation.title")}
               </h2>
               <div className="space-y-2 leading-relaxed">
-                <p>HRB 92542 Amtsgericht Düsseldorf</p>
-                <p>USt-IdNr. / VAT-Id.: DE341751063</p>
+                <p>{t("impressum.legalInformation.register")}</p>
+                <p>{t("impressum.legalInformation.vatId")}</p>
               </div>
             </div>
 
+            {/* Editorial Responsibility */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                Editorial Responsibility
+                {t("impressum.editorialResponsibility.title")}
               </h2>
               <p className="leading-relaxed">
-                Responsible for journalistic-editorial content according to § 55
-                Abs. 2 RStV: K. Jungclaus at company address.
+                {t("impressum.editorialResponsibility.text")}
               </p>
             </div>
           </div>
         </div>
 
         <div className="text-center mt-8">
-          <p className="text-sm text-gray-600">
-            © 2025 JSE Imaging Solutions UG. All rights reserved.
-          </p>
+          <p className="text-sm text-gray-600">{t("impressum.footer")}</p>
         </div>
       </div>
     </div>

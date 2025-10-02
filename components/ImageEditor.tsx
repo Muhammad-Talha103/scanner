@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useRef, useEffect, useCallback } from "react"
 import { X, RotateCw, ZoomIn, ZoomOut, Crop, Move, Undo, Redo, Save, Loader2, RotateCcw, Maximize } from "lucide-react"
 import { ScannedImage } from "./scanner/Dropdown"
+import { useTranslation } from "react-i18next"
 
 
 interface ImageEditorProps {
@@ -56,6 +57,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [canvasOffset, setCanvasOffset] = useState({ x: 0, y: 0 })
   const [imagePosition, setImagePosition] = useState({ x: 0, y: 0, width: 0, height: 0 })
+  const { t } = useTranslation();
 
   // Crop-specific state
   const [cropDragType, setCropDragType] = useState<string | null>(null)
@@ -670,7 +672,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
       <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Edit Image</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("editImage")}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -688,7 +690,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={() => handleRotate(-90)}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors"
               disabled={isLoading}
-              title="Rotate Left"
+               title={t("rotateLeft")}
             >
               <RotateCcw className="w-4 h-4" />
             </button>
@@ -696,7 +698,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={() => handleRotate(90)}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors"
               disabled={isLoading}
-              title="Rotate Right"
+             title={t("rotateRight")}
             >
               <RotateCw className="w-4 h-4" />
             </button>
@@ -708,7 +710,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={() => handleZoom(1.2)}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors"
               disabled={isLoading}
-              title="Zoom In"
+             title={t("zoomIn")}
             >
               <ZoomIn className="w-4 h-4" />
             </button>
@@ -716,7 +718,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={() => handleZoom(0.8)}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors"
               disabled={isLoading}
-              title="Zoom Out"
+               title={t("zoomOut")}
             >
               <ZoomOut className="w-4 h-4" />
             </button>
@@ -724,7 +726,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={handleFitToScreen}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors"
               disabled={isLoading}
-              title="Fit to Screen"
+              title={t("fitToScreen")}
             >
               <Maximize className="w-4 h-4" />
             </button>
@@ -740,7 +742,9 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-200"
               }`}
               disabled={isLoading}
-              title={editState.isCropping ? "Exit Crop Mode" : "Enter Crop Mode"}
+               title={
+            editState.isCropping ? t("exitCropMode") : t("enterCropMode")
+          }
             >
               <Crop className="w-4 h-4" />
             </button>
@@ -752,7 +756,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={handleUndo}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading || historyIndex <= 0}
-              title="Undo"
+              title={t("undo")}
             >
               <Undo className="w-4 h-4" />
             </button>
@@ -760,7 +764,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               onClick={handleRedo}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isLoading || historyIndex >= history.length - 1}
-              title="Redo"
+               title={t("redo")}
             >
               <Redo className="w-4 h-4" />
             </button>
@@ -768,10 +772,10 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
 
           {/* Scale indicator */}
           <div className="text-sm text-gray-600">
-            Scale: {Math.round(editState.scale * 100)}%
+             {t("scale")} {Math.round(editState.scale * 100)}%
             {editState.isCropping && (
               <span className="ml-4">
-                Crop: {Math.round(editState.cropWidth)} × {Math.round(editState.cropHeight)}
+                 {t("crop")} {Math.round(editState.cropWidth)} × {Math.round(editState.cropHeight)}
               </span>
             )}
           </div>
@@ -783,7 +787,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 transition-colors"
               disabled={isLoading}
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               onClick={handleSave}
@@ -793,12 +797,12 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Saving...</span>
+                  <span>{t("saving")}</span>
                 </>
               ) : (
                 <>
                   <Save className="w-4 h-4" />
-                  <span>Save</span>
+                  <span>{t("save")}</span>
                 </>
               )}
             </button>
@@ -811,7 +815,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
-                <p className="text-sm text-gray-600">Loading image...</p>
+                <p className="text-sm text-gray-600">{t("loadingImage")}</p>
               </div>
             </div>
           ) : (
@@ -830,7 +834,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
             <div className="absolute bottom-4 left-4 bg-black bg-opacity-75 text-white text-xs px-3 py-2 rounded">
               <div className="flex items-center space-x-2">
                 <Move className="w-3 h-3" />
-                <span>Drag to pan • Use zoom controls to resize</span>
+                <span>{t("panInstruction")}</span>
               </div>
             </div>
           )}
@@ -839,7 +843,7 @@ export const ImageEditor: React.FC<ImageEditorProps> = ({ isOpen, onClose, image
             <div className="absolute bottom-4 left-4 bg-black bg-opacity-75 text-white text-xs px-3 py-2 rounded">
               <div className="flex items-center space-x-2">
                 <Crop className="w-3 h-3" />
-                <span>Drag handles to resize crop area • Drag inside to move</span>
+                <span>{t("cropInstruction")}</span>
               </div>
             </div>
           )}

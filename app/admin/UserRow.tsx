@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Trash2, Eye, EyeOff } from "lucide-react";
+import { MdOutlineWorkspacePremium } from "react-icons/md";
+import { useTranslation } from "react-i18next";
 
 interface User {
   id: string;
@@ -27,12 +29,12 @@ export default function UserRow({
 }: UserRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
 
   const maskPassword = (password: string) => {
     return "•".repeat(password.length);
   };
 
-  // Handlers to show password only while pressing the eye button
   const handleShowPasswordStart = () => {
     setShowPassword(true);
   };
@@ -57,7 +59,7 @@ export default function UserRow({
           {/*  Show UPDATED label when password was updated from forgetPassword */}
           {user.isPasswordUpdated && (
             <span className="uppercase font-semibold text-xs text-white select-none bg-blue-500 w-fit px-2 py-1 rounded-full">
-              UPDATED
+              {t("user_row.updated")}
             </span>
           )}
 
@@ -73,7 +75,7 @@ export default function UserRow({
               onTouchStart={handleShowPasswordStart}
               onTouchEnd={handleShowPasswordEnd}
               className="focus:outline-none"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? t("user_row.hidePassword") : t("user_row.showPassword")}
               type="button"
             >
               {showPassword ? (
@@ -85,13 +87,16 @@ export default function UserRow({
           </div>
         </td>
 
-        <td className="px-6 py-4 whitespace-nowrap">
+        <td className="px-4 py-4 whitespace-nowrap relative">
+          <div className="flex items-center absolute right-2 top-2  text-xs font-bold justify-center  ">
+            <MdOutlineWorkspacePremium className=" text-yellow-500" size={30} />
+          </div>
           <button
             onClick={() => onDelete(user.id, user.name)}
             className="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           >
             <Trash2 className="w-4 h-4 mr-1" />
-            Delete
+            <span className="hidden lg:flex">{t("user_row.delete")}</span>
           </button>
         </td>
       </tr>
@@ -112,9 +117,10 @@ export default function UserRow({
           {/*  Show UPDATED badge in mobile view */}
           {user.isPasswordUpdated && (
             <span className="uppercase font-semibold text-xs text-white select-none bg-blue-500 px-2 py-1 rounded-full">
-              UPDATED
+              {t("user_row.updated")}
             </span>
           )}
+          <MdOutlineWorkspacePremium className=" text-yellow-500" size={30} />
         </div>
         <div className="flex items-center space-x-2">
           {isExpanded ? (
@@ -133,7 +139,7 @@ export default function UserRow({
         <div className="px-4 pb-4 bg-gray-50 space-y-3">
           <div>
             <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
-              Email
+              {t("user_row.email")}
             </label>
             <div className="text-sm text-gray-900">{user.email}</div>
           </div>
@@ -141,12 +147,12 @@ export default function UserRow({
           <div>
             <div className="flex items-center space-x-2 mb-1">
               <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Password
+                 {t("user_row.password")}
               </label>
               {/*  Show UPDATED label in mobile expanded view */}
               {user.isPasswordUpdated && (
                 <span className="uppercase font-semibold text-xs text-white select-none bg-blue-500 px-2 py-1 rounded-full">
-                  UPDATED
+                   {t("user_row.updated")}
                 </span>
               )}
             </div>
@@ -197,7 +203,7 @@ export default function UserRow({
               className="inline-flex items-center px-3 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Delete User
+             {t("user_row.deleteUser")}
             </button>
           </div>
         </div>

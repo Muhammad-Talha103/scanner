@@ -61,6 +61,7 @@ export default function ScannerApp() {
   const router = useRouter();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
+
   // Local states
   const [userName, setUserName] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -100,6 +101,22 @@ export default function ScannerApp() {
     canRedo,
     updateScannerCapabilities,
   } = useScannerIntegration(showScannerUI);
+
+  // Check license when user email changes
+useEffect(() => {
+  if (!userInfo?.email) return;
+
+  const verifyLicense = async () => {
+    try {
+      const res = await fetch(`/api/encleso?email=${userInfo.email}`);
+    } catch (err) {
+      console.error("License check failed:", err);
+    }
+  };
+
+
+  verifyLicense();
+}, [userInfo?.email]);
 
   // Fetch username from Sanity on email change
   useEffect(() => {

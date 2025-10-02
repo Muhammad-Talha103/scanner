@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { X, Trash2, AlertTriangle } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean
@@ -21,6 +22,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
 }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isOpen) {
@@ -74,7 +76,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
             <div className="flex items-center justify-center w-10 h-10 bg-red-100 rounded-full">
               <AlertTriangle className="w-5 h-5 text-red-600" />
             </div>
-            <h2 className="text-lg font-semibold">Delete Image</h2>
+            <h2 className="text-lg font-semibold">{t("deleteImageTitle")}</h2>
           </div>
           <button
             onClick={handleClose}
@@ -91,11 +93,11 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
             <div className="mx-auto flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
               <Trash2 className="w-8 h-8 text-red-600" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Confirm Deletion</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">{t("confirmDeletion")}</h3>
             <p className="text-sm text-gray-600 mb-6">
-              Do you really want to delete image <span className="font-medium text-gray-900">Page {imageIndex}</span>?
+               {t("deleteImageMessage", { imageIndex })}
             </p>
-            <p className="text-xs text-gray-500 mb-6">This action cannot be undone.</p>
+            <p className="text-xs text-gray-500 mb-6">{t("irreversibleAction")}</p>
 
             <div className="flex justify-center space-x-3">
               <button
@@ -103,7 +105,7 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors"
                 disabled={isDeleting}
               >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 onClick={handleConfirm}
@@ -113,12 +115,12 @@ export const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (
                 {isDeleting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Deleting...</span>
+                    <span>{t("deleting")}</span>
                   </>
                 ) : (
                   <>
                     <Trash2 className="w-4 h-4" />
-                    <span>Confirm Delete</span>
+                    <span>{t("confirmDelete")}</span>
                   </>
                 )}
               </button>

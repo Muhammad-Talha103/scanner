@@ -67,7 +67,7 @@ export async function fetchUsersWithPasswordMerge(): Promise<Userr[]> {
         forgetPasswordMap.set(entry.userEmail.toLowerCase(), entry);
       } else {
         console.warn(
-          "[v0] ⚠️ Skipping forgetPassword entry with null/invalid userEmail:",
+          "⚠️ Skipping forgetPassword entry with null/invalid userEmail:",
           entry
         );
       }
@@ -79,7 +79,7 @@ export async function fetchUsersWithPasswordMerge(): Promise<Userr[]> {
       if (user.email && typeof user.email === "string") {
         forgetPasswordEntry = forgetPasswordMap.get(user.email.toLowerCase());
       } else {
-        console.warn("[v0] ⚠️ User has null/invalid email:", user);
+        console.warn(" ⚠️ User has null/invalid email:", user);
       }
 
       if (forgetPasswordEntry) {
@@ -87,7 +87,7 @@ export async function fetchUsersWithPasswordMerge(): Promise<Userr[]> {
           id: user._id,
           serial: index + 1,
           name: user.username,
-          email: user.email || "No Email", // Handle null email in display
+          email: user.email || "No Email",
           password: forgetPasswordEntry.password, // Use password from forgetPassword
           createdAt: user.createdAt,
           isPasswordUpdated: true, // Mark as updated

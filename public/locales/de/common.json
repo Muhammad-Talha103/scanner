@@ -1,0 +1,637 @@
+{
+  "___comments_toolbar": "Toolbar.tsx",
+  "scan": "Scannen",
+  "save": "Speichern",
+  "print": "Drucken",
+  "mail": "E-Mail",
+  "new": "Neu",
+  "edit": "Bearbeiten",
+  "symbols": "Symbole",
+  "version": "Version",
+  "userMenu": "Benutzermenü",
+
+  "___comments_advertise": "Advertise.tsx",
+  "scrollingText": "GreweScanner verwendet die encleso TWAIN-Webscan-Komponente von encleso.com.",
+
+  "___comments_loginRequired": "LoginRequired.tsx",
+  "authRequired": "Authentifizierung erforderlich",
+  "loginMessage": "Bitte melden Sie sich an, um auf die GREWE Scanner-Oberfläche zuzugreifen. Sie werden in Kürze zur Anmeldeseite weitergeleitet.",
+  "redirecting": "Weiterleitung zur Anmeldung",
+  "loginNow": "Jetzt anmelden",
+  "secureAccess": "Sicherer Zugriff auf Ihren Scan-Arbeitsbereich",
+
+  "___comments_menuBar": "MenuBar.tsx",
+  "fullscreen": "Vollbild",
+
+
+  "___comments_deleteAlImages": "DeleteAllImages.tsx",
+  "deleteAllTitle": "Alle Bilder löschen?",
+  "deleteAllMessage": "Diese Aktion kann nicht rückgängig gemacht werden. Alle Bilder werden dauerhaft aus Ihrer Galerie gelöscht. Möchten Sie wirklich fortfahren?",
+  "cancel": "Abbrechen",
+  "deleteAll": "Alle löschen",
+
+  "___comments_deleteConfirmations": "DeleteConfirmation.tsx",
+  "deleteImageTitle": "Bild löschen",
+  "confirmDeletion": "Löschung bestätigen",
+  "deleteImageMessage": "Möchten Sie wirklich das Bild Seite {{imageIndex}} löschen?",
+  "irreversibleAction": "Diese Aktion kann nicht rückgängig gemacht werden.",
+  "confirmDelete": "Löschen bestätigen",
+  "deleting": "Löschen...",
+
+"___comments_imageEditor": "ImageEditor.tsx",
+  "editImage": "Bild bearbeiten",
+    "rotateLeft": "Nach links drehen",
+    "rotateRight": "Nach rechts drehen",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "fitToScreen": "An Bildschirm anpassen",
+    "enterCropMode": "Zuschneidemodus starten",
+    "exitCropMode": "Zuschneidemodus beenden",
+    "undo": "Rückgängig",
+    "redo": "Wiederholen",
+    "scale": "Skalierung",
+    "crop": "Zuschneiden",
+    "saving": "Speichert...",
+    "loadingImage": "Bild wird geladen...",
+    "panInstruction": "Ziehen zum Verschieben • Zoom-Steuerung zum Skalieren verwenden",
+    "cropInstruction": "Griffe ziehen, um den Zuschnittsbereich zu ändern • Innen ziehen, um zu verschieben",
+
+    "___comments_ImportHandler": "ImportHandler.tsx",
+    "invalidFiles": "Bitte wählen Sie gültige Bilddateien aus (PNG, JPG, JPEG, TIFF)",
+    "errorImporting": "Fehler beim Importieren von Bildern. Bitte versuchen Sie es erneut.",
+
+    "___comments_MailModal": "MailModal.tsx",
+     "title": "E-Mail senden",
+    "to": "An",
+    "toPlaceholder": "empfänger@beispiel.de",
+    "subject": "Betreff",
+    "subjectPlaceholder": "E-Mail-Betreff",
+    "message": "Nachricht",
+    "messagePlaceholder": "Ihre Nachricht hier...",
+    "fileAttachment": "Dateianhang",
+    "chooseFile": "Datei auswählen",
+    "includePDF": "Gescannte/importierte Bilder als PDF einfügen ({{count}} Seite{{plural}})",
+    "pdfName": "PDF-Name",
+    "pdfNamePlaceholder": "Dokumentname",
+    "sendFrom": "Senden von",
+    "ownEmail": "Eigene E-Mail",
+    "grewScannerEmail": "GrewScanner E-Mail",
+    "send": "Senden",
+    "sending": "Wird gesendet...",
+    "errorRecipientRequired": "Empfänger-E-Mail ist erforderlich",
+    "errorInvalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "errorSubjectRequired": "Betreff ist erforderlich",
+    "errorPdfNameRequired": "PDF-Name ist erforderlich, wenn gescannte Bilder eingefügt werden",
+    "successTitle": "E-Mail erfolgreich gesendet!",
+    "successMessage": "Ihre E-Mail wurde an {{email}} zugestellt",
+     "downloadPDF": "PDF herunterladen: {{url}}",
+  "attachments": "Anhänge:",
+  "failedToLoadImage": "Bild konnte nicht geladen werden",
+
+ "___comments_ScannedImages": "ScannedImages.tsx",
+  "noDocumentLoaded": "Kein Dokument geladen",
+  "clickScanOrImport": "Klicken Sie auf 'Scan', um zu scannen, oder auf 'Importieren', um Bilder zu laden",
+  "clearAllImages": "Alle Bilder löschen",
+  "page": "Seite {{index}}",
+  "imported": "Importiert",
+  "scanned": "Gescannt",
+  "deleteImage": "Bild löschen",
+  "selected": "Ausgewählt",
+  "selectedForOperations": "Für Operationen ausgewählt",
+
+ "___comments_ScannedStatus": "ScannerStatus.tsx",
+  "scanMode": "Scan-Modus:",
+  "showScannerUI": "Scanner-Treiber UI anzeigen:",
+  "error": "Fehler",
+  "initializing": "Initialisierung...",
+  "connected": "Verbunden",
+  "noScanner": "Kein Scanner",
+  "resolutions": "Auflösungen:",
+  "selectResolution": "Auflösung auswählen",
+  "colorModes": "Farbmodi:",
+  "selectColorMode": "Farbmodus auswählen",
+  "duplex": "Duplex",
+  "on": "Ein",
+  "off": "Aus",
+
+  "pageNotFound": "Seite nicht gefunden",
+  "goHome": "Zur Startseite",
+  "oops_message":"Hoppla! Die gesuchte Seite existiert nicht.",
+
+   "___comments_About.tsx": "About.tsx",
+  "backToHome": "Zur Startseite",
+    "heroTitle": "GreweScan",
+    "heroDescription": "Professionelle browserbasierte TWAIN-Scannerlösung, unterstützt durch Encleso SDK",
+    "heroBadge": "Browser-basiert • Encleso Client-Installation erforderlich",
+    "whatIsGreweScanTitle": "Was ist GreweScan?",
+    "whatIsGreweScanDescription1": "GreweScan ist eine revolutionäre browserbasierte Anwendung, die TWAIN-Scans direkt aus Webbrowsern mit dem leistungsstarken Encleso SDK ermöglicht. Während die Weboberfläche keine Installation erfordert, muss die Encleso-Clientsoftware auf dem lokalen Rechner installiert sein, um die Kommunikation zwischen Browser und Scanner zu gewährleisten.",
+    "whatIsGreweScanDescription2": "Dieser hybride Ansatz bietet den Komfort des webbasierten Zugriffs bei gleichzeitiger direkter Hardware-Kommunikation für optimale Scan-Leistung. GreweScan unterstützt nahezu alle TWAIN-kompatiblen Scanner und funktioniert nahtlos in Chrome, Firefox, Edge und Opera unter Windows.",
+    "keyBenefitsTitle": "Hauptvorteile",
+    "keyBenefitsList": [
+      "Weboberfläche ohne Browser-Plugins",
+      "Direkte Scanner-Kommunikation über Encleso Client",
+      "Unterstützt nahezu alle TWAIN-kompatiblen Scanner",
+      "Kompatibel mit Windows 7 bis Windows 11"
+    ],
+    "howItWorksTitle": "Wie es funktioniert",
+    "architectureTitle": "Client-Server-Architektur",
+    "architectureDescription": "GreweScan verwendet eine hybride Architektur, bei der die Webanwendung im Browser läuft, während die auf Ihrem Rechner installierte Encleso-Clientsoftware die direkte Scanner-Kommunikation über TWAIN-Treiber übernimmt.",
+    "webInterfaceTitle": "Weboberfläche",
+    "webInterfaceDesc": "Browserbasierte UI ohne Plugins. Funktioniert mit Chrome, Firefox, Edge und Opera",
+    "enclesoClientTitle": "Encleso Client",
+    "enclesoClientDesc": "Lokale Software, die Browser und Scanner über REST-API verbindet",
+    "twainScannerTitle": "TWAIN-Scanner",
+    "twainScannerDesc": "Direkte Hardware-Kommunikation mit nahezu allen TWAIN-kompatiblen Scannern",
+    "supportedFormatsTitle": "Unterstützte Formate",
+    "supportedFormatsList": ["PDF", "JPEG", "TIFF", "Multi-page TIFF", "PNG", "BMP"],
+    "systemRequirementsTitle": "Systemanforderungen",
+    "systemRequirementsList": [
+      "Windows 7 bis Windows 11 (32-Bit und 64-Bit)",
+      "TWAIN-kompatibler Scanner mit installierten Treibern",
+      "Installation der Encleso-Clientsoftware erforderlich",
+      "Moderner Webbrowser (Chrome, Firefox, Edge, Opera)"
+    ],
+    "aboutJSETitle": "Über JSE Imaging Solutions",
+    "30YearsOfInnovation": "30 Jahre TWAIN-Innovation",
+    "aboutJSEDesc1": "JSE Imaging Solutions ist ein führender Entwickler von TWAIN-Entwicklungstools, TWAIN-Treibern, TWAIN-Dienstprogrammen und Imaging-Tools mit 30 Jahren Innovation in Scan- und Bildlösungen. Sie spezialisieren sich auf die Erstellung von OEM-TWAIN- und WIA-Treibern für verschiedene Hersteller und bieten umfassende Imaging-Lösungen für Unternehmen weltweit.",
+    "aboutJSEDesc2": "JSE entwickelte das Encleso SDK, das GreweScan antreibt, und bringt damit jahrzehntelange TWAIN-Expertise in moderne browserbasierte Anwendungen. Ihre Lösungen überbrücken die Lücke zwischen traditionellem Desktop-Scanning und modernen Webtechnologien.",
+    "visitJSE": "JSE Imaging Solutions besuchen",
+    "products": {
+      "SnapTwain": "TWAIN-Treiber für Fujitsu und Ricoh ScanSnap Scanner (iX100, iX500, iX1300, iX1400, iX1500, iX1600)",
+      "TWAINCommander": "Befehlszeilen-Scan-Utility für Stapelscans von jedem TWAIN-kompatiblen Gerät",
+      "EnclesoSDK": "Web TWAIN SDK für browserbasierte Scan-Anwendungen"
+    },
+    "poweredByEnclesoTitle": "Angetrieben durch Encleso SDK",
+    "poweredByEnclesoDesc": "GreweScan wird vom Encleso SDK unterstützt, einer TWAIN-Scan-Komponente, die speziell für browserbasierte Webanwendungen entwickelt wurde. Encleso ermöglicht es Benutzern, angeschlossene Scanner auszuwählen, Einstellungen wie Auflösung und Farbe zu konfigurieren und gescannte Seiten direkt auf Webseiten über die JavaScript-Bibliothek anzuzeigen.",
+    "poweredByEnclesoFeatures": [
+      {
+        "title": "Browser-Integration",
+        "desc": "JavaScript-Bibliothek für nahtlose Web-Integration"
+      },
+      {
+        "title": "Hohe Leistung",
+        "desc": "Direkte TWAIN-Kommunikation für optimale Scan-Geschwindigkeit"
+      },
+      {
+        "title": "Breite Kompatibilität",
+        "desc": "Unterstützt nahezu alle TWAIN-kompatiblen Scanner"
+      },
+      {
+        "title": "Entwicklerfreundlich",
+        "desc": "Einfache Integration mit umfassender Dokumentation"
+      }
+    ],
+    "learnMoreEncleso": "Mehr über Encleso SDK erfahren",
+    "footerVersion": "GreweScan Version",
+    "footerDescription": "Browserbasierte Anwendung für TWAIN-Scanning, unterstützt durch Encleso SDK.",
+    "footerCopyright": "(C) 2025 von JSE Imaging Solutions.",
+    "footerEncleso": "Verwendet Encleso Web TWAIN SDK von",
+
+    
+  "helpCenter": {
+    "title": "GreweScanner Hilfe-Center",
+    "subtitle": "Alles, was Sie für den Einstieg in GreweScanner benötigen",
+    "backToHome": "Zurück zur Startseite",
+
+    "systemRequirements": {
+      "title": "Systemanforderungen",
+      "os": "Betriebssystem",
+      "scanner": "Scanner",
+      "client": "Client-Software",
+      "osText": "Windows 10 oder neuer",
+      "scannerText": "TWAIN-kompatibler Scanner oder ein anderes Bildaufnahmegerät",
+      "clientText": "Der Encleso Client muss installiert sein. Herunterladen von"
+    },
+
+    "gettingStarted": {
+      "title": "Erste Schritte",
+      "steps": {
+        "installClient": {
+          "title": "Encleso Client installieren",
+          "text": "Besuchen Sie encleso.com und installieren Sie den Encleso Client auf Ihrem Windows-Computer."
+        },
+        "connectScanner": {
+          "title": "Scanner anschließen",
+          "text": "Schließen Sie einen TWAIN-kompatiblen Scanner oder ein unterstütztes Bildaufnahmegerät an; stellen Sie sicher, dass es eingeschaltet und über USB oder Netzwerk verbunden ist."
+        },
+        "openApp": {
+          "title": "GreweScanner im Browser öffnen",
+          "text": "Starten Sie die GreweScanner-Webanwendung. Wenn alle Voraussetzungen erfüllt sind, sollte Ihr Scanner automatisch erkannt werden."
+        },
+        "checkVersion": {
+          "title": "Version prüfen",
+          "text": "Die Versionsnummer (z. B. v1.00) ist in der Kopfzeile neben dem 'Benutzersymbol'-Button sichtbar und wird bei neuen Versionen aktualisiert."
+        }
+      }
+    },
+
+    "troubleshooting": {
+      "title": "Fehlerbehebung (falls erforderlich)",
+      "scannerNotDetected": {
+        "title": "Scanner nicht erkannt?",
+        "text": "Stellen Sie sicher, dass der Scanner TWAIN-kompatibel ist und der Encleso Client ausgeführt wird."
+      },
+      "stillNotWorking": {
+        "title": "Funktioniert immer noch nicht?",
+        "text": "Starten Sie den Browser und den Client neu; prüfen Sie, ob keine andere Anwendung den Scanner verwendet."
+      },
+      "clientNotStart": {
+        "title": "Client startet nicht?",
+        "text": "Installieren Sie den Client von der offiziellen Website neu und führen Sie ihn ggf. als Administrator aus."
+      },
+      "reinstallScanner": {
+        "title": "Scanner neu installieren?",
+        "text": "Entfernen Sie das Gerät über Systemsteuerung → Geräte und Drucker, und schließen Sie es erneut an, damit die Treiber automatisch installiert werden."
+      },
+      "twainLimit": {
+        "title": "TWAIN-Verbindungsbeschränkung",
+        "text": "TWAIN kann jeweils nur mit einer Anwendung oder einem Browserfenster verbunden werden. Schließen Sie andere Scan-Programme oder Browserfenster und versuchen Sie es erneut."
+      }
+    },
+
+    "contact": {
+      "title": "Kontakt & Feedback",
+      "questions": "Fragen oder Rückmeldungen?",
+      "visit": "Besuchen Sie",
+      "emailSupport": "E-Mail-Support"
+    },
+
+    "footer": "© 2025 GreweScanner. Unterstützt durch Encleso Client."
+  },
+
+  "impressum": {
+      "title": "Impressum",
+      "backToHome": "Zurück zur Startseite",
+
+      "companyInformation": {
+        "title": "Unternehmensinformationen",
+        "name": "JSE Imaging Solutions UG (haftungsbeschränkt)",
+        "managingDirector": "Geschäftsführer: Kai Jungclaus",
+        "street": "Kolpingstr. 11",
+        "zipCity": "40764 Langenfeld",
+        "country": "Deutschland"
+      },
+
+      "contact": {
+        "title": "Kontakt",
+        "phone": "Telefon: +49 2173 168 882",
+        "email": "E-Mail: sales@jse.de"
+      },
+
+      "legalInformation": {
+        "title": "Rechtliche Informationen",
+        "register": "HRB 92542 Amtsgericht Düsseldorf",
+        "vatId": "USt-IdNr.: DE341751063"
+      },
+
+      "editorialResponsibility": {
+        "title": "Verantwortlich für den Inhalt",
+        "text": "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 55. 2 RStV: K. Jungclaus unter der Firmenadresse."
+      },
+
+      "footer": "© 2025 JSE Imaging Solutions UG. Alle Rechte vorbehalten."
+    },
+
+   "upgrade": {
+  "hero": {
+    "offerBadge": "Zeitlich begrenztes Angebot",
+    "title": "Upgrade zu {{product}} Premium",
+    "subtitle": "Schalte professionelle Scan-Funktionen frei und steigere deine Produktivität auf das nächste Level",
+    "price": "€1",
+    "perMonth": "pro Monat",
+    "button": "Jetzt upgraden"
+  },
+  "features": {
+    "title": "Premium-Funktionen",
+    "subtitle": "Alles, was du für professionelles Scannen brauchst",
+    "items": [
+      { "title": "Kein Encleso-Wasserzeichen", "description": "Saubere, professionelle Scans ohne Wasserzeichen oder Branding.", "icon": "✨" },
+      { "title": "24/7 Technischer Support", "description": "Erhalte jederzeit sofortige Hilfe durch unser engagiertes Support-Team.", "icon": "🛟" },
+      { "title": "Schnellere Uploads & Prioritätsserver", "description": "Blitzschnelle Verarbeitung mit spezieller Premium-Infrastruktur.", "icon": "⚡" },
+      { "title": "Dekorativer Vorschaumodus", "description": "Schöne Vorschau-Layouts, die deine Scans professionell wirken lassen.", "icon": "🎨" },
+      { "title": "Premium-Profilabzeichen", "description": "Zeige deinen Premium-Status mit einem exklusiven Profilabzeichen.", "icon": "👑" },
+      { "title": "Früher Zugang zu neuen Funktionen", "description": "Sei der Erste, der neue Funktionen und Verbesserungen ausprobiert.", "icon": "🚀" }
+    ]
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "items": [
+      { "q": "Bekomme ich technischen Support mit Premium?", "a": "Ja — mit Premium erhältst du 24/7 technischen Support. Unser Team ist jederzeit bereit, dir zu helfen." },
+      { "q": "Welche Zahlungsmethoden akzeptiert ihr?", "a": "Wir akzeptieren alle gängigen Kreditkarten, Debitkarten und digitale Zahlungsmethoden über unseren sicheren Stripe-Zahlungsanbieter." },
+      { "q": "Habe ich früher Zugriff auf neue Funktionen?", "a": "Ja — Premium-Mitglieder genießen frühen Zugang zu neuen Funktionen und können diese als Erste ausprobieren." },
+      { "q": "Sind meine Scans noch mit Encleso-Wasserzeichen versehen?", "a": "Nein — Premium entfernt das Encleso-Wasserzeichen vollständig und liefert dir saubere, professionelle Scans." },
+      { "q": "Kostet Premium wirklich nur 1 € pro Monat?", "a": "Ja — das Premium-Abo kostet nur 1 € pro Monat und ist damit für jeden erschwinglich." },
+      { "q": "Bekomme ich ein Premium-Abzeichen in meinem Profil?", "a": "Ja — Premium-Mitglieder erhalten ein spezielles Abzeichen, das deinen Support für GreweScanner zeigt und exklusive Vorteile freischaltet." }
+    ]
+  },
+  "cta": {
+    "title": "Bereit für Premium?",
+    "subtitle": "Schließe dich tausenden Profis an, die {{product}} Premium für ihre Scans nutzen",
+    "button": "Starte deine Premium-Reise",
+    "note": "Sichere Zahlung • Sofortige Aktivierung"
+  }
+},
+
+  "signin": {
+    "appTitle": "GREWE Scanner Interface Cloud Version",
+    "pageTitle": "Melden Sie sich bei Ihrem Konto an",
+    "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Daten ein",
+
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "rememberMe": "Angemeldet bleiben",
+    "forgotPassword": "Passwort vergessen?",
+
+    "signIn": "Anmelden",
+    "signingIn": "Anmeldung läuft...",
+    "noAccount": "Noch kein Konto?",
+    "createAccount": "Neues Konto erstellen",
+
+    "successTitle": "Erfolg!",
+    "errorTitle": "Fehler!",
+    "loginSuccess": "Anmeldung erfolgreich! Willkommen zurück!",
+    "loginFailed": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut.",
+    "fixErrors": "Bitte beheben Sie die unten aufgeführten Fehler und versuchen Sie es erneut.",
+
+    "emailRequired": "E-Mail ist erforderlich",
+    "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "passwordRequired": "Passwort ist erforderlich",
+    "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen enthalten",
+
+    "firebaseErrors": {
+      "userNotFound": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfen Sie Ihre E-Mail oder erstellen Sie ein neues Konto.",
+      "wrongPassword": "Falsches Passwort. Bitte versuchen Sie es erneut oder setzen Sie Ihr Passwort zurück.",
+      "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "userDisabled": "Dieses Konto wurde deaktiviert. Bitte wenden Sie sich an den Support.",
+      "tooManyRequests": "Zu viele fehlgeschlagene Anmeldeversuche. Bitte versuchen Sie es später erneut oder setzen Sie Ihr Passwort zurück.",
+      "networkRequestFailed": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+      "invalidCredential": "Ungültige E-Mail oder Passwort. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut.",
+      "operationNotAllowed": "E-Mail/Passwort-Anmeldung ist nicht aktiviert. Bitte wenden Sie sich an den Support.",
+      "weakPassword": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
+      "default": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Zugangsdaten und versuchen Sie es erneut."
+    }
+  },
+
+  "signup": {
+      "appTitle": "GREWE Scanner Interface Cloud-Version",
+      "pageTitle": "Erstellen Sie Ihr Konto",
+      "subtitle": "Treten Sie uns heute bei und legen Sie los",
+
+      "nameLabel": "Vollständiger Name",
+      "namePlaceholder": "Geben Sie Ihren vollständigen Namen ein",
+      "emailLabel": "E-Mail-Adresse",
+      "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+      "passwordLabel": "Passwort",
+      "passwordPlaceholder": "Erstellen Sie ein Passwort",
+      "confirmPasswordLabel": "Passwort bestätigen",
+      "confirmPasswordPlaceholder": "Bestätigen Sie Ihr Passwort",
+
+      "createAccount": "Konto erstellen",
+      "creatingAccount": "Konto wird erstellt...",
+      "alreadyHaveAccount": "Haben Sie bereits ein Konto?",
+      "signInInstead": "Stattdessen anmelden",
+
+      "successTitle": "Erfolg!",
+      "errorTitle": "Fehler!",
+      "accountCreated": "Konto erfolgreich erstellt! Willkommen an Bord! Sie können sich jetzt anmelden.",
+      "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
+
+      "nameRequired": "Vollständiger Name ist erforderlich",
+      "nameTooShort": "Der Name muss mindestens 2 Zeichen lang sein",
+      "nameTooLong": "Der Name darf höchstens 50 Zeichen lang sein",
+
+      "emailRequired": "E-Mail ist erforderlich",
+      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+
+      "passwordRequired": "Passwort ist erforderlich",
+      "passwordTooShort": "Das Passwort muss mindestens 6 Zeichen lang sein",
+      "passwordTooLong": "Das Passwort darf höchstens 128 Zeichen lang sein",
+      "passwordLowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
+      "passwordUppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
+      "passwordNumber": "Das Passwort muss mindestens eine Zahl enthalten",
+
+      "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+      "confirmPasswordMismatch": "Passwörter stimmen nicht überein",
+
+      "firebaseErrors": {
+        "emailAlreadyInUse": "Diese E-Mail-Adresse ist bereits registriert. Bitte verwenden Sie eine andere E-Mail oder melden Sie sich an.",
+        "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "operationNotAllowed": "E-Mail-/Passwort-Konten sind nicht aktiviert. Bitte wenden Sie sich an den Support.",
+        "weakPassword": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
+        "networkRequestFailed": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+        "tooManyRequests": "Zu viele fehlgeschlagene Versuche. Bitte versuchen Sie es später erneut.",
+        "default": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+      }
+    },
+"login_admin": {
+  "appTitle": "GREWE Scanner Interface Cloud-Version",
+  "pageTitle": "Willkommen zurück",
+  "subtitle": "Melden Sie sich an, um auf Ihr Admin-Dashboard zuzugreifen",
+
+  "emailLabel": "E-Mail-Adresse",
+  "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+
+  "passwordLabel": "Passwort",
+  "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+
+  "rememberMe": "Angemeldet bleiben",
+  "forgotPassword": "Passwort vergessen?",
+
+  "signIn": "Anmelden",
+  "signingIn": "Anmeldung läuft...",
+
+  "successTitle": "Erfolg!",
+  "errorTitle": "Fehler!",
+  "invalidCredentials": "Ungültige E-Mail oder Passwort",
+  "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
+
+  "emailRequired": "E-Mail ist erforderlich",
+  "passwordRequired": "Passwort ist erforderlich",
+
+  "footerNote": "Geschützt durch Sicherheitsstandards auf Unternehmensebene"
+},
+"changePassword_admin": {
+  "pageTitle": "Admin-Passwort ändern",
+  "step1": "Aktuelle Zugangsdaten überprüfen",
+  "step2": "Neue Zugangsdaten festlegen",
+
+  "currentUsernameLabel": "Aktueller Benutzername",
+  "currentUsernamePlaceholder": "Aktuellen Benutzernamen eingeben",
+
+  "currentPasswordLabel": "Aktuelles Passwort",
+  "currentPasswordPlaceholder": "Aktuelles Passwort eingeben",
+
+  "newUsernameLabel": "Neuer Benutzername",
+  "newUsernamePlaceholder": "Neuen Benutzernamen eingeben",
+
+  "newPasswordLabel": "Neues Passwort",
+  "newPasswordPlaceholder": "Neues Passwort eingeben",
+  "passwordHint": "Das Passwort muss mindestens 6 Zeichen lang sein",
+
+  "verifyButton": "Zugangsdaten überprüfen",
+  "verifying": "Überprüfung läuft...",
+  "updateButton": "Passwort aktualisieren",
+  "updating": "Aktualisierung läuft...",
+  "backButton": "Zurück",
+
+  "successTitle": "Erfolg!",
+  "successMessage": "Die Admin-Zugangsdaten wurden erfolgreich aktualisiert.",
+  "goToDashboard": "Zum Admin-Dashboard",
+
+  "errorInvalid": "Ungültiger Benutzername oder Passwort",
+  "errorNotFound": "Admin-Zugangsdaten nicht in der Datenbank gefunden",
+  "errorGeneric": "Es ist ein Fehler aufgetreten"
+},
+"deleteUser": {
+  "successTitle": "Erfolgreich gelöscht",
+  "successMessageP1": "Benutzer ",
+  "successMessageP2": " wurde erfolgreich gelöscht",
+
+  "confirmTitle": "Löschen bestätigen",
+ "confirmMessageP1": "Möchten Sie wirklich löschen",
+  "confirmMessageP2": " Diese Aktion kann nicht rückgängig gemacht werden.",
+
+  "cancelButton": "Abbrechen",
+  "deleteButton": "Löschen",
+  "deleting": "Wird gelöscht..."
+},
+"admin": {
+  "verifying": "Zugriff wird überprüft",
+  "checkadminCredentials": "Ihre Admin-Anmeldedaten und Berechtigungen werden überprüft...",
+  "accessDenied": "Zugriff verweigert",
+  "redirecting": "Weiterleitung zur Anmeldung...",
+  "admin_dashboard": "Admin-Dashboard",
+  "loadingDashboard": "Ihr Dashboard wird geladen...",
+  "loadingUsers": "Benutzer werden geladen",
+  "fetchingUsers": "Benutzerdaten werden aus der Datenbank abgerufen...",
+  "manage_users": "Benutzer und ihre Informationen verwalten",
+  "change_credentials": "Anmeldedaten ändern",
+  "logout": "Abmelden",
+  "user_management": "Benutzerverwaltung"
+},
+
+  "userTable": {
+    "searchPlaceholder": "Benutzer nach Name oder E-Mail suchen...",
+    "showing": "Zeigt",
+    "of": "von",
+    "users": "Benutzer",
+    "all": "alle",
+    "noUsersFoundFor": "- Keine Benutzer gefunden für {{term}}",
+
+    "columnSerial": "#",
+    "columnName": "Name",
+    "columnEmail": "E-Mail",
+    "columnPassword": "Passwort",
+    "columnAction": "Aktion",
+    "columnUserType": "Benutzertyp",
+
+    "noResultsTitle": "Keine Benutzer gefunden",
+    "noResultsDescription": "Versuchen Sie, Ihre Suchbegriffe anzupassen oder",
+    "noResultsClearSearch": "Suche zurücksetzen",
+    "deletion_failed":"Das Löschen ist fehlgeschlagen",
+    "unknownError":"Es ist ein unbekannter Fehler aufgetreten",
+    "error":"Fehler"
+  },
+  "user_row": {
+    "updated": "AKTUALISIERT",
+    "delete": "Löschen",
+    "deleteUser": "Benutzer löschen",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "showPassword": "Passwort anzeigen",
+    "hidePassword": "Passwort verbergen",
+    "serialNumberPrefix": "#"
+  },
+  "forget_password":{
+  "appTitle": "GREWE Scanner Interface Cloud-Version",
+  "resetPasswordHeading": "Passwort zurücksetzen",
+  "resetPasswordSubtext": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+  "emailLabel": "E-Mail-Adresse",
+  "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+  "emailHelp": "Wir senden einen Link zum Zurücksetzen des Passworts an diese E-Mail-Adresse.",
+  "validationEmailRequired": "E-Mail ist erforderlich",
+  "validationEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "formErrorMessage": "Bitte beheben Sie die folgenden Fehler und versuchen Sie es erneut.",
+  "buttonSendReset": "Link zum Zurücksetzen senden",
+  "buttonSendingReset": "Link zum Zurücksetzen wird gesendet...",
+  "messageSuccessTitle": "Erfolg!",
+  "messageErrorTitle": "Fehler!",
+  "messageSuccessDefault": "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie in Kürze einen Link zum Zurücksetzen des Passworts.",
+  "messageErrorDefault": "Fehler beim Senden der E-Mail zum Zurücksetzen des Passworts. Bitte versuchen Sie es erneut.",
+  "errormessage":"Ein unbekannter Fehler ist aufgetreten.",
+  "firebaseErrors": {
+    "user-not-found": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfen Sie Ihre E-Mail oder erstellen Sie ein neues Konto.",
+    "invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "too-many-requests": "Zu viele Anfragen zum Zurücksetzen des Passworts. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
+    "network-request-failed": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "operation-not-allowed": "Das Zurücksetzen des Passworts ist nicht aktiviert. Bitte kontaktieren Sie den Support.",
+    "invalid-action-code": "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
+    "expired-action-code": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie einen neuen an.",
+    "weak-password": "Bitte wählen Sie ein stärkeres Passwort.",
+    "default":"E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+  },
+  "rememberPassword": "Erinnern Sie sich an Ihr Passwort?",
+  "backToSignIn": "Zurück zur Anmeldung",
+  "infoBoxTitle": "Was Sie erwarten können",
+  "infoBoxItems": {
+      "line1":"Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts",
+      "line2":"Der Link läuft aus Sicherheitsgründen in 1 Stunde ab",
+      "line3": "Überprüfen Sie Ihren Spam-Ordner, wenn Sie die E-Mail nicht sehen",
+      "line4": "Kontaktieren Sie den Support, wenn die Probleme weiterhin bestehen"
+  },
+  "securityNoticeTitle": "Sicherheits-Hinweis",
+  "securityNoticeText": "Zu Ihrer Sicherheit haben wir diese Anfrage zum Zurücksetzen des Passworts protokolliert. Wenn Sie dies nicht angefordert haben, kontaktieren Sie bitte sofort den Support."
+}
+,
+"reset_password":{
+  "verifyingResetLink": "Zurücksetzungslink wird überprüft...",
+  "code_verification_error":"Fehler bei der Codeüberprüfung:",
+  "invalidOrMissingCode": "Ungültiger oder fehlender Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
+  "unknownError": "Ein unbekannter Fehler ist aufgetreten",
+  "expiredActionCode": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie eine neue E-Mail zum Zurücksetzen an.",
+  "invalidActionCode": "Der Link zum Zurücksetzen ist ungültig oder wurde bereits verwendet. Bitte fordern Sie einen neuen an.",
+  "userDisabled": "Dieses Konto wurde deaktiviert. Bitte wenden Sie sich an den Support.",
+  "userNotFound": "Kein Konto gefunden. Der Benutzer wurde möglicherweise gelöscht.",
+  "weakPassword": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
+  "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+  "tooManyRequests": "Zu viele Anfragen. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
+  "failedReset": "Das Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut oder fordern Sie einen neuen Link an.",
+  "invalidResetCode": "Ungültiger Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
+  "passwordResetSuccess": "Passwort erfolgreich zurückgesetzt! Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+  "passwordRequired": "Passwort ist erforderlich",
+  "passwordMinLength": "Das Passwort muss mindestens 6 Zeichen lang sein",
+  "passwordMaxLength": "Das Passwort darf nicht länger als 128 Zeichen sein",
+  "passwordLowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
+  "passwordUppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
+  "passwordNumber": "Das Passwort muss mindestens eine Zahl enthalten",
+  "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+  "confirmPasswordMismatch": "Die Passwörter stimmen nicht überein",
+  "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
+  "setNewPassword": "Neues Passwort festlegen",
+  "enterNewPasswordFor": "Geben Sie Ihr neues Passwort ein für",
+  "invalidResetLink": "Ungültiger Zurücksetzungslink",
+  "error": "Fehler!",
+  "success": "Erfolg!",
+  "requestNewResetLink": "Neuen Zurücksetzungslink anfordern",
+  "backToSignIn": "Zurück zur Anmeldung",
+  "newPassword": "Neues Passwort",
+  "enterNewPassword": "Geben Sie Ihr neues Passwort ein",
+  "confirmNewPassword": "Neues Passwort bestätigen",
+  "confirmYourPassword": "Bestätigen Sie Ihr neues Passwort",
+  "updatingPassword": "Passwort wird aktualisiert...",
+  "updatePassword": "Passwort aktualisieren",
+  "signInNow": "Jetzt anmelden",
+  "passwordRequirements": "Passwortanforderungen",
+  "requirementMinLength": "Mindestens 6 Zeichen lang",
+  "requirementUppercase": "Mindestens einen Großbuchstaben enthalten",
+  "requirementLowercase": "Mindestens einen Kleinbuchstaben enthalten",
+  "requirementNumber": "Mindestens eine Zahl enthalten"
+}
+
+
+
+
+
+}
