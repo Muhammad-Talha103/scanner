@@ -1,15 +1,36 @@
-import { NextResponse } from "next/server";
+import { client } from "@/sanity/lib/client";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    // License key ko string ke andar rakho
-    const LICENSE_KEY: string = "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu";
 
+     const userEmail = req.nextUrl.searchParams.get("email"); 
+     console.log("User email from request:", userEmail);
+
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: "User email missing" },
+        { status: 400 }
+      );
+    }
+
+     const query = `*[_type == "premiumUser"]{ email }`;
+    const premiumUsers: { email: string }[] = await client.fetch(query);
+
+    // Check if the user is premium
+    const isPremium = premiumUsers.some(
+      (user) => user.email.toLowerCase() === userEmail.toLowerCase()
+    );
+
+    // License key ko string ke andar rakho
+    const LICENSE_KEY: string = isPremium
+      ? "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu"
+      : "";
 
     if (!LICENSE_KEY) {
       return NextResponse.json(
-        { error: "License key missing" },
-        { status: 500 }
+        { error: "Not a premium user, license denied" },
+        { status: 403 }
       );
     }
 

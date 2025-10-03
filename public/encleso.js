@@ -324,8 +324,11 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
         Encleso.OnReady = async (ret) => {
           try {
+             const userEmail = window.__USER_EMAIL__;
+            if (!userEmail) throw new Error("User email not set");
+
             // fetch token from our Next.js API
-            const resp = await fetch("/api/encleso", {
+              const resp = await fetch(`/api/encleso?email=${encodeURIComponent(userEmail)}`, {
               method: "GET",
               credentials: "same-origin",
             });

@@ -28,3 +28,18 @@
     animation: marquee 15s linear infinite;
   }
 }
+
+
+/* global.css me add karo */
+::-webkit-scrollbar {
+  height: 2px; /* horizontal scrollbar ki height */
+  width: 3px; /* vertical scrollbar ki width */
+}
+::-webkit-scrollbar-thumb {
+  background: #9ca3af; /* gray color */
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+

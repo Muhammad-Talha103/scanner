@@ -102,21 +102,16 @@ export default function ScannerApp() {
     updateScannerCapabilities,
   } = useScannerIntegration(showScannerUI);
 
-  // Check license when user email changes
-// useEffect(() => {
-//   if (!userInfo?.email) return;
+  
 
-//   const verifyLicense = async () => {
-//     try {
-//       const res = await fetch(`/api/encleso?email=${userInfo.email}`);
-//     } catch (err) {
-//       console.error("License check failed:", err);
-//     }
-//   };
+useEffect(() => {
+  if (userInfo?.email) {
+    window.__USER_EMAIL__ = userInfo.email;
+
+  }
+}, [userInfo?.email]);
 
 
-//   verifyLicense();
-// }, [userInfo?.email]);
 
   // Fetch username from Sanity on email change
   useEffect(() => {

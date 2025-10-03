@@ -62,6 +62,7 @@ declare global {
     ExportedScannerNames?: string[]
     getResolutionCaps?: () => Promise<number[]>
     getColorModeCaps?: () => Promise<string[]>
+     __USER_EMAIL__?: string;
     showSaveFilePicker?: (options: {
       suggestedName?: string
       types?: Array<{
