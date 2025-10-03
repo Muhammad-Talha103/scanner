@@ -27,12 +27,12 @@ export async function GET(req: NextRequest) {
       ? "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu"
       : "";
 
-    if (!LICENSE_KEY) {
-      return NextResponse.json(
-        { error: "Not a premium user, license denied" },
-        { status: 403 }
-      );
-    }
+    // if (!LICENSE_KEY) {
+    //   return NextResponse.json(
+    //     { error: "Not a premium user, license denied" },
+    //     { status: 403 }
+    //   );
+    // }
 
     // Apna allowed origin jo aapne Encleso ko diya tha
     const origin: string = "https://www.grewescan.de" ;
