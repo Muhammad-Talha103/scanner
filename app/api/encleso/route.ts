@@ -1,45 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { client } from "@/sanity/lib/client"; // apna sanity client import karo
+import { NextResponse } from "next/server";
 
-// Sanity query for premium user by email
-const getPremiumUserByEmail = async (email: string) => {
-  return await client.fetch(
-    `*[_type == "premiumUser" && email == $email][0]{
-      name, email
-    }`,
-    { email }
-  );
-};
-
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    // Client se email lo (Redux se client pe bhejna hoga)
-    const email = req.nextUrl.searchParams.get("email");
+    // License key ko string ke andar rakho
+    const LICENSE_KEY: string = "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu";
 
-    if (!email) {
-      return NextResponse.json(
-        { error: "Email is required" },
-        { status: 400 }
-      );
-    }
-
-    // Sanity se user dhoondo
-    const premiumUser = await getPremiumUserByEmail(email);
-
-    // Agar premium user mila to license key set karo
-    const LICENSE_KEY = premiumUser
-      ? "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu"
-      : "";
 
     if (!LICENSE_KEY) {
       return NextResponse.json(
-        { error: "No valid license for this user" },
-        { status: 403 }
+        { error: "License key missing" },
+        { status: 500 }
       );
     }
 
     // Apna allowed origin jo aapne Encleso ko diya tha
-    const origin: string = "https://www.grewescan.de";
+    const origin: string = "https://www.grewescan.de" ;
 
     const body = new URLSearchParams();
     body.append("Key", LICENSE_KEY);
@@ -48,7 +23,7 @@ export async function GET(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        Origin: origin,
+        "Origin": origin,
       },
       body: body.toString(),
     });
@@ -61,7 +36,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const json = await resp.json();
+    const json: unknown = await resp.json();
     return NextResponse.json(json);
   } catch (err: unknown) {
     const message =
