@@ -109,20 +109,31 @@ export default function ScannerApp() {
   }, [userInfo?.email]);
 
   // Fetch username from Sanity on email change
-  useEffect(() => {
-    if (!userInfo?.email) return;
+useEffect(() => {
+  if (!userInfo?.email) return;
 
-    async function fetchUsername() {
-      try {
-        const query = `*[_type == "user" && email == $email]{username}`;
-        const results = await client.fetch(query, { email: userInfo?.email });
-        setUserName(results?.[0]?.username ?? null);
-      } catch (err) {
-        console.error("Sanity fetch error:", err);
+  async function fetchUsername() {
+    try {
+      const query = `*[_type == "user" && lower(email) == $email]{username}`;
+      const results = await client.fetch(query, {
+        email: userInfo?.email?.toLowerCase(),
+      });
+
+
+      if (results.length > 0) {
+        setUserName(results[0].username ?? null);
+      } else {
+        setUserName(null);
       }
+    } catch (err) {
+      console.error("Sanity fetch error:", err);
+      setUserName(null);
     }
-    fetchUsername();
-  }, [userInfo?.email]);
+  }
+
+  fetchUsername();
+}, [userInfo?.email]);
+
 
   // Redirect if not logged in
   if (!userInfo?.email) return <LoginRequired />;
