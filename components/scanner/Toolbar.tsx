@@ -166,16 +166,19 @@ export const Toolbar = ({
 
         {/* Right controls */}
         <div className="flex items-center space-x-4 min-w-max relative">
-          {isMounted && (
-            <select
-              onChange={handleLanguageChange}
-              value={language}
-              className="border border-gray-400 rounded px-2 py-1 text-sm"
-            >
-              <option value="en">🇬🇧 English</option>
-              <option value="de">🇩🇪 Deutsch</option>
-            </select>
-          )}
+        {isMounted && (
+  <select
+    onChange={handleLanguageChange}
+    value={language}
+    className="border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm 
+               bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 
+               focus:border-blue-500 transition"
+  >
+    <option value="en">🇬🇧 English</option>
+    <option value="de">🇩🇪 Deutsch</option>
+  </select>
+)}
+
 
           <span className="text-sm text-gray-600 font-medium">
             {t("version")} <b>{VERSION}</b>
