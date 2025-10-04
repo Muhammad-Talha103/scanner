@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
 
      const userEmail = req.nextUrl.searchParams.get("email"); 
-     console.log("User email from request:", userEmail);
+    
 
     if (!userEmail) {
       return NextResponse.json(
@@ -23,9 +23,9 @@ export async function GET(req: NextRequest) {
     );
 
     // License key ko string ke andar rakho
-    const LICENSE_KEY: string = isPremium
+    const LICENSE_KEY: string | null = isPremium
       ? "Jn6SlEQtMRRbewL5mxlJWkTVj4k0X94pKEu"
-      : "";
+      : null;
 
     // if (!LICENSE_KEY) {
     //   return NextResponse.json(
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     const origin: string = "https://www.grewescan.de" ;
 
     const body = new URLSearchParams();
-    body.append("Key", LICENSE_KEY);
+    body.append("Key", LICENSE_KEY ?? "");
 
     const resp = await fetch("https://encleso.com/API/SetLicenseKey", {
       method: "POST",

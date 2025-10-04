@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchUsersWithPasswordMerge, Userr } from "./datafetch";
 import UserTable from "./UserTable";
 import { useRouter } from "next/navigation";
-import { Shield, Users, Loader2 } from "lucide-react";
+import { Shield, Users, Loader2, Key, LogOut, UserIcon } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +15,8 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check if admin is authenticated
@@ -62,6 +64,18 @@ export default function AdminPage() {
     router.push("/admin/admin-login");
   };
 
+    useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  
   // Authorization checking state
   if (authChecking) {
     return (
@@ -228,58 +242,52 @@ export default function AdminPage() {
           </div>
 
           {/* Buttons container */}
-          <div className="flex gap-4">
-            {/* Change Credentials Button */}
-            <Link
-              href="/admin/change-password"
-              className="
-            px-6 py-3 
-            bg-blue-600 
-            text-white 
-            font-semibold 
-            rounded-lg 
-            shadow-md 
-            hover:bg-blue-700 
-            focus:outline-none 
-            focus:ring-2 
-            focus:ring-blue-400 
-            focus:ring-offset-2 
-            transition 
-            duration-300 
-            transform 
-            hover:scale-105
-            active:scale-95
-            select-none
-          "
-            >
-              {t("admin.change_credentials")}
-            </Link>
-
-            {/* Logout Button */}
+           <div className="relative" ref={dropdownRef}>
             <button
-              onClick={handleLogout}
-              className="
-            px-6 py-3 
-            bg-green-600 
-            text-white 
-            font-semibold 
-            rounded-lg 
-            shadow-md 
-            hover:bg-green-700 
-            focus:outline-none 
-            focus:ring-2 
-            focus:ring-green-400 
-            focus:ring-offset-2 
-            transition 
-            duration-300 
-            transform 
-            hover:scale-105
-            active:scale-95
-            select-none
-          "
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
             >
-              {t("admin.logout")}
+              <UserIcon className="w-6 h-6 text-gray-700" />
             </button>
+
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 animate-fade-in">
+                <Link
+                  href="/admin/change-password"
+                  className="flex items-center px-4 py-2 text-gray-800 text-sm hover:bg-gray-100 transition"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <Key className="w-4 h-4 mr-2" />
+                  {t("admin.change_credentials")}
+                </Link>
+                <Link
+                  href="/admin/premium-users"
+                  className="flex items-center px-4 py-2 text-gray-800 text-sm hover:bg-gray-100 transition"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <Key className="w-4 h-4 mr-2" />
+                  {t("admin.premium_users")}
+                </Link>
+                <Link
+                  href="/admin/expired-premium-users"
+                  className="flex items-center px-4 py-2 text-gray-800 text-sm hover:bg-gray-100 transition"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <Key className="w-4 h-4 mr-2" />
+                  {t("admin.expired_premium_users")}
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setDropdownOpen(false);
+                  }}
+                  className="w-full flex items-center px-4 py-2 text-gray-800 text-sm hover:bg-gray-100 transition"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  {t("admin.logout")}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

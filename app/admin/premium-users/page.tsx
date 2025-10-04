@@ -13,6 +13,7 @@ import {
   Package,
   User,
 } from "lucide-react";
+import { client } from "@/sanity/lib/client";
 
 // ============================================================================
 // TYPES
@@ -79,13 +80,6 @@ interface PremiumUser {
 // SANITY CLIENT SETUP
 // ============================================================================
 
-const sanityClient = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01",
-  token: process.env.SANITY_TOKEN,
-  useCdn: false, // Use false for real-time data
-});
 
 const PREMIUM_USERS_QUERY = `*[_type == "premiumUser"]{
   _id,
@@ -208,7 +202,7 @@ export default function PremiumUsersPage() {
     setLoading(true);
     setError(null);
     try {
-      const data = await sanityClient.fetch<PremiumUser[]>(PREMIUM_USERS_QUERY);
+      const data = await client.fetch<PremiumUser[]>(PREMIUM_USERS_QUERY);
       setUsers(data);
     } catch (err) {
       console.error("Error fetching premium users:", err);

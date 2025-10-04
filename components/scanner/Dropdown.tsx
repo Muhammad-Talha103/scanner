@@ -39,7 +39,7 @@ export const Dropdown = ({ items, isOpen, onImagesImported, onClose }: DropdownP
           <>
             <div className="flex items-center space-x-3">
               {item.icon}
-              <span>{item.label}</span>
+              <span className="text-[13px] whitespace-nowrap">{item.label}</span>
             </div>
             {item.shortcut && (
               <span className="text-xs text-gray-500">{item.shortcut}</span>

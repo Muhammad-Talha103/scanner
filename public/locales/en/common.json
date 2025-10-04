@@ -5,7 +5,7 @@
   "mail": "Mail",
   "new": "New",
   "edit": "Edit",
-  "symbols": "Symbols",
+  "installation_button": "Installation",
   "version": "Version",
   "userMenu": "User menu",
   "scrollingText": "GreweScanner is using the encleso TWAIN web scan component from encleso.com.",
@@ -494,7 +494,10 @@
   "loadingUsers":"Loading Users",
   "fetchingUsers":"Fetching user data from the database...",
   "manage_users":"Manage users and their information",
+  "premium_users":"Premium Users",
+  "expired_premium_users":"Expired Premium Users",
   "change_credentials":"Change Credentials",
+  "upgrade":"Upgrade to Premium",
   "logout":"Logout",
   "user_management":"User Management"
 },
@@ -522,16 +525,17 @@
 
 
   },
-  "user_row": {
-    "updated": "AKTUALISIERT",
-    "delete": "Löschen",
-    "deleteUser": "Benutzer löschen",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "showPassword": "Passwort anzeigen",
-    "hidePassword": "Passwort verbergen",
-    "serialNumberPrefix": "#"
-  },
+ "user_row": {
+  "updated": "UPDATED",
+  "delete": "Delete",
+  "deleteUser": "Delete User",
+  "email": "Email",
+  "password": "Password",
+  "showPassword": "Show Password",
+  "hidePassword": "Hide Password",
+  "serialNumberPrefix": "#"
+},
+
  "forget_password": {
   "appTitle": "GREWE Scanner Interface Cloud Version",
   "resetPasswordHeading": "Reset your password",
@@ -615,9 +619,117 @@
   "requirementUppercase": "Contains at least one uppercase letter",
   "requirementLowercase": "Contains at least one lowercase letter",
   "requirementNumber": "Contains at least one number"
+},
+"installation":{
+  "headerTitle": "How to Install Encleso",
+  "headerDescription": "Follow this step-by-step guide to install Encleso on your computer. The installation process is straightforward and should take only a few minutes to complete.",
+
+  "downloadSectionTitle": "Ready to Get Started?",
+  "downloadSectionDescription": "Download the latest version of Encleso to begin the installation process.",
+  "downloadButton": "Download Encleso",
+
+  "steps": {
+    "1": {
+      "title": "Download Encleso",
+      "description": "Click the button above to start downloading Encleso. The download should begin automatically and save to your default downloads folder."
+    },
+    "2": {
+      "title": "Open the Downloaded File",
+      "description": "Once the download is complete, navigate to your downloads folder and open the installer file to begin the setup process. The file will typically be named \"EnclesoSetup.exe\" or similar."
+    },
+    "3": {
+      "title": "Welcome Screen",
+      "description": "You will see a welcome screen introducing Encleso. This is the start of the installation process. Read through the welcome message and click \"Next\" to continue."
+    },
+    "4": {
+      "title": "Choose Installation Location",
+      "description": "Next, select the folder where you want to install Encleso. By default, the installer will suggest a location in your Program Files directory. You can change this if you prefer a different location."
+    },
+    "5": {
+      "title": "Ready to Install",
+      "description": "After choosing the location, you will see a confirmation screen showing that setup is ready to begin. Review your installation settings and click \"Install\" when you're ready to proceed."
+    },
+    "6": {
+      "title": "Installation in Progress",
+      "description": "Click \"Install\" and the setup will begin copying files to your computer. A progress bar will show the installation status. Wait until the installation finishes - this usually takes just a few seconds."
+    },
+    "7": {
+      "title": "Installation Complete",
+      "description": "Once installation is done, you'll see a final screen confirming completion. You can choose to launch Encleso immediately or click \"Finish\" to close the installer and launch it later from your applications menu."
+    }
+  },
+
+  "footerMessage": "Happy scanning with Grewe Scanner!"
+},
+"app_page":{
+ 
+    "loading": "Loading saved images...",
+  "selected": {
+    "label": "Selected:",
+    "imported": "Imported Image",
+    "scanned": "Scanned Image"
+  },
+  "image":"Image",
+  "operations": {
+    "label": "For Operations:",
+    "count": "{{count}} image selected",
+    "count_plural": "{{count}} images selected"
+  },
+  "action":"Action",
+  "edit":"Edit",
+  "view":"View",
+  "menu": {
+    "action": {
+      "new": "New Document",
+      "open": "Open",
+      "import": "Import",
+      "export": "Export",
+      "send": "Send",
+      "exit": "Exit"
+    },
+    "edit": {
+      "undo": "Undo",
+      "redo": "Redo",
+      "cut": "Cut",
+      "copy": "Copy",
+      "paste": "Paste",
+      "selectAll": "Select All"
+    },
+    "view": {
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "fit": "Fit to Window",
+      "fullScreen": "Full Screen",
+      "thumbnails": "Thumbnails",
+      "properties": "Properties"
+    },
+    "help": {
+      "help": "Help",
+      "about": "About",
+      "impressum": "Impressum"
+    }
+  },
+  "shortcuts": {
+    "new": "Ctrl+N",
+    "open": "Ctrl+O",
+    "import": "Ctrl+I",
+    "export": "Ctrl+E",
+    "send": "Ctrl+S",
+    "exit": "Alt+F4",
+    "undo": "Ctrl+Z",
+    "redo": "Ctrl+Y",
+    "cut": "Ctrl+X",
+    "copy": "Ctrl+C",
+    "paste": "Ctrl+V",
+    "selectAll": "Ctrl+A",
+    "zoomIn": "Ctrl++",
+    "zoomOut": "Ctrl+-",
+    "fit": "Ctrl+0",
+    "fullScreen": "F11",
+    "thumbnails": "Ctrl+T",
+    "properties": "Alt+Enter"
+  }
 }
-
-
 
 
 

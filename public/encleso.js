@@ -415,8 +415,3 @@ if (!window.__ENCLESO_INITIALIZED__) {
     setHandlers();
   }
 }
-
-
-
-
-

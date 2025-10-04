@@ -96,7 +96,6 @@
 //     updateCapabilities(selectedResolution, value);
 //   };
 
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -128,7 +127,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   onCapabilitiesChange,
   onToggleUI,
 }) => {
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [isResolutionOpen, setIsResolutionOpen] = useState(false);
   const [isColorModeOpen, setIsColorModeOpen] = useState(false);
@@ -316,7 +315,9 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       return (
         <div className="flex items-center space-x-2 text-green-600">
           <Wifi className="w-4 h-4 animate-pulse" />
-          <span className="text-xs">{t("connected")} ({scanners.length})</span>
+          <span className="text-xs">
+            {t("connected")} ({scanners.length})
+          </span>
         </div>
       );
     }
@@ -331,28 +332,27 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="text-sm text-gray-700">{t("scanMode")}:</div>
+      <div className="text-sm text-gray-700">{t("scanMode")}</div>
       {getStatusDisplay()}
 
       {isReady && scanners.length > 0 && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-600">{t("showScannerUI")}:</span>
-        
-<label className="relative inline-flex items-center cursor-pointer">
-  <input
-    type="checkbox"
-    className="sr-only peer"
-    checked={showScannerUI}
-    onChange={(e) => {
-      const checked = e.target.checked;
-      setShowScannerUI(checked);
-      onToggleUI?.(checked);
-    }}
-  />
-  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-  <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
-</label>
+          <span className="text-xs text-gray-600">{t("showScannerUI")}</span>
 
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={showScannerUI}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setShowScannerUI(checked);
+                onToggleUI?.(checked);
+              }}
+            />
+            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+            <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+          </label>
         </div>
       )}
 
@@ -409,7 +409,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span className="text-xs">
+            <span className="text-10px whitespace-nowrap">
               {selectedResolution || t("selectResolution")}
             </span>
             <ChevronDown
@@ -453,7 +453,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
             }}
             className="border rounded p-2 mt-1 text-xs text-gray-700 bg-white hover:bg-gray-50 flex items-center justify-between"
           >
-            <span className="text-[11px]">
+            <span className="text-[11px] whitespace-nowrap">
               {selectedColorMode || t("selectColorMode")}
             </span>
             <ChevronDown
@@ -488,32 +488,32 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
 
       {/* Duplex Toggle */}
       {isReady && selectedScanner && (
-  <div className="flex flex-col text-xs text-gray-600">
-    <div className="flex items-center space-x-2 font-semibold mb-1">
-      <span>{t("duplex")}:</span>
-      <label className="relative inline-flex ml-2 items-center cursor-pointer">
-        <input
-          type="checkbox"
-          className="sr-only peer"
-          checked={!!duplexValue}
-          onChange={() => {
-            const newValue = !duplexValue;
-            setDuplexValue(newValue);
-            setSelectedDuplexLabel(newValue ?  t("on") :  t("off"));
-            updateCapabilities(
-              selectedResolution,
-              selectedColorMode,
-              newValue ? "On" : "Off"
-            );
-            onCapabilitiesChange?.(undefined, undefined, newValue);
-          }}
-        />
-        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
-        <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
-      </label>
-    </div>
-  </div>
-)}
+        <div className="flex flex-col text-xs text-gray-600">
+          <div className="flex items-center space-x-2 font-semibold mb-1">
+            <span>{t("duplex")}:</span>
+            <label className="relative inline-flex ml-2 items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={!!duplexValue}
+                onChange={() => {
+                  const newValue = !duplexValue;
+                  setDuplexValue(newValue);
+                  setSelectedDuplexLabel(newValue ? t("on") : t("off"));
+                  updateCapabilities(
+                    selectedResolution,
+                    selectedColorMode,
+                    newValue ? "On" : "Off"
+                  );
+                  onCapabilitiesChange?.(undefined, undefined, newValue);
+                }}
+              />
+              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+            </label>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div

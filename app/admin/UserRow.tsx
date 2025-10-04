@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Trash2, Eye, EyeOff } from "lucide-react";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { client } from "@/sanity/lib/client";
 
 interface User {
   id: string;
@@ -27,9 +28,11 @@ export default function UserRow({
   onDelete,
   isDesktop,
 }: UserRowProps) {
+  
   const [isExpanded, setIsExpanded] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
+  const [isPremium, setIsPremium] = useState(false);
 
   const maskPassword = (password: string) => {
     return "•".repeat(password.length);
@@ -43,6 +46,25 @@ export default function UserRow({
     setShowPassword(false);
   };
 
+    // Fetch premium users and check if current user is premium
+ useEffect(() => {
+    async function checkPremium() {
+      try {
+        const PREMIUM_USERS_QUERY = `*[_type == "premiumUser"].email`;
+        const premiumEmails: string[] = await client.fetch(PREMIUM_USERS_QUERY);
+        // Check if the current user's email is in premiumEmails
+        setIsPremium(
+          premiumEmails.some(
+            (email) => email.toLowerCase() === user.email.toLowerCase()
+          )
+        );
+      } catch (err) {
+        console.error("Failed to check premium status:", err);
+      }
+    }
+    checkPremium();
+  }, [user.email]);
+  
   if (isDesktop) {
     return (
       <tr className="hover:bg-gray-50 transition-colors duration-200 animate-fade-in">
@@ -50,7 +72,7 @@ export default function UserRow({
           {serialNumber}
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
-          <div className="text-sm font-medium text-gray-900">{user.name}</div>
+          <div className={`text-sm font-medium ${isPremium ? "text-yellow-400" : "text-gray-900"}`}>{user.name}</div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="text-sm text-gray-900">{user.email}</div>
@@ -88,9 +110,11 @@ export default function UserRow({
         </td>
 
         <td className="px-4 py-4 whitespace-nowrap relative">
-          <div className="flex items-center absolute right-2 top-2  text-xs font-bold justify-center  ">
-            <MdOutlineWorkspacePremium className=" text-yellow-500" size={30} />
+         {isPremium && (
+          <div className="flex items-center absolute right-2 top-2 text-xs font-bold justify-center">
+            <MdOutlineWorkspacePremium className="text-yellow-500" size={30} />
           </div>
+        )}
           <button
             onClick={() => onDelete(user.id, user.name)}
             className="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100 hover:border-red-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
@@ -113,14 +137,16 @@ export default function UserRow({
           <span className="text-sm font-medium text-gray-500">
             #{serialNumber}
           </span>
-          <span className="text-sm font-medium text-gray-900">{user.name}</span>
+          <span className={`text-sm font-medium ${isPremium ? "text-yellow-400" : "text-gray-900"}`}>{user.name}</span>
           {/*  Show UPDATED badge in mobile view */}
           {user.isPasswordUpdated && (
             <span className="uppercase font-semibold text-xs text-white select-none bg-blue-500 px-2 py-1 rounded-full">
               {t("user_row.updated")}
             </span>
           )}
+          {isPremium && (
           <MdOutlineWorkspacePremium className=" text-yellow-500" size={30} />
+          )}
         </div>
         <div className="flex items-center space-x-2">
           {isExpanded ? (

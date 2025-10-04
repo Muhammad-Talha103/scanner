@@ -3,7 +3,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import {
-  FileText,
   Mail,
   Plus,
   Grid3X3,
@@ -45,6 +44,7 @@ import Header from "@/components/scanner/Header";
 
 import { useScannerIntegration } from "@/hooks/useScannerIntegration";
 import Marquee from "@/components/scanner/Advertise";
+import { useTranslation } from "react-i18next";
 
 interface DropdownItem {
   label: string;
@@ -56,11 +56,11 @@ interface DropdownItem {
 }
 
 export default function ScannerApp() {
+  const { t } = useTranslation();
   // Redux & Router
   const dispatch = useDispatch();
   const router = useRouter();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
-
 
   // Local states
   const [userName, setUserName] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export default function ScannerApp() {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showMailModal, setShowMailModal] = useState(false);
   const [showImageEditor, setShowImageEditor] = useState(false);
-   const [showScannerUI, setShowScannerUI] = useState(true);
+  const [showScannerUI, setShowScannerUI] = useState(true);
 
   // Scanner integration hooks
   const {
@@ -102,16 +102,11 @@ export default function ScannerApp() {
     updateScannerCapabilities,
   } = useScannerIntegration(showScannerUI);
 
-  
-
-useEffect(() => {
-  if (userInfo?.email) {
-    window.__USER_EMAIL__ = userInfo.email;
-
-  }
-}, [userInfo?.email]);
-
-
+  useEffect(() => {
+    if (userInfo?.email) {
+      window.__USER_EMAIL__ = userInfo.email;
+    }
+  }, [userInfo?.email]);
 
   // Fetch username from Sanity on email change
   useEffect(() => {
@@ -188,7 +183,7 @@ useEffect(() => {
 
   const handleDeleteAllImages = () => {
     deleteAllImages();
-  }
+  };
 
   const handleUndo = () => {
     undo();
@@ -205,158 +200,161 @@ useEffect(() => {
     pixelType?: number,
     duplex?: boolean
   ) => {
-    updateScannerCapabilities(resolution, pixelType,duplex);
+    updateScannerCapabilities(resolution, pixelType, duplex);
   };
+  const action = t("app_page.action");
+  const edit = t("app_page.edit");
+  const view = t("app_page.view");
+
 
   // Menu items config
-  const menuItems: Record<string, DropdownItem[]> = {
-    action: [
-      {
-        label: "New Document",
-        icon: <Plus className="w-4 h-4" />,
-        shortcut: "Ctrl+N",
-        onClick: handleNewDocument,
-        disabled: true,
-      },
-      {
-        label: "Open",
-        icon: <FolderOpen className="w-4 h-4" />,
-        shortcut: "Ctrl+O",
-        disabled: true,
-      },
-      {
-        label: "Import",
-        icon: <Download className="w-4 h-4" />,
-        shortcut: "Ctrl+I",
-        onClick: () => {},
-        disabled: false,
-      },
-      {
-        label: "Export",
-        icon: <Send className="w-4 h-4" />,
-        shortcut: "Ctrl+E",
-        disabled: true,
-      },
-      {
-        label: "Send",
-        icon: <Mail className="w-4 h-4" />,
-        shortcut: "Ctrl+S",
-        disabled: true,
-      },
-      {
-        label: "Exit",
-        icon: <LogOut className="w-4 h-4" />,
-        shortcut: "Alt+F4",
-        disabled: true,
-      },
-    ],
-    edit: [
-      {
-        label: "Undo",
-        icon: <Undo className="w-4 h-4" />,
-        shortcut: "Ctrl+Z",
-        onClick: handleUndo,
-        disabled: !canUndo,
-      },
-      {
-        label: "Redo",
-        icon: <Redo className="w-4 h-4" />,
-        shortcut: "Ctrl+Y",
-        onClick: handleRedo,
-        disabled: !canRedo,
-      },
-      {
-        label: "Cut",
-        icon: <Scissors className="w-4 h-4" />,
-        shortcut: "Ctrl+X",
-        disabled: true,
-      },
-      {
-        label: "Copy",
-        icon: <Copy className="w-4 h-4" />,
-        shortcut: "Ctrl+C",
-        disabled: true,
-      },
-      {
-        label: "Paste",
-        icon: <Paste className="w-4 h-4" />,
-        shortcut: "Ctrl+V",
-        disabled: true,
-      },
-      {
-        label: "Select All",
-        icon: <Grid3X3 className="w-4 h-4" />,
-        shortcut: "Ctrl+A",
-        disabled: true,
-      },
-    ],
-    view: [
-      {
-        label: "Zoom In",
-        icon: <ZoomIn className="w-4 h-4" />,
-        shortcut: "Ctrl++",
-        disabled: true,
-      },
-      {
-        label: "Zoom Out",
-        icon: <ZoomOut className="w-4 h-4" />,
-        shortcut: "Ctrl+-",
-        disabled: true,
-      },
-      {
-        label: "Fit to Window",
-        icon: <Monitor className="w-4 h-4" />,
-        shortcut: "Ctrl+0",
-        disabled: true,
-      },
-      {
-        label: "Full Screen",
-        icon: <Maximize className="w-4 h-4" />,
-        shortcut: "F11",
-        disabled: true,
-      },
-      {
-        label: "Thumbnails",
-        icon: <Paste className="w-4 h-4" />,
-        shortcut: "Ctrl+T",
-        disabled: true,
-      },
-      {
-        label: "Properties",
-        icon: <Info className="w-4 h-4" />,
-        shortcut: "Alt+Enter",
-        disabled: true,
-      },
-    ],
-    "?": [
-      {
-        label: "Help",
-        icon: <HelpCircle className="w-4 h-4" />,
-        href: "/help",
-        disabled: false,
-      },
-      {
-        label: "About",
-        icon: <Info className="w-4 h-4" />,
-        href: "/about",
-        disabled: false,
-      },
-      {
-        label: "Impressum",
-        icon: <BookOpenCheck className="w-4 h-4" />,
-        href: "/impressum",
-        disabled: false,
-      },
-    ],
-  };
-
+const menuItems: Record<string, DropdownItem[]> = {
+  [action]: [
+    {
+      label: t("app_page.menu.action.new"),
+      icon: <Plus className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.new"),
+      onClick: handleNewDocument,
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.action.open"),
+      icon: <FolderOpen className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.open"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.action.import"),
+      icon: <Download className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.import"),
+      onClick: () => {},
+      disabled: false,
+    },
+    {
+      label: t("app_page.menu.action.export"),
+      icon: <Send className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.export"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.action.send"),
+      icon: <Mail className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.send"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.action.exit"),
+      icon: <LogOut className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.exit"),
+      disabled: true,
+    },
+  ],
+  [edit]: [
+    {
+      label: t("app_page.menu.edit.undo"),
+      icon: <Undo className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.undo"),
+      onClick: handleUndo,
+      disabled: !canUndo,
+    },
+    {
+      label: t("app_page.menu.edit.redo"),
+      icon: <Redo className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.redo"),
+      onClick: handleRedo,
+      disabled: !canRedo,
+    },
+    {
+      label: t("app_page.menu.edit.cut"),
+      icon: <Scissors className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.cut"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.edit.copy"),
+      icon: <Copy className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.copy"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.edit.paste"),
+      icon: <Paste className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.paste"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.edit.selectAll"),
+      icon: <Grid3X3 className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.selectAll"),
+      disabled: true,
+    },
+  ],
+  [view]: [
+    {
+      label: t("app_page.menu.view.zoomIn"),
+      icon: <ZoomIn className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.zoomIn"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.view.zoomOut"),
+      icon: <ZoomOut className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.zoomOut"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.view.fit"),
+      icon: <Monitor className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.fit"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.view.fullScreen"),
+      icon: <Maximize className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.fullScreen"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.view.thumbnails"),
+      icon: <Paste className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.thumbnails"),
+      disabled: true,
+    },
+    {
+      label: t("app_page.menu.view.properties"),
+      icon: <Info className="w-4 h-4" />,
+      shortcut: t("app_page.shortcuts.properties"),
+      disabled: true,
+    },
+  ],
+  "?": [
+    {
+      label: t("app_page.menu.help.help"),
+      icon: <HelpCircle className="w-4 h-4" />,
+      href: "/help",
+      disabled: false,
+    },
+    {
+      label: t("app_page.menu.help.about"),
+      icon: <Info className="w-4 h-4" />,
+      href: "/about",
+      disabled: false,
+    },
+    {
+      label: t("app_page.menu.help.impressum"),
+      icon: <BookOpenCheck className="w-4 h-4" />,
+      href: "/impressum",
+      disabled: false,
+    },
+  ],
+};
   // Loading state UI
   if (isLoadingImages) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading saved images...</p>
+          <p className="text-gray-600">{t("app_page.loading")}</p>
         </div>
       </div>
     );
@@ -404,29 +402,32 @@ useEffect(() => {
             onSelectScanner={setScannerName}
             error={error}
             onCapabilitiesChange={handleCapabilitiesChange}
-           
             onToggleUI={setShowScannerUI}
-            
           />
 
           {selectedImage && (
             <section className="mt-4 pt-4 border-t border-gray-300">
-              <div className="text-sm text-gray-700 mb-2">Selected:</div>
+              <div className="text-sm text-gray-700 mb-2">
+                {t("app_page.selected.label")}
+              </div>
               <div className="text-xs text-gray-600">
                 {selectedImage.id.startsWith("import-")
-                  ? "Imported"
-                  : "Scanned"}{" "}
-                Image
+                  ? t("app_page.selected.imported")
+                  : t("app_page.selected.scanned")}{" "}
+                {t("app_page.image")}
               </div>
             </section>
           )}
 
           {getSelectedImages().length > 0 && (
             <section className="mt-4 pt-4 border-t border-gray-300">
-              <div className="text-sm text-gray-700 mb-2">For Operations:</div>
+              <div className="text-sm text-gray-700 mb-2">
+                {t("app_page.operations.label")}
+              </div>
               <div className="text-xs text-gray-600">
-                {getSelectedImages().length} image
-                {getSelectedImages().length !== 1 ? "s" : ""} selected
+                {t("app_page.operations.count", {
+                  count: getSelectedImages().length,
+                })}
               </div>
             </section>
           )}
@@ -442,7 +443,7 @@ useEffect(() => {
             isImageSelected={isImageSelected}
             onToggleSelection={toggleImageSelection}
             onDeleteImage={handleDeleteImage}
-             deleteAllImages={handleDeleteAllImages}
+            deleteAllImages={handleDeleteAllImages}
           />
         </main>
       </div>

@@ -6,7 +6,7 @@
   "mail": "E-Mail",
   "new": "Neu",
   "edit": "Bearbeiten",
-  "symbols": "Symbole",
+  "installation_button": "Installation",
   "version": "Version",
   "userMenu": "Benutzermenü",
 
@@ -507,7 +507,10 @@
   "loadingUsers": "Benutzer werden geladen",
   "fetchingUsers": "Benutzerdaten werden aus der Datenbank abgerufen...",
   "manage_users": "Benutzer und ihre Informationen verwalten",
+  "premium_users":"Premium-Benutzer",
+  "expired_premium_users":"Abgelaufene Premium-Benutzer",
   "change_credentials": "Anmeldedaten ändern",
+  "upgrade":"Upgrade auf Premium",
   "logout": "Abmelden",
   "user_management": "Benutzerverwaltung"
 },
@@ -628,8 +631,119 @@
   "requirementUppercase": "Mindestens einen Großbuchstaben enthalten",
   "requirementLowercase": "Mindestens einen Kleinbuchstaben enthalten",
   "requirementNumber": "Mindestens eine Zahl enthalten"
-}
+},
+"installation":{
+  "headerTitle": "Wie installiere ich Encleso",
+  "headerDescription": "Folgen Sie dieser Schritt-für-Schritt-Anleitung, um Encleso auf Ihrem Computer zu installieren. Der Installationsprozess ist einfach und sollte nur wenige Minuten dauern.",
 
+  "downloadSectionTitle": "Bereit, loszulegen?",
+  "downloadSectionDescription": "Laden Sie die neueste Version von Encleso herunter, um mit der Installation zu beginnen.",
+  "downloadButton": "Encleso herunterladen",
+
+  "steps": {
+    "1": {
+      "title": "Encleso herunterladen",
+      "description": "Klicken Sie auf die Schaltfläche oben, um mit dem Herunterladen von Encleso zu beginnen. Der Download startet automatisch und wird im Standard-Download-Ordner gespeichert."
+    },
+    "2": {
+      "title": "Heruntergeladene Datei öffnen",
+      "description": "Sobald der Download abgeschlossen ist, navigieren Sie zu Ihrem Download-Ordner und öffnen Sie die Installationsdatei, um den Setup-Prozess zu starten. Die Datei heißt normalerweise \"EnclesoSetup.exe\" oder ähnlich."
+    },
+    "3": {
+      "title": "Willkommensbildschirm",
+      "description": "Sie sehen einen Willkommensbildschirm mit einer Einführung zu Encleso. Dies ist der Beginn des Installationsprozesses. Lesen Sie die Willkommensnachricht und klicken Sie auf „Weiter“, um fortzufahren."
+    },
+    "4": {
+      "title": "Installationsort wählen",
+      "description": "Wählen Sie als Nächstes den Ordner aus, in dem Sie Encleso installieren möchten. Standardmäßig schlägt das Installationsprogramm einen Speicherort im Ordner „Programme“ vor. Sie können diesen ändern, wenn Sie möchten."
+    },
+    "5": {
+      "title": "Bereit zur Installation",
+      "description": "Nach der Auswahl des Speicherorts sehen Sie eine Bestätigungsseite, die zeigt, dass die Installation beginnen kann. Überprüfen Sie Ihre Einstellungen und klicken Sie auf „Installieren“, wenn Sie fortfahren möchten."
+    },
+    "6": {
+      "title": "Installation läuft",
+      "description": "Klicken Sie auf „Installieren“ und der Vorgang beginnt mit dem Kopieren der Dateien auf Ihren Computer. Ein Fortschrittsbalken zeigt den Status an. Warten Sie, bis die Installation abgeschlossen ist – dies dauert normalerweise nur wenige Sekunden."
+    },
+    "7": {
+      "title": "Installation abgeschlossen",
+      "description": "Nach Abschluss der Installation sehen Sie eine letzte Seite mit einer Bestätigung. Sie können Encleso sofort starten oder auf „Fertigstellen“ klicken, um den Installer zu schließen und die Anwendung später über das Startmenü zu öffnen."
+    }
+  },
+
+  "footerMessage": "Viel Spaß beim Scannen mit Grewe Scanner!"
+},
+"app_page":{
+
+    "loading": "Gespeicherte Bilder werden geladen...",
+  
+  "selected": {
+    "label": "Ausgewählt:",
+    "imported": "Importiertes Bild",
+    "scanned": "Gescanntes Bild"
+  },
+  "operations": {
+    "label": "Für Operationen:",
+    "count": "{{count}} Bild ausgewählt",
+    "count_plural": "{{count}} Bilder ausgewählt"
+  },
+  "image":"Bild",
+  "action":"Aktion",
+  "edit":"Bearbeiten",
+  "view":"Sicht",
+
+  "menu": {
+    "action": {
+      "new": "Neues Dokument",
+      "open": "Öffnen",
+      "import": "Importieren",
+      "export": "Exportieren",
+      "send": "Senden",
+      "exit": "Beenden"
+    },
+    "edit": {
+      "undo": "Rückgängig",
+      "redo": "Wiederholen",
+      "cut": "Ausschneiden",
+      "copy": "Kopieren",
+      "paste": "Einfügen",
+      "selectAll": "Alles auswählen"
+    },
+    "view": {
+      "zoomIn": "Vergrößern",
+      "zoomOut": "Verkleinern",
+      "fit": "An Fenster anpassen",
+      "fullScreen": "Vollbild",
+      "thumbnails": "Miniaturen",
+      "properties": "Eigenschaften"
+    },
+    "help": {
+      "help": "Hilfe",
+      "about": "Über",
+      "impressum": "Impressum"
+    }
+  },
+  "shortcuts": {
+    "new": "Strg+N",
+    "open": "Strg+O",
+    "import": "Strg+I",
+    "export": "Strg+E",
+    "send": "Strg+S",
+    "exit": "Alt+F4",
+    "undo": "Strg+Z",
+    "redo": "Strg+Y",
+    "cut": "Strg+X",
+    "copy": "Strg+C",
+    "paste": "Strg+V",
+    "selectAll": "Strg+A",
+    "zoomIn": "Strg++",
+    "zoomOut": "Strg+-",
+    "fit": "Strg+0",
+    "fullScreen": "F11",
+    "thumbnails": "Strg+T",
+    "properties": "Alt+Eingabe"
+  }
+}
 
 
 
