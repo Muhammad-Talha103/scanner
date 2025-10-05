@@ -729,13 +729,66 @@
     "thumbnails": "Ctrl+T",
     "properties": "Alt+Enter"
   }
+},
+"expired_premium_user":{
+  "expiredPremiumUsers": "Expired Premium Users",
+  "total": "Total:",
+  "expiredUser":"expired user",
+  "reload": "Reload",
+  "searchPlaceholder": "Search by name or email...",
+  "sortMovedNewest": "Moved: Newest First",
+  "sortMovedOldest": "Moved: Oldest First",
+  "sortPremiumLatest": "Premium End: Latest First",
+  "sortPremiumEarliest": "Premium End: Earliest First",
+  "clearFilters": "Clear Filters",
+  "noUsersFound": "No expired premium users found",
+  "tryAdjustSearch": "Try adjusting your search query.",
+  "noExpiredUsers": "There are no expired premium users at the moment.",
+  "paymentHistory": "Payment History",
+  "amount": "Amount",
+  "status": "Status",
+  "date": "Date",
+  "name": "Name",
+  "premiumStart": "Premium Start",
+  "premiumEnd": "Premium End",
+  "movedToExpired": "Moved to Expired",
+  "failedToLoad": "Failed to load expired premium users. Please try again.",
+  "tryAgain": "Try again"
+},
+"premiumUsers":{
+  "premiumUsers": "Premium Users",
+   "total": "Total:",
+  "premium":"Premium",
+  "reload": "Reload",
+  "searchPlaceholder": "Search by name or email...",
+  "sortby": "Sort by:",
+  "sortPremiumStartNewest": "Premium Start (Newest)",
+  "sortPremiumStartOldest": "Premium Start (Oldest)",
+  "sortCreatedDateNewest": "Created Date (Newest)",
+  "noPremiumUsers": "No Premium Users Yet",
+  "premiumUsersWillAppear": "Premium users will appear here once they subscribe.",
+  "oopsSomethingWrong": "Oops! Something went wrong",
+  "tryAgain": "Try Again",
+  "noResultsFound": "No Results Found",
+  "adjustSearchQuery": "Try adjusting your search query.",
+  "name": "Name",
+  "premiumPeriod": "Premium Period",
+  "accountCreated": "Account Created",
+  "paymentHistory": "Payment History ",
+  "stripeIDs": "Stripe IDs",
+  "session": "Session",
+  "intent": "Intent",
+  "charge": "Charge",
+  "card": "Card",
+  "expires": "Expires",
+  "billingAddress": "Billing Address",
+  "items": "Items",
+  "quantity": "Qty",
+  "noPaymentHistory": "No payment history available",
+  "statusSucceeded": "Succeeded",
+  "statusPaid": "Paid",
+  "statusPending": "Pending",
+  "statusFailed": "Failed"
 }
 
-
-
 }
-
-
-
-
-

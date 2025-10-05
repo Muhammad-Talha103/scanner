@@ -14,6 +14,7 @@ import {
   User,
 } from "lucide-react";
 import { client } from "@/sanity/lib/client";
+import { useTranslation } from "react-i18next";
 
 // ============================================================================
 // TYPES
@@ -79,7 +80,6 @@ interface PremiumUser {
 // ============================================================================
 // SANITY CLIENT SETUP
 // ============================================================================
-
 
 const PREMIUM_USERS_QUERY = `*[_type == "premiumUser"]{
   _id,
@@ -187,6 +187,7 @@ function useDebounce<T>(value: T, delay: number): T {
 // ============================================================================
 
 export default function PremiumUsersPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<PremiumUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -205,7 +206,7 @@ export default function PremiumUsersPage() {
       const data = await client.fetch<PremiumUser[]>(PREMIUM_USERS_QUERY);
       setUsers(data);
     } catch (err) {
-      console.error("Error fetching premium users:", err);
+      console.error(err);
       setError("Failed to load premium users. Please try again.");
     } finally {
       setLoading(false);
@@ -288,15 +289,16 @@ export default function PremiumUsersPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">
-                Premium Users
+                {t("premiumUsers.premiumUsers")}
               </h1>
               <p className="text-sm text-slate-600 mt-1">
                 {loading ? (
                   "Loading..."
                 ) : (
                   <>
-                    Total: <span className="font-semibold">{users.length}</span>{" "}
-                    premium {users.length === 1 ? "user" : "users"}
+                    {t("premiumUsers.total")}{" "}
+                    <span className="font-semibold">{users.length}</span>{" "}
+                    {t("premiumUsers.premium")} {users.length === 1 ? "user" : "users"}
                   </>
                 )}
               </p>
@@ -311,7 +313,7 @@ export default function PremiumUsersPage() {
                 className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
                 aria-hidden="true"
               />
-              <span className="font-medium">Reload</span>
+              <span className="font-medium">{t("premiumUsers.reload")}</span>
             </button>
           </div>
         </div>
@@ -326,12 +328,12 @@ export default function PremiumUsersPage() {
                 aria-hidden="true"
               />
               <label htmlFor="search" className="sr-only">
-                Search by name or email
+                {t("premiumUsers.searchPlaceholder")}
               </label>
               <input
                 id="search"
                 type="text"
-                placeholder="Search by name or email..."
+                placeholder={t("premiumUsers.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all"
@@ -340,19 +342,31 @@ export default function PremiumUsersPage() {
 
             <div className="sm:w-64">
               <label htmlFor="sort" className="sr-only">
-                Sort by
+                {t("premiumUsers.sortby")}
               </label>
               <select
                 id="sort"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "premiumStart-desc" | "premiumStart-asc" | "createdAt-desc")}
+                onChange={(e) =>
+                  setSortBy(
+                    e.target.value as
+                      | "premiumStart-desc"
+                      | "premiumStart-asc"
+                      | "createdAt-desc"
+                  )
+                }
                 className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all cursor-pointer"
               >
                 <option value="premiumStart-desc">
-                  Premium Start (Newest)
+                  {t("premiumUsers.sortPremiumStartNewest")}
                 </option>
-                <option value="premiumStart-asc">Premium Start (Oldest)</option>
-                <option value="createdAt-desc">Created Date (Newest)</option>
+                <option value="premiumStart-asc">
+                  {" "}
+                  {t("premiumUsers.sortPremiumStartOldest")}
+                </option>
+                <option value="createdAt-desc">
+                  {t("premiumUsers.sortCreatedDateNewest")}
+                </option>
               </select>
             </div>
           </div>
@@ -383,7 +397,7 @@ export default function PremiumUsersPage() {
               <span className="text-3xl">⚠️</span>
             </div>
             <h2 className="text-xl font-semibold text-slate-900 mb-2">
-              Oops! Something went wrong
+              {t("premiumUsers.oopsSomethingWrong")}
             </h2>
             <p className="text-slate-600 mb-6">{error}</p>
             <button
@@ -391,7 +405,7 @@ export default function PremiumUsersPage() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all duration-200 shadow-md hover:shadow-lg"
             >
               <RefreshCw className="w-4 h-4" />
-              Try Again
+              {t("premiumUsers.tryAgain")}
             </button>
           </div>
         )}
@@ -402,11 +416,9 @@ export default function PremiumUsersPage() {
               <User className="w-8 h-8 text-slate-400" />
             </div>
             <h2 className="text-xl font-semibold text-slate-900 mb-2">
-              No Premium Users Yet
+              {t("premiumUsers.noPremiumUsers")}
             </h2>
-            <p className="text-slate-600">
-              Premium users will appear here once they subscribe.
-            </p>
+            <p className="text-slate-600">{t("premiumUsers.premiumUsersWillAppear")}</p>
           </div>
         )}
 
@@ -419,9 +431,9 @@ export default function PremiumUsersPage() {
                 <Search className="w-8 h-8 text-slate-400" />
               </div>
               <h2 className="text-xl font-semibold text-slate-900 mb-2">
-                No Results Found
+                {t("premiumUsers.noResultsFound")}
               </h2>
-              <p className="text-slate-600">Try adjusting your search query.</p>
+              <p className="text-slate-600">{t("premiumUsers.adjustSearchQuery")}</p>
             </div>
           )}
 
@@ -496,7 +508,7 @@ export default function PremiumUsersPage() {
                             />
                             <div>
                               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                Name
+                                {t("premiumUsers.name")}
                               </p>
                               <p className="text-sm text-slate-900 mt-1">
                                 {user.name}
@@ -513,7 +525,7 @@ export default function PremiumUsersPage() {
                             />
                             <div>
                               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                Premium Period
+                                {t("premiumUsers.premiumPeriod")}
                               </p>
                               <p className="text-sm text-slate-900 mt-1">
                                 {formatDate(user.premiumStart)}
@@ -538,7 +550,7 @@ export default function PremiumUsersPage() {
                             />
                             <div>
                               <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                Account Created
+                                {t("premiumUsers.accountCreated")}
                               </p>
                               <p className="text-sm text-slate-900 mt-1">
                                 {formatDate(user.createdAt)}
@@ -555,7 +567,7 @@ export default function PremiumUsersPage() {
                               className="w-5 h-5"
                               aria-hidden="true"
                             />
-                            Payment History ({user.payments.length})
+                            {t("premiumUsers.paymentHistory")} ({user.payments.length})
                           </h3>
 
                           <div className="space-y-4">
@@ -576,10 +588,12 @@ export default function PremiumUsersPage() {
                                       {payment.status && (
                                         <span
                                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                            payment.status === "succeeded" ||
-                                            payment.status === "paid"
+                                            payment.status ===
+                                              t("statusSucceeded") ||
+                                            payment.status === t("statusPaid")
                                               ? "bg-green-100 text-green-800"
-                                              : payment.status === "pending"
+                                              : payment.status ===
+                                                  t("statusPending")
                                                 ? "bg-yellow-100 text-yellow-800"
                                                 : "bg-red-100 text-red-800"
                                           }`}
@@ -607,13 +621,13 @@ export default function PremiumUsersPage() {
                                   payment.stripeChargeId) && (
                                   <div className="mb-4 p-3 bg-white rounded-lg border border-slate-200">
                                     <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-2">
-                                      Stripe IDs
+                                      {t("premiumUsers.stripeIDs")}
                                     </p>
                                     <div className="space-y-1.5 text-xs">
                                       {payment.stripeSessionId && (
                                         <div className="flex items-start gap-2">
                                           <span className="text-slate-600 font-medium min-w-[80px]">
-                                            Session:
+                                            {t("premiumUsers.session")}
                                           </span>
                                           <code className="flex-1 text-slate-900 bg-slate-50 px-2 py-0.5 rounded font-mono break-all">
                                             {payment.stripeSessionId}
@@ -623,7 +637,7 @@ export default function PremiumUsersPage() {
                                       {payment.stripePaymentIntentId && (
                                         <div className="flex items-start gap-2">
                                           <span className="text-slate-600 font-medium min-w-[80px]">
-                                            Intent:
+                                            {t("premiumUsers.intent")}
                                           </span>
                                           <code className="flex-1 text-slate-900 bg-slate-50 px-2 py-0.5 rounded font-mono break-all">
                                             {payment.stripePaymentIntentId}
@@ -633,7 +647,7 @@ export default function PremiumUsersPage() {
                                       {payment.stripeChargeId && (
                                         <div className="flex items-start gap-2">
                                           <span className="text-slate-600 font-medium min-w-[80px]">
-                                            Charge:
+                                            {t("premiumUsers.charge")}
                                           </span>
                                           <code className="flex-1 text-slate-900 bg-slate-50 px-2 py-0.5 rounded font-mono break-all">
                                             {payment.stripeChargeId}
@@ -654,13 +668,14 @@ export default function PremiumUsersPage() {
                                       <div>
                                         <p className="text-sm font-medium text-slate-900">
                                           {payment.card.brand?.toUpperCase() ||
-                                            "Card"}{" "}
+                                            t("card")}{" "}
                                           •••• {payment.card.last4}
                                         </p>
                                         {payment.card.exp_month &&
                                           payment.card.exp_year && (
                                             <p className="text-xs text-slate-600">
-                                              Expires {payment.card.exp_month}/
+                                              {t("premiumUsers.expires")}{" "}
+                                              {payment.card.exp_month}/
                                               {payment.card.exp_year}
                                             </p>
                                           )}
@@ -678,7 +693,7 @@ export default function PremiumUsersPage() {
                                       />
                                       <div>
                                         <p className="text-xs font-medium text-slate-500 uppercase tracking-wide mb-1">
-                                          Billing Address
+                                          {t("premiumUsers.billingAddress")}
                                         </p>
                                         <div className="text-sm text-slate-900 space-y-0.5">
                                           {payment.billing_address.line1 && (
@@ -712,7 +727,6 @@ export default function PremiumUsersPage() {
                                   </div>
                                 )}
 
-                                
                                 {payment.lineItems &&
                                   payment.lineItems.length > 0 && (
                                     <div className="p-3 bg-white rounded-lg border border-slate-200">
@@ -722,7 +736,8 @@ export default function PremiumUsersPage() {
                                           aria-hidden="true"
                                         />
                                         <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
-                                          Items ({payment.lineItems.length})
+                                          {t("premiumUsers.items")} (
+                                          {payment.lineItems.length})
                                         </p>
                                       </div>
                                       <div className="space-y-3">
@@ -738,7 +753,8 @@ export default function PremiumUsersPage() {
                                                 </p>
                                                 {item.quantity && (
                                                   <p className="text-slate-600 text-xs mt-0.5">
-                                                    Qty: {item.quantity}
+                                                    {t("premiumUsers.quantity")}{" "}
+                                                    {item.quantity}
                                                   </p>
                                                 )}
                                               </div>
@@ -749,8 +765,6 @@ export default function PremiumUsersPage() {
                                                 )}
                                               </p>
                                             </div>
-
-                                            
                                           </div>
                                         ))}
                                       </div>
@@ -769,7 +783,7 @@ export default function PremiumUsersPage() {
                             aria-hidden="true"
                           />
                           <p className="text-sm text-slate-600">
-                            No payment history available
+                            {t("premiumUsers.noPaymentHistory")}
                           </p>
                         </div>
                       )}

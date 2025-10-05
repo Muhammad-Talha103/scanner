@@ -744,7 +744,67 @@
     "properties": "Alt+Eingabe"
   }
 }
-
+,
+"expired_premium_user":{
+  "expiredPremiumUsers": "Abgelaufene Premium-Benutzer",
+  "total": "Insgesamt:",
+  "expiredUser": "abgelaufener Benutzer ",
+  "reload": "Aktualisieren",
+  "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+  "sortMovedNewest": "Verschoben: Neueste zuerst",
+  "sortMovedOldest": "Verschoben: Älteste zuerst",
+  "sortPremiumLatest": "Premium-Ende: Neueste zuerst",
+  "sortPremiumEarliest": "Premium-Ende: Älteste zuerst",
+  "clearFilters": "Filter zurücksetzen",
+  "noUsersFound": "Keine abgelaufenen Premium-Benutzer gefunden",
+  "tryAdjustSearch": "Versuche, deine Suchanfrage anzupassen.",
+  "noExpiredUsers": "Momentan gibt es keine abgelaufenen Premium-Benutzer.",
+  "paymentHistory": "Zahlungsverlauf",
+  "amount": "Betrag",
+  "status": "Status",
+  "date": "Datum",
+  "name": "Name",
+  "premiumStart": "Premium-Start",
+  "premiumEnd": "Premium-Ende",
+  "movedToExpired": "Als abgelaufen markiert",
+  "failedToLoad": "Abgelaufene Premium-Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
+  "tryAgain": "Erneut versuchen"
+},
+"premiumUsers":{
+  "premiumUsers": "Premium-Benutzer",
+  "total": "Gesamt:",
+  "premium":"Prämie",
+  "reload": "Aktualisieren",
+  "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+   "sortby": "Sortieren nach",
+  "sortPremiumStartNewest": "Premium-Start (Neueste zuerst)",
+  "sortPremiumStartOldest": "Premium-Start (Älteste zuerst)",
+  "sortCreatedDateNewest": "Erstellungsdatum (Neueste zuerst)",
+  "noPremiumUsers": "Noch keine Premium-Benutzer",
+  "premiumUsersWillAppear": "Premium-Benutzer werden hier angezeigt, sobald sie abonnieren.",
+  "oopsSomethingWrong": "Ups! Etwas ist schiefgelaufen",
+  "tryAgain": "Erneut versuchen",
+  "noResultsFound": "Keine Ergebnisse gefunden",
+  "adjustSearchQuery": "Versuche, deine Suchanfrage anzupassen.",
+  "name": "Name",
+  "premiumPeriod": "Premium-Zeitraum",
+  "accountCreated": "Konto erstellt",
+  "paymentHistory": "Zahlungsverlauf ",
+  "stripeIDs": "Stripe-IDs",
+  "session": "Sitzung",
+  "intent": "Intent",
+  "charge": "Charge",
+  "card": "Karte",
+  "expires": "Gültig bis",
+  "billingAddress": "Rechnungsadresse",
+  "items": "Artikel",
+  "quantity": "Menge",
+  "noPaymentHistory": "Keine Zahlungsinformationen verfügbar",
+  "statusSucceeded": "Erfolgreich",
+  "statusPaid": "Bezahlt",
+  "statusPending": "Ausstehend",
+  "statusFailed": "Fehlgeschlagen"
+}
 
 
 

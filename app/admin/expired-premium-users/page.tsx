@@ -5,20 +5,13 @@ import type React from "react"
 import { client } from "@/sanity/lib/client"
 import { useState, useEffect, useMemo } from "react"
 import { RefreshCw, Search, ChevronDown, Calendar, CreditCard, AlertCircle, Users } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 
 // ============================================================================
 // TYPESCRIPT INTERFACES
 // ============================================================================
 
-type PaymentStatus =
-  | "succeeded"
-  | "pending"
-  | "failed"
-  | "canceled"
-  | "refunded"
-  | "paid"
-  | "unpaid"
 
 interface Payment {
   createdAt?: string
@@ -123,6 +116,7 @@ interface UserCardProps {
 }
 
 const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(isDesktop) // Desktop always expanded
 
   // On desktop, always keep expanded
@@ -203,7 +197,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
               <div className="flex items-start gap-2">
                 <Users className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-500 uppercase tracking-wide">Name</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">{t("expired_premium_user.name")}</p>
                   <p className="text-sm font-medium text-gray-900 break-words">{user.name}</p>
                 </div>
               </div>
@@ -213,7 +207,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
             <div className="flex items-start gap-2">
               <Calendar className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Premium Start</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">{t("expired_premium_user.premiumStart")}</p>
                 <p className="text-sm text-gray-700 break-words">{formatDate(user.premiumStart)}</p>
               </div>
             </div>
@@ -222,7 +216,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
             <div className="flex items-start gap-2">
               <Calendar className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Premium End</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">{t("expired_premium_user.premiumEnd")}</p>
                 <p className="text-sm text-gray-700 break-words">{formatDate(user.premiumEnd)}</p>
               </div>
             </div>
@@ -231,7 +225,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
             <div className="flex items-start gap-2">
               <Calendar className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs text-gray-500 uppercase tracking-wide">Moved to Expired</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wide">{t("expired_premium_user.movedToExpired")}</p>
                 <p className="text-sm font-medium text-red-600 break-words">{formatDate(user.movedAt)}</p>
               </div>
             </div>
@@ -242,7 +236,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
             <div className="pt-2">
               <div className="flex items-center gap-2 mb-3">
                 <CreditCard className="w-4 h-4 text-gray-400" />
-                <h4 className="text-sm font-semibold text-gray-900">Payment History ({user.payments.length})</h4>
+                <h4 className="text-sm font-semibold text-gray-900">{t("expired_premium_user.paymentHistory")} ({user.payments.length})</h4>
               </div>
 
               <div className="space-y-3">
@@ -251,7 +245,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                       {payment.amount !== undefined && (
                         <div>
-                          <p className="text-xs text-gray-500">Amount</p>
+                          <p className="text-xs text-gray-500">{t("expired_premium_user.amount")}</p>
                           <p className="text-sm font-semibold text-gray-900">
                             {formatCurrency(payment.amount, payment.currency)}
                           </p>
@@ -260,7 +254,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
 
                       {payment.status && (
                         <div>
-                          <p className="text-xs text-gray-500">Status</p>
+                          <p className="text-xs text-gray-500">{t("expired_premium_user.status")}</p>
                           <span
                             className={`
                               inline-block px-2 py-0.5 rounded-full text-xs font-medium
@@ -280,7 +274,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
 
                       {payment.createdAt && (
                         <div>
-                          <p className="text-xs text-gray-500">Date</p>
+                          <p className="text-xs text-gray-500">{t("expired_premium_user.date")}</p>
                           <p className="text-sm text-gray-700">{formatDate(payment.createdAt)}</p>
                         </div>
                       )}
@@ -303,6 +297,8 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
 // ============================================================================
 
 export default function ExpiredPremiumUsersPage() {
+  const { t } = useTranslation()
+  
   const [users, setUsers] = useState<ExpiredUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -347,8 +343,8 @@ export default function ExpiredPremiumUsersPage() {
       const data = await client.fetch<ExpiredUser[]>(EXPIRED_USERS_QUERY)
       setUsers(data || [])
     } catch (err) {
-      console.error("Error fetching expired users:", err)
-      setError("Failed to load expired premium users. Please try again.")
+      console.error(err)
+      setError(t("failedToLoad"))
     } finally {
       setIsLoading(false)
       setIsRefreshing(false)
@@ -412,9 +408,9 @@ export default function ExpiredPremiumUsersPage() {
         <header className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Expired Premium Users</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{t("expired_premium_user.expiredPremiumUsers")}</h1>
               <p className="text-gray-600">
-                Total: <span className="font-semibold text-gray-900">{users.length}</span> expired user
+                {t("expired_premium_user.total")} <span className="font-semibold text-gray-900">{users.length}</span> {t("expired_premium_user.expiredUser")}
                 {users.length !== 1 ? "s" : ""}
               </p>
             </div>
@@ -433,7 +429,7 @@ export default function ExpiredPremiumUsersPage() {
               aria-label="Reload expired users"
             >
               <RefreshCw className={`w-5 h-5 ${isRefreshing ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">Reload</span>
+              <span className="hidden sm:inline">{t("expired_premium_user.reload")}</span>
             </button>
           </div>
 
@@ -444,7 +440,7 @@ export default function ExpiredPremiumUsersPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Search by name or email..."
+                placeholder={t("expired_premium_user.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="
@@ -469,10 +465,10 @@ export default function ExpiredPremiumUsersPage() {
               "
               aria-label="Sort expired users"
             >
-              <option value="movedAt-desc">Moved: Newest First</option>
-              <option value="movedAt-asc">Moved: Oldest First</option>
-              <option value="premiumEnd-desc">Premium End: Latest First</option>
-              <option value="premiumEnd-asc">Premium End: Earliest First</option>
+               <option value="movedAt-desc">{t("expired_premium_user.sortMovedNewest")}</option>
+              <option value="movedAt-asc">{t("expired_premium_user.sortMovedOldest")}</option>
+              <option value="premiumEnd-desc">{t("expired_premium_user.sortPremiumLatest")}</option>
+              <option value="premiumEnd-asc">{t("expired_premium_user.sortPremiumEarliest")}</option>
             </select>
 
             {/* Clear Filter Button */}
@@ -489,7 +485,7 @@ export default function ExpiredPremiumUsersPage() {
                   focus:ring-offset-2 whitespace-nowrap
                 "
               >
-                Clear Filters
+                     {t("expired_premium_user.clearFilters")}
               </button>
             )}
           </div>
@@ -505,7 +501,7 @@ export default function ExpiredPremiumUsersPage() {
                 onClick={() => fetchUsers()}
                 className="mt-2 text-sm text-red-600 hover:text-red-700 font-medium underline"
               >
-                Try again
+                {t("expired_premium_user.tryAgain")}
               </button>
             </div>
           </div>
@@ -517,11 +513,11 @@ export default function ExpiredPremiumUsersPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
               <Users className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No expired premium users found</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">{t("expired_premium_user.noUsersFound")}</h3>
             <p className="text-gray-600">
               {debouncedSearch
-                ? "Try adjusting your search query."
-                : "There are no expired premium users at the moment."}
+                ? t("tryAdjustSearch")
+                : t("noExpiredUsers")}
             </p>
           </div>
         )}
