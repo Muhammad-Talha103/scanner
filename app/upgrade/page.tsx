@@ -1,9 +1,16 @@
 "use client"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
+import { useState } from "react"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
 
 export default function UpgradePage() {
   const { t } = useTranslation()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const userEmail = userInfo?.email || ""
+
   const stripeUrl =
     "https://buy.stripe.com/cNicN50Yq5DCfZB7oJ5ZC0u?locale=de&__embed_source=buy_btn"
 
@@ -18,9 +25,24 @@ export default function UpgradePage() {
     a: string
   }[]
 
+  const handleUpgradeClick = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleConfirmUpgrade = () => {
+    setIsModalOpen(false)
+    window.location.href =
+      stripeUrl + `&prefilled_email=${encodeURIComponent(userEmail)}`
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white to-blue-50">
-       <div className="fixed top-4 left-4 z-50">
+    <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 relative">
+      {/* Back to Home */}
+      <div className="fixed top-4 left-4 z-50">
         <Link
           href="/"
           className="flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-600 border border-blue-200 px-4 py-2 rounded-lg shadow-sm transition-colors"
@@ -28,9 +50,10 @@ export default function UpgradePage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        {t("helpCenter.backToHome")}
+          {t("helpCenter.backToHome")}
         </Link>
       </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
@@ -59,13 +82,14 @@ export default function UpgradePage() {
               </div>
             </div>
 
-            <a
-              href={stripeUrl}
+            {/* Upgrade Button */}
+            <button
+              onClick={handleUpgradeClick}
               className="inline-flex items-center rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700"
             >
               {t("upgrade.hero.button")}
               <span className="ml-2">→</span>
-            </a>
+            </button>
           </div>
         </div>
       </section>
@@ -74,17 +98,16 @@ export default function UpgradePage() {
       <section className="px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">
-              {t("upgrade.features.title")}
-            </h2>
-            <p className="mt-4 text-lg text-gray-600">
-              {t("upgrade.features.subtitle")}
-            </p>
+            <h2 className="text-3xl font-bold sm:text-4xl">{t("upgrade.features.title")}</h2>
+            <p className="mt-4 text-lg text-gray-600">{t("upgrade.features.subtitle")}</p>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, i) => (
-              <div key={i} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-lg">
+              <div
+                key={i}
+                className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-lg"
+              >
                 <div className="mb-4 text-3xl">{feature.icon}</div>
                 <h3 className="mb-3 text-xl font-semibold">{feature.title}</h3>
                 <p className="text-gray-600">{feature.description}</p>
@@ -122,18 +145,45 @@ export default function UpgradePage() {
               {t("upgrade.cta.subtitle", { product: "GreweScanner" })}
             </p>
 
-            <a
-              href={stripeUrl}
+            <button
+              onClick={handleUpgradeClick}
               className="inline-flex items-center rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-600 shadow-lg hover:bg-gray-50"
             >
               {t("upgrade.cta.button")}
               <span className="ml-2">→</span>
-            </a>
+            </button>
 
             <p className="mt-4 text-sm opacity-75">{t("upgrade.cta.note")}</p>
           </div>
         </div>
       </section>
+
+      {/* ⚠️ Warning Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 mx-4">
+            <h2 className="text-xl font-bold mb-4 text-red-600">{t("upgrade.hero.important_notice")}</h2>
+            <p className="text-gray-700 mb-6">
+              {t("upgrade.hero.do")} <strong>{t("upgrade.hero.not_change_your_email")}</strong> {t("upgrade.hero.message")}
+              <span className="block font-semibold text-blue-600 mt-1">{userEmail}</span>
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+              >
+                {t("upgrade.hero.cancel")}
+              </button>
+              <button
+                onClick={handleConfirmUpgrade}
+                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+              >
+               {t("upgrade.hero.understand")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   )
 }

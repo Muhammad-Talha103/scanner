@@ -288,7 +288,15 @@
     "subtitle": "Unlock professional scanning features and take your productivity to the next level",
     "price": "€1",
     "perMonth": "per month",
-    "button": "Upgrade Now"
+    "button": "Upgrade Now",
+    "important_notice":"⚠️ Important Notice",
+    "do":"Do",
+    "not_change_your_email":"not change your email",
+    "message":"on the Stripe checkout page. Your Premium will only be activated for the email:",
+    "cancel":"Cancel",
+    "understand":"I Understand"
+
+
   },
   "features": {
     "title": "Premium Features",
@@ -576,6 +584,9 @@
   "securityNoticeTitle": "Security Reminder",
   "securityNoticeText": "For your security, we've logged this password reset request. If you didn't request this, please contact support immediately."
 },
+"premium":"Premium",
+"expiresIn":"Expires in",
+"expired":"Premium Expired",
 "reset_password": {
   "verifyingResetLink": "Verifying reset link...",
   "code_verification_error":"Code verification error:",

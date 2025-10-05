@@ -299,7 +299,14 @@
     "subtitle": "Schalte professionelle Scan-Funktionen frei und steigere deine Produktivität auf das nächste Level",
     "price": "€1",
     "perMonth": "pro Monat",
-    "button": "Jetzt upgraden"
+    "button": "Jetzt upgraden",
+    "important_notice": "⚠️ Wichtiger Hinweis",
+"do": "Tun",
+"not_change_your_email": "Ihre E-Mail-Adresse nicht",
+"message": "auf der Stripe-Bezahlseite. Ihr Premium wird nur für die folgende E-Mail aktiviert:",
+"cancel": "Abbrechen",
+"understand": "Ich verstehe"
+
   },
   "features": {
     "title": "Premium-Funktionen",
@@ -586,8 +593,12 @@
   },
   "securityNoticeTitle": "Sicherheits-Hinweis",
   "securityNoticeText": "Zu Ihrer Sicherheit haben wir diese Anfrage zum Zurücksetzen des Passworts protokolliert. Wenn Sie dies nicht angefordert haben, kontaktieren Sie bitte sofort den Support."
-}
-,
+},
+
+"premium":"Prämie",
+"expiresIn":"Läuft ab in",
+"expired":"Prämie abgelaufen",
+
 "reset_password":{
   "verifyingResetLink": "Zurücksetzungslink wird überprüft...",
   "code_verification_error":"Fehler bei der Codeüberprüfung:",

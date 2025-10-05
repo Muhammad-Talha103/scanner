@@ -5,7 +5,8 @@ import Stripe from "stripe";
 import { client } from "@/sanity/lib/client";
 
 export async function POST(req: NextRequest) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const sig = req.headers.get("stripe-signature")!;
   const body = await req.text();
 
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ received: true });
       }
 
-      // 🔹 Calculate expiry (amount_total is in cents)
+
       const euros = session.amount_total ? session.amount_total / 100 : 0;
       const months = euros; // €1 = 1 month, €10 = 10 months etc.
       const startDate = new Date();
@@ -142,7 +143,7 @@ export async function POST(req: NextRequest) {
           })
           .commit();
 
-        console.log("🔄 Updated premium user:", existingUser._id);
+
       } else {
         await client.create({
           _type: "premiumUser",
