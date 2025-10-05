@@ -4,9 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { client } from "@/sanity/lib/client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(req: NextRequest) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   const sig = req.headers.get("stripe-signature")!;
   const body = await req.text();
 
@@ -28,11 +27,14 @@ export async function POST(req: NextRequest) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     try {
-       let customerEmail = session.customer_details?.email || session.customer_email || null;
+      let customerEmail =
+        session.customer_details?.email || session.customer_email || null;
 
       // Agar phir bhi email null hai to Stripe se customer fetch karo
       if (!customerEmail && session.customer) {
-        const customer = await stripe.customers.retrieve(session.customer as string);
+        const customer = await stripe.customers.retrieve(
+          session.customer as string
+        );
         if (!("deleted" in customer)) {
           customerEmail = customer.email ?? null;
         }
@@ -42,8 +44,6 @@ export async function POST(req: NextRequest) {
         console.error("❌ Email not found in session or customer object.");
         return NextResponse.json({ received: true, warning: "Email missing" });
       }
-
-
 
       const paymentIntent = (await stripe.paymentIntents.retrieve(
         session.payment_intent as string,
@@ -56,7 +56,9 @@ export async function POST(req: NextRequest) {
       const billingAddress =
         charge?.billing_details?.address || session.customer_details?.address;
 
-      const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+      const lineItems = await stripe.checkout.sessions.listLineItems(
+        session.id
+      );
 
       const userEmail =
         charge?.billing_details?.email || session.customer_details?.email;
@@ -67,7 +69,7 @@ export async function POST(req: NextRequest) {
       }
 
       // 🔹 Calculate expiry (amount_total is in cents)
-      const euros = session.amount_total ? session.amount_total / 100 : 0
+      const euros = session.amount_total ? session.amount_total / 100 : 0;
       const months = euros; // €1 = 1 month, €10 = 10 months etc.
       const startDate = new Date();
       const endDate = new Date(startDate);
