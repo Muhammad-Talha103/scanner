@@ -1,60 +1,106 @@
 "use client"
 
-import { CheckCircle, X } from "lucide-react"
+import { useEffect } from "react"
+import { CheckCircle2, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 interface SuccessModalProps {
   isOpen: boolean
   onClose: () => void
-  format: string
-  savePath: string
+  fileName: string
 }
 
-export const SuccessModal = ({ isOpen, onClose, format, savePath }: SuccessModalProps) => {
+export default function SuccessModal({ isOpen, onClose, fileName }: SuccessModalProps) {
+  
+  const { t } = useTranslation()
+  // Auto-close after 5 seconds
+
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        onClose()
+      }, 5000)
+
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, onClose])
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+
+    return () => {
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+      onClick={onClose}
+    >
+      {/* Backdrop with blur */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-      {/* Modal */}
-      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <div className="flex items-center space-x-2">
-            <CheckCircle className="w-5 h-5 text-green-600" />
-            <h2 className="text-lg font-semibold text-gray-800">Success</h2>
-          </div>
+      {/* Modal Content */}
+      <div className="relative w-full max-w-md animate-in zoom-in-95 duration-300" onClick={(e) => e.stopPropagation()}>
+        <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
+          {/* Close button */}
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Close modal"
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+            aria-label="Close"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-gray-500" />
           </button>
-        </div>
 
-        {/* Content */}
-        <div className="px-6 py-5">
-          <div className="flex items-start space-x-3">
-            <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                Successfully saved images in <span className="font-semibold">{format}</span> format inside{" "}
-                <span className="font-semibold">{savePath}</span>
-              </p>
+          {/* Content */}
+          <div className="p-8 text-center">
+            {/* Animated Success Icon */}
+            <div className="mb-6 flex justify-center">
+              <div className="relative">
+                {/* Outer ring animation */}
+                <div className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-75" />
+
+                {/* Icon container */}
+                <div className="relative bg-green-100 rounded-full p-4 animate-in zoom-in duration-500">
+                  <CheckCircle2 className="w-16 h-16 text-green-600 animate-in zoom-in duration-700 delay-100" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-end px-6 py-4 bg-gray-50 rounded-b-lg">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
-          >
-            OK
-          </button>
+            {/* Success Message */}
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">{t("modalTitle")}</h2>
+
+            <div className="space-y-2 mb-6">
+              <p className="text-gray-600 text-balance">{t("modalText")}</p>
+
+              {/* File name with highlight */}
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <p className="font-semibold text-gray-900 break-all">{fileName}</p>
+              </div>
+            </div>
+
+            {/* OK Button */}
+            <button
+              onClick={onClose}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+            >
+              {t("ok")}
+            </button>
+
+            {/* Auto-close indicator */}
+            <p className="text-xs text-gray-400 mt-4">{t("close_message")}</p>
+          </div>
+
+          {/* Bottom accent bar */}
+          <div className="h-1 bg-gradient-to-r from-green-400 via-green-500 to-green-600" />
         </div>
       </div>
     </div>

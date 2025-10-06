@@ -1,9 +1,10 @@
 "use client"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { RootState } from "@/redux/store"
+import { client } from "@/sanity/lib/client"
 
 export default function UpgradePage() {
   const { t } = useTranslation()
@@ -11,6 +12,35 @@ export default function UpgradePage() {
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
   const userEmail = userInfo?.email || ""
 
+  const [isPremiumUser, setIsPremiumUser] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+
+  // ✅ Fetch premium users from Sanity
+  useEffect(() => {
+    const fetchPremiumUsers = async () => {
+      try {
+        if (!userEmail) return
+
+        // 🧠 Query to get all premium users
+        const query = `*[_type == "premiumUser"]{email}`
+        const data = await client.fetch(query)
+        
+        const found = data.some(
+          (user: { email: string; type: string }) =>
+            user.email === userEmail 
+        )
+
+        setIsPremiumUser(found)
+      } catch (error) {
+        console.error("Error fetching premium users:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPremiumUsers()
+  }, [userEmail])
   const stripeUrl =
     "https://buy.stripe.com/cNicN50Yq5DCfZB7oJ5ZC0u?locale=de&__embed_source=buy_btn"
 
@@ -38,6 +68,40 @@ export default function UpgradePage() {
   const handleCloseModal = () => {
     setIsModalOpen(false)
   }
+
+
+   if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-blue-50">
+        <div className="text-center text-gray-600 text-lg animate-pulse">
+          {t("upgrade.hero.loading")}
+        </div>
+      </main>
+    )
+  }
+
+    // 🎉 Already Premium
+  if (isPremiumUser) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-blue-50">
+        <div className="text-center max-w-md p-8 bg-white rounded-2xl shadow-md">
+          <h1 className="text-3xl font-bold text-blue-600 mb-4">
+            🎉 {t("upgrade.hero.premium_user") }
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {t("upgrade.hero.alreadyPremiumMessage")}
+          </p>
+          <Link
+            href="/"
+            className="inline-flex items-center rounded-full bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
+          >
+            {t("upgrade.hero.back")}
+          </Link>
+        </div>
+      </main>
+    )
+  }
+
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 relative">

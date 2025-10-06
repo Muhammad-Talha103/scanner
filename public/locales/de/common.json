@@ -301,11 +301,20 @@
     "perMonth": "pro Monat",
     "button": "Jetzt upgraden",
     "important_notice": "⚠️ Wichtiger Hinweis",
+    
 "do": "Tun",
+
 "not_change_your_email": "Ihre E-Mail-Adresse nicht",
 "message": "auf der Stripe-Bezahlseite. Ihr Premium wird nur für die folgende E-Mail aktiviert:",
 "cancel": "Abbrechen",
-"understand": "Ich verstehe"
+"understand": "Ich verstehe",
+
+  "loading": "Ihre Abonnementdaten werden überprüft...",
+  "premium_user": "Sie sind bereits ein Premium-Benutzer!",
+  "back": "Zurück zur Startseite",
+  "alreadyPremiumMessage": "Vielen Dank, dass Sie GreweScanner Premium unterstützen. Sie haben bereits vollen Zugriff auf alle Funktionen."
+
+
 
   },
   "features": {
@@ -815,7 +824,70 @@
   "statusPaid": "Bezahlt",
   "statusPending": "Ausstehend",
   "statusFailed": "Fehlgeschlagen"
+},
+"save_modal": {
+  "modalTitle": "Gescannten Bilder speichern",
+  "cancel": "Abbrechen",
+  "next": "Weiter",
+  "back": "Zurück",
+  "save": "Speichern",
+  "done": "Fertig",
+  "tryAgain": "Erneut versuchen",
+  "savingTitle": "Dateien werden gespeichert...",
+  "savingText": "Bitte warten Sie, während wir Ihre ",
+  "as": "als",
+  "savingImages": "Bilder speichern",
+  "successTitle": "Dateien erfolgreich gespeichert!",
+  "successText": "Ihre Dateien wurden erfolgreich gespeichert als ",
+  "the_selected_folder": "der ausgewählte Ordner",
+  "the_selected_location": "der ausgewählte Speicherort",
+
+  "in": "in",
+  "successPath": "Gespeicherter Pfad",
+  "errorTitle": "Speichern fehlgeschlagen",
+  "errorText": "{message}",
+  "selectFormatTitle": "Dateiformat auswählen",
+  "combine": "Alle Bilder zusammenführen",
+  "onefile": "Eine Datei pro Bild",
+  "selectFormatDescription": "Wählen Sie das Format aus, in dem Sie Ihre gescannten Bilder speichern möchten.",
+  "multiPageInfoTitle": "Mehrseitiges Format:",
+  "multiPageInfo": "Alle Bilder werden zu einer einzigen Datei zusammengefasst.",
+  "file": "Datei",
+  "singlePageInfoTitle": "Einseitiges Format:",
+  "singlePageInfo": "Jedes Bild wird als separate Datei gespeichert.",
+  "selectImagesTitle": "Bilder auswählen",
+  "selectImagesDescription": "Wählen Sie die Bilder aus, die Sie speichern möchten.",
+  "totalImages": "Gesamtbilder:",
+  "selectedImages": "Ausgewählte Bilder:",
+  "saveAllImages": "Alle Bilder speichern",
+  "saveAllImagesDesc": "Alle",
+  "scanned_images": "gescannten Bilder speichern",
+  "saveSelectedOnly": "Nur ausgewählte speichern",
+  "selected_image_preview": "Vorschau der ausgewählten Bilder:",
+  "saveSelectedOnlyDesc": "Nur die ",
+  "selected_images": "ausgewählten Bilder speichern",
+  "noImagesSelectedWarning": "Derzeit sind keine Bilder ausgewählt. Bitte wählen Sie mindestens ein Bild zum Speichern aus.",
+  "chooseLocationTitle": "Speicherort wählen",
+  "chooseLocationDescriptionFolder": "Wählen Sie einen Ordner, um Ihre Dateien zu speichern.",
+  "chooseLocationDescriptionFile": "Wählen Sie aus, wo Sie Ihre Datei speichern möchten.",
+  "unsupportedBrowserWarning": "Ihr Browser unterstützt keine Ordnerauswahl. Bitte geben Sie den Ordnerpfad manuell ein.",
+  "formatLabel": "Format:",
+  "imagesToSaveLabel": "Zu speichernde Bilder:",
+  "outputLabel": "Ausgabe:",
+  "browse": "Durchsuchen",
+  "selectedFolder": "Ausgewählter Ordner:",
+  "selectedFile": "Ausgewählte Datei:",
+  "noLocationSelected": "Kein Speicherort ausgewählt",
+  "locationSuccessTitle": "Speicherort erfolgreich ausgewählt",
+  "locationSuccessText": "Bereit zum Speichern Ihrer Dateien",
+  "noImagesError": "Keine Bilder zum Speichern ausgewählt",
+  "noLocationError": "Bitte wählen Sie einen Speicherort",
+  "abortError": "Keine Datei oder kein Ordner ausgewählt.",
+  "deniedError": "Zugriff verweigert. Bitte erteilen Sie die Berechtigung zum Speichern von Dateien.",
+  "error_select_folder": "Ordnerauswahl fehlgeschlagen. Bitte versuchen Sie es erneut.",
+  "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
 }
+
 
 
 
