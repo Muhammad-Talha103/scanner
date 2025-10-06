@@ -58,6 +58,26 @@ interface DropdownItem {
   href?: string
 }
 
+type SaveFormat =
+  | "pdf-multi"
+  | "pdf-single"
+  | "tiff-multi"
+  | "tiff-single"
+  | "png"
+  | "jpeg"
+  | "jpg"
+  | "bmp"
+  | "webp"
+
+
+  interface ScannedImage {
+  id: string
+  dataUrl: string
+  name?: string
+  timestamp?: number
+}
+
+
 export default function ScannerApp() {
   const { t } = useTranslation()
   // Redux & Router
@@ -533,7 +553,7 @@ export default function ScannerApp() {
   )
 }
 
-const saveImagesToFolder = async (images: any[], format: string, directoryHandle: FileSystemDirectoryHandle) => {
+const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, directoryHandle: FileSystemDirectoryHandle) => {
   try {
     if (format === "pdf-multi") {
       const pdf = new jsPDF()
@@ -633,7 +653,7 @@ const saveImagesToFolder = async (images: any[], format: string, directoryHandle
   }
 }
 
-const saveToFile = async (images: any[], format: string, fileHandle: FileSystemFileHandle) => {
+const saveToFile = async (images: ScannedImage[], format: SaveFormat, fileHandle: FileSystemFileHandle) => {
   try {
     const writable = await fileHandle.createWritable()
 
