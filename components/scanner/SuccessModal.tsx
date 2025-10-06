@@ -76,10 +76,10 @@ export default function SuccessModal({ isOpen, onClose, fileName }: SuccessModal
             </div>
 
             {/* Success Message */}
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">{t("modalTitle")}</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">{t("success_modal.modalTitle")}</h2>
 
             <div className="space-y-2 mb-6">
-              <p className="text-gray-600 text-balance">{t("modalText")}</p>
+              <p className="text-gray-600 text-balance">{t("success_modal.modalText")}</p>
 
               {/* File name with highlight */}
               <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
@@ -92,11 +92,11 @@ export default function SuccessModal({ isOpen, onClose, fileName }: SuccessModal
               onClick={onClose}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
             >
-              {t("ok")}
+              {t("success_modal.ok")}
             </button>
 
             {/* Auto-close indicator */}
-            <p className="text-xs text-gray-400 mt-4">{t("close_message")}</p>
+            <p className="text-xs text-gray-400 mt-4">{t("success_modal.close_message")}</p>
           </div>
 
           {/* Bottom accent bar */}
