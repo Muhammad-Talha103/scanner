@@ -100,11 +100,11 @@ export default function UserRow({
               aria-label={showPassword ? t("user_row.hidePassword") : t("user_row.showPassword")}
               type="button"
             >
-              {showPassword ? (
+              {/* {showPassword ? (
                 <EyeOff className="w-5 h-5 text-gray-500" />
               ) : (
                 <Eye className="w-5 h-5 text-gray-500" />
-              )}
+              )} */}
             </button>
           </div>
         </td>
@@ -184,39 +184,9 @@ export default function UserRow({
             </div>
             <span className="text-sm text-gray-900 font-mono flex items-center space-x-2">
               <span>
-                {showPassword ? user.password : maskPassword(user.password)}
+                {maskPassword(user.password)}
               </span>
-              <button
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                  handleShowPasswordStart();
-                }}
-                onMouseUp={(e) => {
-                  e.stopPropagation();
-                  handleShowPasswordEnd();
-                }}
-                onMouseLeave={(e) => {
-                  e.stopPropagation();
-                  handleShowPasswordEnd();
-                }}
-                onTouchStart={(e) => {
-                  e.stopPropagation();
-                  handleShowPasswordStart();
-                }}
-                onTouchEnd={(e) => {
-                  e.stopPropagation();
-                  handleShowPasswordEnd();
-                }}
-                className="focus:outline-none"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                type="button"
-              >
-                {showPassword ? (
-                  <EyeOff className="w-5 h-5 text-gray-500" />
-                ) : (
-                  <Eye className="w-5 h-5 text-gray-500" />
-                )}
-              </button>
+             
             </span>
           </div>
 

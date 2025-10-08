@@ -1,165 +1,164 @@
-export const runtime = "nodejs";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { client } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client"; // tumhara existing sanity client
 
-export async function POST(req: NextRequest) {
+export const config = {
+  api: {
+    bodyParser: false, // ✅ disable default body parsing
+  },
+};
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+export async function POST(req: Request) {
+  console.log("🚀 Incoming TEST Stripe webhook...");
+
+  const payload = await req.text();
   const sig = req.headers.get("stripe-signature")!;
-  const body = await req.text();
+  const webhookSecret = "whsec_hfe19MQJHuLliciBC2oxvRu0NQacpw7H"
+  const stripeSecret = "sk_test_51SBZO0KAT5m6jW9YcNxvHnHTSPxCid0o6iS5InuaDqL374GzzYQEnTMDevPm0NnkrDmthcpGoURRn0fasgyu6ez000xpZLwiNK"
 
-  let event: Stripe.Event;
-
-  try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
-  } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : String(err);
-    console.error("❌ Webhook verification error:", errorMessage);
-    return new NextResponse(`Webhook Error: ${errorMessage}`, { status: 400 });
+  if (!webhookSecret || !stripeSecret) {
+    console.error("❌ Missing STRIPE_WEBHOOK_SECRET_TEST or STRIPE_TEST_SECRET_KEY env vars");
+    return new NextResponse("Missing test env vars", { status: 500 });
   }
 
-  if (event.type === "checkout.session.completed") {
+  const stripe = new Stripe(stripeSecret);
+
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(payload, sig, webhookSecret);
+    console.log("✅ TEST Webhook verified:", event.type);
+  } catch (err) {
+    console.error("❌ TEST Webhook verification failed:", err);
+    return new NextResponse("Webhook verification failed", { status: 400 });
+  }
+
+  if (event.type !== "checkout.session.completed") {
+    console.log("⚠️ TEST Ignoring event:", event.type);
+    return NextResponse.json({ received: true });
+  }
+
+  try {
     const session = event.data.object as Stripe.Checkout.Session;
+    console.log("💡 TEST Checkout session:", session.id);
 
-    try {
-      let customerEmail =
-        session.customer_details?.email || session.customer_email || null;
+    // get email
+    let userEmail =
+      session.customer_details?.email || session.customer_email || null;
 
-      // Agar phir bhi email null hai to Stripe se customer fetch karo
-      if (!customerEmail && session.customer) {
-        const customer = await stripe.customers.retrieve(
-          session.customer as string
-        );
-        if (!("deleted" in customer)) {
-          customerEmail = customer.email ?? null;
-        }
-      }
+    if (!userEmail && session.customer) {
+      const customer = await stripe.customers.retrieve(session.customer as string);
+      if (!("deleted" in customer)) userEmail = (customer as any).email ?? null;
+    }
 
-      if (!customerEmail) {
-        console.error("❌ Email not found in session or customer object.");
-        return NextResponse.json({ received: true, warning: "Email missing" });
-      }
+    if (!userEmail) {
+      console.error("❌ TEST No email in session");
+      return NextResponse.json({ received: true, warning: "No email" });
+    }
 
-      const paymentIntent = (await stripe.paymentIntents.retrieve(
+    // optional: retrieve paymentIntent to get charges/payment method
+    let paymentIntent: (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> }) | null = null;
+    if (session.payment_intent) {
+      paymentIntent = await stripe.paymentIntents.retrieve(
         session.payment_intent as string,
-        { expand: ["charges.payment_method"] }
-      )) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+        { expand: ["charges"] }
+      ) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+    }
 
-      const charge = paymentIntent.charges?.data?.[0];
-      const paymentMethod = charge?.payment_method_details;
+    const charge = paymentIntent?.charges?.data?.[0];
+    const paymentMethod = charge?.payment_method_details;
+    const billingAddress = charge?.billing_details?.address || session.customer_details?.address;
 
-      const billingAddress =
-        charge?.billing_details?.address || session.customer_details?.address;
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
-      const lineItems = await stripe.checkout.sessions.listLineItems(
-        session.id
-      );
+    const euros = session.amount_total ? session.amount_total / 100 : 0;
+    const months = euros;
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + months);
 
-      const userEmail =
-        charge?.billing_details?.email || session.customer_details?.email;
+    const metadata =
+      session.metadata && Object.keys(session.metadata).length > 0
+        ? Object.entries(session.metadata).map(([k, v]) => ({ key: k, value: String(v) }))
+        : [];
 
-      if (!userEmail) {
-        console.error("❌ No user email found in payment session");
-        return NextResponse.json({ received: true });
-      }
+    const newPayment = {
+      _key: session.id,
+      stripeSessionId: session.id,
+      stripePaymentIntentId: paymentIntent?.id,
+      stripeChargeId: charge?.id,
+      amount_total: session.amount_total,
+      currency: session.currency,
+      status: session.payment_status,
+      payment_method_type: paymentMethod?.type,
+      card: paymentMethod?.card
+        ? {
+            brand: paymentMethod.card.brand,
+            last4: paymentMethod.card.last4,
+            exp_month: paymentMethod.card.exp_month,
+            exp_year: paymentMethod.card.exp_year,
+          }
+        : undefined,
+      billing_address: billingAddress
+        ? {
+            line1: billingAddress.line1,
+            line2: billingAddress.line2,
+            city: billingAddress.city,
+            state: billingAddress.state,
+            postal_code: billingAddress.postal_code,
+            country: billingAddress.country,
+          }
+        : undefined,
+      metadata,
+      lineItems: lineItems.data.map((item) => ({
+        id: item.id,
+        description: item.description,
+        price: item.price?.id,
+        product: item.price?.product,
+        quantity: item.quantity,
+        amount_total: item.amount_total,
+        currency: item.currency,
+      })),
+      createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
+    };
 
+    console.log("💳 TEST Prepared payment for:", userEmail);
 
-      const euros = session.amount_total ? session.amount_total / 100 : 0;
-      const months = euros; // €1 = 1 month, €10 = 10 months etc.
-      const startDate = new Date();
-      const endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + months);
+    // Update or create premiumUser (same logic as your production route)
+    const existingUser = await client.fetch(
+      `*[_type == "premiumUser" && email == $email][0]`,
+      { email: userEmail }
+    );
 
-      const newPayment = {
-        _key: session.id,
-        stripeSessionId: session.id,
-        stripePaymentIntentId: paymentIntent.id,
-        stripeChargeId: charge?.id,
-        amount_total: session.amount_total,
-        currency: session.currency,
-        status: session.payment_status,
-        payment_method_type: paymentMethod?.type,
-        card: paymentMethod?.card
-          ? {
-              brand: paymentMethod.card.brand,
-              last4: paymentMethod.card.last4,
-              exp_month: paymentMethod.card.exp_month,
-              exp_year: paymentMethod.card.exp_year,
-            }
-          : undefined,
-        billing_address: billingAddress
-          ? {
-              line1: billingAddress.line1,
-              line2: billingAddress.line2,
-              city: billingAddress.city,
-              state: billingAddress.state,
-              postal_code: billingAddress.postal_code,
-              country: billingAddress.country,
-            }
-          : undefined,
-        metadata: session.metadata || {},
-        lineItems: lineItems.data.map((item) => ({
-          id: item.id,
-          description: item.description,
-          price: item.price?.id,
-          product: item.price?.product,
-          quantity: item.quantity,
-          amount_total: item.amount_total,
-          currency: item.currency,
-        })),
-        createdAt: new Date(session.created * 1000).toISOString(),
-      };
-
-      // 🔎 Check if user already expired
-      const expiredUser = await client.fetch(
-        `*[_type == "premium_user_ends" && email == $email][0]`,
-        { email: userEmail }
-      );
-      if (expiredUser) {
-        await client.delete(expiredUser._id);
-        console.log("♻️ Removed from expired users:", expiredUser._id);
-      }
-
-      // 🔎 Check if user already exists in active
-      const existingUser = await client.fetch(
-        `*[_type == "premiumUser" && email == $email][0]`,
-        { email: userEmail }
-      );
-
-      if (existingUser) {
-        await client
-          .patch(existingUser._id)
-          .setIfMissing({ payments: [] })
-          .append("payments", [newPayment])
-          .set({
-            premiumStart: startDate.toISOString(),
-            premiumEnd: endDate.toISOString(),
-          })
-          .commit();
-
-
-      } else {
-        await client.create({
-          _type: "premiumUser",
-          email: userEmail,
-          name: charge?.billing_details?.name || session.customer_details?.name,
-          payments: [newPayment],
+    if (existingUser) {
+      console.log("🧾 TEST Updating existing user:", existingUser._id);
+      await client
+        .patch(existingUser._id)
+        .setIfMissing({ payments: [] })
+        .append("payments", [newPayment])
+        .set({
           premiumStart: startDate.toISOString(),
           premiumEnd: endDate.toISOString(),
-          createdAt: new Date().toISOString(),
-        });
-
-        console.log("✅ Created new premium user:", userEmail);
-      }
-    } catch (err) {
-      console.error("❌ Error handling session:", err);
+        })
+        .commit();
+      console.log("✅ TEST Updated user:", userEmail);
+    } else {
+      console.log("🆕 TEST Creating new premium user:", userEmail);
+      await client.create({
+        _type: "premiumUser",
+        email: userEmail,
+        name: charge?.billing_details?.name || session.customer_details?.name || undefined,
+        payments: [newPayment],
+        premiumStart: startDate.toISOString(),
+        premiumEnd: endDate.toISOString(),
+        createdAt: new Date().toISOString(),
+      });
+      console.log("✅ TEST Created new premium user:", userEmail);
     }
+  } catch (err) {
+    console.error("❌ TEST Error handling session:", err);
+    return new NextResponse("Handler error", { status: 500 });
   }
 
   return NextResponse.json({ received: true });
