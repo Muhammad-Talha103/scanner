@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 
     if (!userEmail && session.customer) {
       const customer = await stripe.customers.retrieve(session.customer as string);
-      if (!("deleted" in customer)) userEmail = (customer as any).email ?? null;
+      if (!("deleted" in customer)) userEmail = (customer).email ?? null;
     }
 
     if (!userEmail) {
