@@ -14,8 +14,8 @@ export async function POST(req: Request) {
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature")!;
   
-  const webhookSecret = "whsec_8PurKpatwGglCDBtgV3RIcJ0TqcSball"; 
-  const stripeSecret = "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"; // LIVE secret key
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const stripeSecret = process.env.STRIPE_SECRET_KEY; // LIVE secret key
 
   if (!webhookSecret || !stripeSecret) {
     console.error("❌ Missing Stripe webhook secret or live secret key");
