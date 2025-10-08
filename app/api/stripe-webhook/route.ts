@@ -1,26 +1,24 @@
-
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { client } from "@/sanity/lib/client"; // tumhara existing sanity client
+import { client } from "@/sanity/lib/client"; 
 
 export const config = {
   api: {
-    bodyParser: false, // ✅ disable default body parsing
+    bodyParser: false, 
   },
 };
 
-
 export async function POST(req: Request) {
-  console.log("🚀 Incoming TEST Stripe webhook...");
+  console.log("🚀 Incoming Stripe webhook...");
 
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature")!;
-  const webhookSecret = "whsec_hfe19MQJHuLliciBC2oxvRu0NQacpw7H";
-  const stripeSecret = "sk_test_51SBZO0KAT5m6jW9YcNxvHnHTSPxCid0o6iS5InuaDqL374GzzYQEnTMDevPm0NnkrDmthcpGoURRn0fasgyu6ez000xpZLwiNK";
+  const webhookSecret = "whsec_8PurKpatwGglCDBtgV3RIcJ0TqcSball"; 
+  const stripeSecret = "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"; // LIVE secret key
 
   if (!webhookSecret || !stripeSecret) {
-    console.error("❌ Missing STRIPE_WEBHOOK_SECRET_TEST or STRIPE_TEST_SECRET_KEY env vars");
-    return new NextResponse("Missing test env vars", { status: 500 });
+    console.error("❌ Missing Stripe webhook secret or live secret key");
+    return new NextResponse("Missing env vars", { status: 500 });
   }
 
   const stripe = new Stripe(stripeSecret);
@@ -28,20 +26,20 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(payload, sig, webhookSecret);
-    console.log("✅ TEST Webhook verified:", event.type);
+    console.log("✅ Webhook verified:", event.type);
   } catch (err) {
-    console.error("❌ TEST Webhook verification failed:", err);
+    console.error("❌ Webhook verification failed:", err);
     return new NextResponse("Webhook verification failed", { status: 400 });
   }
 
   if (event.type !== "checkout.session.completed") {
-    console.log("⚠️ TEST Ignoring event:", event.type);
+    console.log("⚠️ Ignoring event:", event.type);
     return NextResponse.json({ received: true });
   }
 
   try {
     const session = event.data.object as Stripe.Checkout.Session;
-    console.log("💡 TEST Checkout session:", session.id);
+    console.log("💡 Checkout session:", session.id);
 
     // get email
     let userEmail =
@@ -53,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     if (!userEmail) {
-      console.error("❌ TEST No email in session");
+      console.error("❌ No email in session");
       return NextResponse.json({ received: true, warning: "No email" });
     }
 
@@ -123,16 +121,16 @@ export async function POST(req: Request) {
       createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
     };
 
-    console.log("💳 TEST Prepared payment for:", userEmail);
+    console.log("💳 Prepared payment for:", userEmail);
 
-    // Update or create premiumUser (same logic as your production route)
+    // Update or create premiumUser
     const existingUser = await client.fetch(
       `*[_type == "premiumUser" && email == $email][0]`,
       { email: userEmail }
     );
 
     if (existingUser) {
-      console.log("🧾 TEST Updating existing user:", existingUser._id);
+      console.log("🧾 Updating existing user:", existingUser._id);
       await client
         .patch(existingUser._id)
         .setIfMissing({ payments: [] })
@@ -142,9 +140,9 @@ export async function POST(req: Request) {
           premiumEnd: endDate.toISOString(),
         })
         .commit();
-      console.log("✅ TEST Updated user:", userEmail);
+      console.log("✅ Updated user:", userEmail);
     } else {
-      console.log("🆕 TEST Creating new premium user:", userEmail);
+      console.log("🆕 Creating new premium user:", userEmail);
       await client.create({
         _type: "premiumUser",
         email: userEmail,
@@ -154,10 +152,10 @@ export async function POST(req: Request) {
         premiumEnd: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       });
-      console.log("✅ TEST Created new premium user:", userEmail);
+      console.log("✅ Created new premium user:", userEmail);
     }
   } catch (err) {
-    console.error("❌ TEST Error handling session:", err);
+    console.error("❌ Error handling session:", err);
     return new NextResponse("Handler error", { status: 500 });
   }
 
