@@ -3,12 +3,14 @@
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { useTranslation } from "react-i18next"
 
 export default function CheckoutSuccess() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
   const [status, setStatus] = useState<"loading" | "success" | "missing">("loading")
+  const {t} = useTranslation()
 
   useEffect(() => {
     if (sessionId) {
@@ -41,8 +43,8 @@ export default function CheckoutSuccess() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </motion.div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Processing Payment...</h1>
-            <p className="text-gray-500">Please wait while we confirm your payment.</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">{t("payment_success.loading.title")}</h1>
+            <p className="text-gray-500">{t("payment_success.loading.message")}</p>
           </div>
         </motion.main>
       )}
@@ -67,15 +69,15 @@ export default function CheckoutSuccess() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </motion.div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Missing Session</h1>
-            <p className="text-gray-500 mb-6">We could not find your payment session. Please try again.</p>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">{t("payment_success.missing.title")}</h1>
+            <p className="text-gray-500 mb-6">{t("payment_success.missing.message")}</p>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.replace("/")}
               className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
             >
-              Go to Home
+             {t("payment_success.missing.button")}
             </motion.button>
           </div>
         </motion.main>
@@ -101,9 +103,9 @@ export default function CheckoutSuccess() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </motion.div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">🎉 Payment Successful!</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">{t("payment_success.success.title")}</h1>
             <p className="text-gray-500 mb-6">
-              Your payment was successful, and your account is now upgraded to <strong>Grewe Scan Premium</strong>.
+              {t("payment_success.success.message")}<strong>{t("payment_success.success.grew_scan_premium")}</strong>.
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -111,7 +113,7 @@ export default function CheckoutSuccess() {
               onClick={() => router.replace("/")}
               className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
             >
-              Go to Home
+              {t("payment_success.success.button")}
             </motion.button>
           </div>
         </motion.main>

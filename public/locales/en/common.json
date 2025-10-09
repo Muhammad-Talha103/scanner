@@ -872,6 +872,23 @@
   "modalText": "Your file has been successfully saved as",
   "close_message": "This message will close automatically in 5 seconds",
   "ok": "Ok"
+},
+"payment_success":{
+   "loading": {
+      "title": "Processing Payment...",
+      "message": "Please wait while we confirm your payment."
+    },
+    "missing": {
+      "title": "Missing Session",
+      "message": "We could not find your payment session. Please try again.",
+      "button": "Go to Home"
+    },
+    "success": {
+      "title": "🎉 Payment Successful!",
+      "message": "Your payment was successful, and your account is now upgraded to ",
+      "grew_scan_premium":"Grewe Scan Premium.",
+      "button": "Go to Home"
+    }
 }
 
 }

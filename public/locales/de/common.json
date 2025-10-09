@@ -886,7 +886,25 @@
   "deniedError": "Zugriff verweigert. Bitte erteilen Sie die Berechtigung zum Speichern von Dateien.",
   "error_select_folder": "Ordnerauswahl fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+},
+"payment_success":{
+ "loading": {
+      "title": "Zahlung wird verarbeitet...",
+      "message": "Bitte warten Sie, während wir Ihre Zahlung bestätigen."
+    },
+    "missing": {
+      "title": "Sitzung fehlt",
+      "message": "Wir konnten Ihre Zahlungssitzung nicht finden. Bitte versuchen Sie es erneut.",
+      "button": "Zur Startseite"
+    },
+    "success": {
+  "title": "🎉 Zahlung erfolgreich!",
+  "message": "Ihre Zahlung war erfolgreich und Ihr Konto wurde aktualisiert auf ",
+  "grew_scan_premium": "Grewe Scan Premium.",
+  "button": "Zur Startseite"
 }
+
+  }
 
 
 
