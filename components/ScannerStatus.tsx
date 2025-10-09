@@ -532,7 +532,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   }
 
   const updateCapabilities = async (resolutionLabel: string, colorLabel: string, duplexLabel?: string) => {
-    const Encleso: EnclesoType | undefined = (window as any).Encleso
+    const Encleso: EnclesoType | undefined = (window).Encleso
     if (!Encleso || !selectedScanner) return
 
     try {
@@ -600,7 +600,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       return
     }
 
-    const Encleso: EnclesoType | undefined = (window as any).Encleso
+    const Encleso: EnclesoType | undefined = (window).Encleso
     if (!Encleso) return
 
     const fetchCapabilities = async () => {
