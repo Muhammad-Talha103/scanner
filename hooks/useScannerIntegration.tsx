@@ -38,6 +38,11 @@ interface ScannerCapabilities {
     Enabled: boolean
     ChangeAllowed: boolean
   }
+  AutoDiscardBlankPages?: {
+    Supported: boolean
+    Enabled: boolean
+    ChangeAllowed: boolean
+  }
 }
 
 export interface EnclesoType {
@@ -47,6 +52,7 @@ export interface EnclesoType {
     Resolution?: number
     PixelType?: number
     Duplex?: boolean
+    AutoDiscardBlankPages?: boolean
   }) => Promise<void>
   StartScan: (scannerName: string, showUI: boolean) => Promise<ScanReturn>
   GetImagePreview: (index: number) => Promise<Blob | string>
@@ -285,6 +291,7 @@ export const useScannerIntegration = (showScannerUI: boolean) => {
   const [currentResolution, setCurrentResolution] = useState<number | null>(null)
   const [currentPixelType, setCurrentPixelType] = useState<number | null>(null)
   const [currentDuplex, setCurrentDuplex] = useState<boolean | null>(null)
+  const [currentDiscardBlankPages, setCurrentDiscardBlankPages] = useState<boolean | null>(null)
 
   const { generatePDF } = usePDFGenerator()
   const { printImages } = usePrintHandler()
@@ -568,15 +575,17 @@ export const useScannerIntegration = (showScannerUI: boolean) => {
       const Encleso = window.Encleso
       if (!Encleso) throw new Error("Encleso SDK not available.")
 
-      // console.log("Starting scan with scanner:", scannerName);
+      console.log("Starting scan with scanner:", scannerName);
       const capabilities: {
         Resolution?: number
         PixelType?: number
         Duplex?: boolean
+        AutoDiscardBlankPages?: boolean
       } = {}
       if (currentResolution !== null) capabilities.Resolution = currentResolution
       if (currentPixelType !== null) capabilities.PixelType = currentPixelType
       if (currentDuplex !== null) capabilities.Duplex = currentDuplex
+      if (currentDiscardBlankPages !== null) capabilities.AutoDiscardBlankPages = currentDiscardBlankPages
 
       if (Object.keys(capabilities).length > 0) {
         await Encleso.SetCapabilities(capabilities)
@@ -642,6 +651,7 @@ export const useScannerIntegration = (showScannerUI: boolean) => {
     currentResolution,
     currentPixelType,
     currentDuplex,
+    currentDiscardBlankPages,
     showScannerUI,
     saveScannedMetadataToStorage,
   ])
@@ -796,10 +806,11 @@ export const useScannerIntegration = (showScannerUI: boolean) => {
     () => (getSelectedImages().length > 0 ? getSelectedImages() : scannedImages),
     [scannedImages, getSelectedImages],
   )
-  const updateScannerCapabilities = useCallback((resolution?: number, pixelType?: number, duplex?: boolean) => {
+  const updateScannerCapabilities = useCallback((resolution?: number, pixelType?: number, duplex?: boolean, discardBlankPages?: boolean) => {
     if (resolution !== undefined) setCurrentResolution(resolution)
     if (pixelType !== undefined) setCurrentPixelType(pixelType)
     if (duplex !== undefined) setCurrentDuplex(duplex)
+    if (discardBlankPages !== undefined) setCurrentDiscardBlankPages(discardBlankPages)
   }, [])
 
   return {

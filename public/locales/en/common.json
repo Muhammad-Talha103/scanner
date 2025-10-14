@@ -99,6 +99,7 @@
   "colorModes": "Color Modes:",
   "selectColorMode": "Select color mode",
   "duplex": "Duplex",
+  "blank_pages":"Discard Blank Pages:",
   "on": "On",
   "off": "Off",
 

@@ -95,8 +95,6 @@
 //     setSelectedColorMode(value);
 //     updateCapabilities(selectedResolution, value);
 //   };
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -114,7 +112,8 @@ interface ScannerStatusProps {
     resolution?: number,
     pixelType?: number,
     duplex?: boolean,
-    showUI?: boolean
+    showUI?: boolean,
+    discardBlankPages?: boolean
   ) => void;
   onToggleUI: (value: boolean) => void;
 }
@@ -148,6 +147,10 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
   const [duplexChangeAllowed, setDuplexChangeAllowed] = useState(false);
   const [showScannerUI, setShowScannerUI] = useState(true);
 
+  // Discard Blank Pages state
+  const [discardBlankPagesSupported, setDiscardBlankPagesSupported] = useState(false);
+  const [discardBlankPagesEnabled, setDiscardBlankPagesEnabled] = useState(false);
+
   const closeAllDropdowns = () => {
     setIsScannerOpen(false);
     setIsResolutionOpen(false);
@@ -155,22 +158,19 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
     setIsDuplexOpen(false);
   };
 
-
-
   useEffect(() => {
-   
-      if (scanners.length === 0) return;
+    if (scanners.length === 0) return;
 
-  const savedScanner = localStorage.getItem("selectedScanner");
+    const savedScanner = localStorage.getItem("selectedScanner");
 
-  // Only set if no scanner selected yet
-  if (!selectedScanner) {
-    if (savedScanner && scanners.includes(savedScanner)) {
-      onSelectScanner(savedScanner);
-    } else {
-      onSelectScanner(scanners[0]); // fallback
+    // Only set if no scanner selected yet
+    if (!selectedScanner) {
+      if (savedScanner && scanners.includes(savedScanner)) {
+        onSelectScanner(savedScanner);
+      } else {
+        onSelectScanner(scanners[0]); // fallback
+      }
     }
-  }
 
     if (!selectedScanner) {
       setResolutions([]);
@@ -183,6 +183,8 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
       setSelectedDuplexLabel("");
       setDuplexValue(null);
       setDuplexChangeAllowed(false);
+      setDiscardBlankPagesSupported(false);
+      setDiscardBlankPagesEnabled(false);
       return;
     }
 
@@ -201,8 +203,11 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         setSelectedDuplexLabel("");
         setDuplexValue(null);
         setDuplexChangeAllowed(false);
+        setDiscardBlankPagesSupported(false);
+        setDiscardBlankPagesEnabled(false);
 
         const caps = await Encleso.GetCapabilities?.(selectedScanner);
+        // console.log("Fetched capabilities for", selectedScanner, caps);
         if (!caps) return;
 
         if (caps.Resolution?.Values?.length) {
@@ -211,12 +216,10 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           setResolutionValues(resVals);
           setResolutions(resLabels);
 
-           const savedRes = localStorage.getItem(`scanner_${selectedScanner}_resolution`);
-        const initialRes = savedRes && resLabels.includes(savedRes) ? savedRes : resLabels[0];
+          const savedRes = localStorage.getItem(`scanner_${selectedScanner}_resolution`);
+          const initialRes = savedRes && resLabels.includes(savedRes) ? savedRes : resLabels[0];
           setSelectedResolution(initialRes);
-           onCapabilitiesChange?.(resVals[resLabels.indexOf(initialRes)]);
-
-         
+          onCapabilitiesChange?.(resVals[resLabels.indexOf(initialRes)]);
         }
 
         if (caps.PixelType?.Values?.length) {
@@ -228,13 +231,10 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           setColorModes(pixLabels);
 
           const savedColor = localStorage.getItem(`scanner_${selectedScanner}_colorMode`);
-        const initialColor = savedColor && pixLabels.includes(savedColor) ? savedColor : pixLabels[0];
+          const initialColor = savedColor && pixLabels.includes(savedColor) ? savedColor : pixLabels[0];
 
-        setSelectedColorMode(initialColor);
-        onCapabilitiesChange?.(undefined, pixVals[pixLabels.indexOf(initialColor)]);
-
-
-          
+          setSelectedColorMode(initialColor);
+          onCapabilitiesChange?.(undefined, pixVals[pixLabels.indexOf(initialColor)]);
         }
 
         if (caps.Duplex?.Supported) {
@@ -245,8 +245,15 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           const options = ["Off", "On"];
           setDuplexOptions(options);
           setSelectedDuplexLabel(enabled ? "On" : "Off");
+        }
 
-          // onCapabilitiesChange?.(undefined, undefined, enabled);
+        // Check for Discard Blank Pages support
+        if (caps.AutoDiscardBlankPages?.Supported) {
+          setDiscardBlankPagesSupported(true);
+          const savedDiscardBlankPages = localStorage.getItem(`scanner_${selectedScanner}_discardBlankPages`);
+          const initialDiscardBlankPages = savedDiscardBlankPages === 'true';
+          setDiscardBlankPagesEnabled(initialDiscardBlankPages);
+          onCapabilitiesChange?.(undefined, undefined, undefined, undefined, initialDiscardBlankPages);
         }
       } catch (err) {
         console.error("Error fetching capabilities:", err);
@@ -254,7 +261,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
     };
 
     fetchCapabilities();
-  }, [selectedScanner,scanners,onSelectScanner]);
+  }, [selectedScanner, scanners, onSelectScanner]);
 
   const updateCapabilities = async (
     resolutionLabel: string,
@@ -282,7 +289,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
 
       if (caps.Resolution !== undefined) {
         setSelectedResolution(resolutionLabel);
-         localStorage.setItem(`scanner_${selectedScanner}_resolution`, resolutionLabel);
+        localStorage.setItem(`scanner_${selectedScanner}_resolution`, resolutionLabel);
         onCapabilitiesChange?.(caps.Resolution);
       }
       if (caps.PixelType !== undefined) {
@@ -321,7 +328,15 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
     onSelectScanner(scanner);
     setIsScannerOpen(!isScannerOpen);
     localStorage.setItem("selectedScanner", scanner);
-  }
+  };
+
+  const handleDiscardBlankPagesToggle = (enabled: boolean) => {
+    setDiscardBlankPagesEnabled(enabled);
+    if (selectedScanner) {
+      localStorage.setItem(`scanner_${selectedScanner}_discardBlankPages`, enabled.toString());
+    }
+    onCapabilitiesChange?.(undefined, undefined, undefined, undefined, enabled);
+  };
 
   const getStatusDisplay = () => {
     if (error) {
@@ -399,7 +414,9 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
           >
             <span className="truncate">{selectedScanner || scanners[0]}</span>
             <ChevronDown
-              className={`w-3 h-3 ml-2 ${isScannerOpen ? "rotate-180" : "rotate-0"}`}
+              className={`w-3 h-3 ml-2 ${
+                isScannerOpen ? "rotate-180" : "rotate-0"
+              }`}
             />
           </button>
 
@@ -443,7 +460,9 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
               {selectedResolution || t("selectResolution")}
             </span>
             <ChevronDown
-              className={`w-3 h-3 ml-2 ${isResolutionOpen ? "rotate-180" : "rotate-0"}`}
+              className={`w-3 h-3 ml-2 ${
+                isResolutionOpen ? "rotate-180" : "rotate-0"
+              }`}
             />
           </button>
 
@@ -487,7 +506,9 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
               {selectedColorMode || t("selectColorMode")}
             </span>
             <ChevronDown
-              className={`w-3 h-3 ml-2 ${isColorModeOpen ? "rotate-180" : "rotate-0"}`}
+              className={`w-3 h-3 ml-2 ${
+                isColorModeOpen ? "rotate-180" : "rotate-0"
+              }`}
             />
           </button>
 
@@ -536,6 +557,27 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                     newValue ? "On" : "Off"
                   );
                   onCapabilitiesChange?.(undefined, undefined, newValue);
+                }}
+              />
+              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
+            </label>
+          </div>
+        </div>
+      )}
+
+      {/* Discard Blank Pages Toggle */}
+      {isReady && selectedScanner && discardBlankPagesSupported && (
+        <div className="flex flex-col text-xs text-gray-600">
+          <div className="flex items-center space-x-2 font-semibold mb-1">
+            <span>{t("blank_pages")}</span>
+            <label className="relative inline-flex ml-2 items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={discardBlankPagesEnabled}
+                onChange={(e) => {
+                  handleDiscardBlankPagesToggle(e.target.checked);
                 }}
               />
               <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>

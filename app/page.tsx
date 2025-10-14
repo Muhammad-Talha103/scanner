@@ -278,8 +278,8 @@ export default function ScannerApp() {
     setActiveDropdown(null)
   }
 
-  const handleCapabilitiesChange = (resolution?: number, pixelType?: number, duplex?: boolean) => {
-    updateScannerCapabilities(resolution, pixelType, duplex)
+  const handleCapabilitiesChange = (resolution?: number, pixelType?: number, duplex?: boolean, showUI?: boolean, discardBlankPages?: boolean) => {
+    updateScannerCapabilities(resolution, pixelType, duplex, discardBlankPages)
   }
   const action = t("app_page.action")
   const edit = t("app_page.edit")
