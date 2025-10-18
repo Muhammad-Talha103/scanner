@@ -29,6 +29,17 @@ export default function RootLayout({
   return (
     <html lang={lng} dir={dir(lng)}>
       <head>
+          {/* 🚫 Force light color mode everywhere */}
+        <meta name="color-scheme" content="light" />
+        <style>{`
+          :root {
+            color-scheme: light !important;
+          }
+          html, body {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+          }
+        `}</style>
         {/* Add Script Tags Here */}
         <Script
           src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"
