@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-/* Global light theme (no dark mode) */
+/* 🌈 Global theme: white background + red text (no dark mode) */
 :root {
   --color-background: #ffffff; /* white background */
-  --color-foreground: #171717; /* dark text */
+  --color-foreground: #ff0000; /* red text */
   --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
   --font-mono: var(--font-geist-mono, monospace);
 }
@@ -13,6 +13,14 @@ html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  -webkit-text-fill-color: var(--color-foreground); /* Safari/Chrome fix */
+  color-scheme: light !important; /* force light mode on all devices */
+}
+
+/* Force all elements to inherit red text */
+* {
+  color: inherit !important;
+  background-color: inherit !important;
 }
 
 /* Scrollbar */
