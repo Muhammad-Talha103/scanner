@@ -1,47 +1,57 @@
 @import "tailwindcss";
 
-/* @import "tailwindcss";
-
-/* 🌈 Lock site appearance to your Tailwind colors (ignore OS themes) */
+/* 🌈 Always use your Tailwind color system — ignore OS or browser color modes */
 :root {
-  color-scheme: only light !important;
+  color-scheme: light !important;
 }
 
-/* Prevent browsers from auto-adjusting based on user theme */
+/* 🚫 Prevent OS / Browser dark mode from changing anything */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: light !important;
   }
 }
 
-/* 🧱 Ensure body uses your Tailwind background & text colors */
+/* 🧱 Global layout styling lock */
 html,
 body {
-  background-color: inherit !important;
-  color: inherit !important;
+  background-color: #ffffff !important; /* your Tailwind bg-base color */
+  color: #000000 !important;            /* your Tailwind text color */
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100%;
+  overflow-x: hidden;
 }
 
-/* 🚫 Ignore forced or high-contrast modes */
+/* 🚫 Stop Windows High Contrast or forced color overrides */
 @media (forced-colors: active) {
   * {
     forced-color-adjust: none !important;
   }
 }
 
-/* Tailwind custom animation example */
+/* 🧱 Prevent any external script (like document.querySelectorAll hacks)
+   from overriding your design */
+* {
+  background-color: inherit !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  outline-color: inherit !important;
+}
+
+/* 🌀 Custom utility example */
 @layer utilities {
   @keyframes marquee {
     0% { transform: translateX(0%); }
     100% { transform: translateX(-100%); }
   }
-  .animate-marquee { animation: marquee 15s linear infinite; }
+  .animate-marquee {
+    animation: marquee 15s linear infinite;
+  }
 }
 
-/* Scrollbar (optional) */
+/* 🌿 Scrollbar styling */
 ::-webkit-scrollbar {
   height: 2px;
   width: 3px;
