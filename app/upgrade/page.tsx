@@ -93,7 +93,7 @@ export default function UpgradePage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center rounded-full bg-[bg-[#2563EB]] px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
+            className="inline-flex items-center rounded-full bg-[#2563EB] px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
           >
             {t("upgrade.hero.back")}
           </Link>
