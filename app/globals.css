@@ -1,42 +1,24 @@
 @import "tailwindcss";
 
-/* 🌈 Global theme: white background + red text (no dark mode) */
+/* Base light theme (default) */
 :root {
-  --color-background: #ffffff; /* white background */
-  --color-foreground: #ff0000; /* red text */
+  --color-background: #ffffff;
+  --color-foreground: #171717;
   --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
   --font-mono: var(--font-geist-mono, monospace);
 }
 
-/* Apply globally */
-html, body {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-sans);
-  -webkit-text-fill-color: var(--color-foreground); /* Safari/Chrome fix */
-  color-scheme: light !important; /* force light mode on all devices */
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+   --color-background: #ffffff;
+  --color-foreground: #171717;
+  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  --font-mono: var(--font-geist-mono, monospace);
+  }
 }
 
-/* Force all elements to inherit red text */
-* {
-  color: inherit !important;
-  background-color: inherit !important;
-}
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  height: 2px;
-  width: 3px;
-}
-::-webkit-scrollbar-thumb {
-  background: #9ca3af;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Tailwind custom utilities */
 @layer utilities {
   @keyframes marquee {
     0% { transform: translateX(0%); }
@@ -46,3 +28,18 @@ html, body {
     animation: marquee 15s linear infinite;
   }
 }
+
+
+/* global.css me add karo */
+::-webkit-scrollbar {
+  height: 2px; /* horizontal scrollbar ki height */
+  width: 3px; /* vertical scrollbar ki width */
+}
+::-webkit-scrollbar-thumb {
+  background: #9ca3af; /* gray color */
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
