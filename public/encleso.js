@@ -238,7 +238,21 @@ if (!window.__ENCLESO_INITIALIZED__) {
         let connectionAttempts = 0;
         const maxAttempts = 200;
 
+        const startTime = Date.now(); 
+        const maxDuration = 15000;
+
         const waitForConnection = () => {
+          if (Date.now() - startTime >= maxDuration) {
+            console.error("Unable to connect. Please check if another tab is already open that has loaded Encleso.");
+            
+            $("#alert-warn-error")
+              .removeClass("d-none")
+              .addClass("d-block")
+              .html("Cannot connect to Encleso client app. Please ensure it's running, and check if another tab is already using it.");
+              
+            return; // Stop sending further requests
+          }
+
           if (Encleso === true) {
             setupEnclesoHandlers();
             setupConnectionMonitor();
@@ -285,7 +299,7 @@ if (!window.__ENCLESO_INITIALIZED__) {
           } catch (err) {
             if (lastConnected) {
               lastConnected = false;
-              console.warn("[Monitor] Connection lost ❌");
+              
               $("#ScannerName").html("<option selected>Choose...</option>");
               SetScannerCapsControlsState(true, null);
               $("#alert-warn-error")
