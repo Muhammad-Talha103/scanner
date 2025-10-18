@@ -1,2 +1,40 @@
 @import "tailwindcss";
 
+/* Global light theme (no dark mode) */
+:root {
+  --color-background: #ffffff; /* white background */
+  --color-foreground: #171717; /* dark text */
+  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+  --font-mono: var(--font-geist-mono, monospace);
+}
+
+/* Apply globally */
+html, body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: 2px;
+  width: 3px;
+}
+::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tailwind custom utilities */
+@layer utilities {
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+  }
+  .animate-marquee {
+    animation: marquee 15s linear infinite;
+  }
+}
