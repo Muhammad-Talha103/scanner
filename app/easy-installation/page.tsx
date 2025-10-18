@@ -98,7 +98,7 @@ export default function InstallationGuide() {
           <p className="text-gray-700 mb-6 leading-relaxed">
            {t("installation.downloadSectionDescription")}
           </p>
-          <button className="inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
+          <button className="inline-flex items-center gap-3 bg-[#2563EB] hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
             <Download className="w-6 h-6" />
             {t("installation.downloadButton")}
           </button>
@@ -116,7 +116,7 @@ export default function InstallationGuide() {
                 <div className="p-6 md:p-8 w-full">
                   {/* Step Header */}
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
+                    <div className="flex-shrink-0 w-12 h-12 bg-[#2563EB] text-white rounded-full flex items-center justify-center font-bold text-lg">
                       {step.number}
                     </div>
                     <div className="flex-1">

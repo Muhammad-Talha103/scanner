@@ -131,7 +131,7 @@ export default function HelpPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-blue-600 text-white py-8 relative">
+      <header className="bg-[#2563EB] text-white py-8 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-4xl font-bold">{t("helpCenter.title")}</h1>
           <p className="text-blue-100 mt-2 text-lg">{t("helpCenter.subtitle")}</p>
@@ -176,7 +176,7 @@ export default function HelpPage() {
                 ))}
               </div>
             ) : (
-              <div className={`${bgBlue ? "bg-blue-600 text-white" : "bg-blue-50"} rounded-lg p-6`}>{content}</div>
+              <div className={`${bgBlue ? "bg-[#2563EB] text-white" : "bg-blue-50"} rounded-lg p-6`}>{content}</div>
             )}
           </section>
         ))}

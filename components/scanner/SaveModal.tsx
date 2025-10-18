@@ -381,7 +381,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
               </button>
               <button
                 onClick={handleNext}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 {t("save_modal.next")}
               </button>
@@ -416,7 +416,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
                 >
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      saveAll ? "border-blue-600 bg-blue-600" : "border-gray-400"
+                      saveAll ? "border-blue-600 bg-[#2563EB]" : "border-gray-400"
                     }`}
                   >
                     {saveAll && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
@@ -435,7 +435,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
                 >
                   <div
                     className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      !saveAll ? "border-blue-600 bg-blue-600" : "border-gray-400"
+                      !saveAll ? "border-blue-600 bg-[#2563EB]" : "border-gray-400"
                     }`}
                   >
                     {!saveAll && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
@@ -464,7 +464,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
                           alt={`Selected ${image.id}`}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute top-1 right-1 w-5 h-5 bg-blue-600 rounded-full flex items-center justify-center">
+                        <div className="absolute top-1 right-1 w-5 h-5 bg-[#2563EB] rounded-full flex items-center justify-center">
                           <CheckCircle2 className="w-3 h-3 text-white" />
                         </div>
                       </div>
@@ -499,7 +499,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
                 </button>
                 <button
                   onClick={handleNext}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   {t("save_modal.next")}
                 </button>
@@ -550,7 +550,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
               <div className="space-y-3">
                 <button
                   onClick={handleBrowse}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                 >
                   <Folder className="w-5 h-5" />
                   {t("save_modal.browse")}
@@ -616,7 +616,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
                 <button
                   onClick={handleSave}
                   disabled={!savePath}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("save_modal.save")}
                 </button>
@@ -659,7 +659,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
             </div>
             <button
               onClick={handleClose}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
               {t("save_modal.done")}
             </button>
@@ -687,7 +687,7 @@ export const SaveModal: React.FC<SaveModalProps> = ({
               </button>
               <button
                 onClick={() => setStep("format")}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="px-6 py-2 bg-[#2563EB] text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                {t("save_modal.tryAgain")}
               </button>
@@ -740,9 +740,9 @@ export const SaveModal: React.FC<SaveModalProps> = ({
           {step !== "saving" && step !== "success" && step !== "error" && (
             <div className="px-6 pb-6">
               <div className="flex items-center justify-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${step === "format" ? "bg-blue-600" : "bg-gray-300"}`} />
-                <div className={`w-2 h-2 rounded-full ${step === "images" ? "bg-blue-600" : "bg-gray-300"}`} />
-                <div className={`w-2 h-2 rounded-full ${step === "location" ? "bg-blue-600" : "bg-gray-300"}`} />
+                <div className={`w-2 h-2 rounded-full ${step === "format" ? "bg-[#2563EB]" : "bg-gray-300"}`} />
+                <div className={`w-2 h-2 rounded-full ${step === "images" ? "bg-[#2563EB]" : "bg-gray-300"}`} />
+                <div className={`w-2 h-2 rounded-full ${step === "location" ? "bg-[#2563EB]" : "bg-gray-300"}`} />
               </div>
             </div>
           )}

@@ -93,7 +93,7 @@ export default function UpgradePage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center rounded-full bg-[#2563EB] px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
+            className="inline-flex items-center rounded-full bg-[bg-[#2563EB]] px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
           >
             {t("upgrade.hero.back")}
           </Link>
@@ -149,7 +149,7 @@ export default function UpgradePage() {
             {/* Upgrade Button */}
             <button
               onClick={handleUpgradeClick}
-              className="inline-flex items-center rounded-full bg-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700"
+              className="inline-flex items-center rounded-full bg-[#2563EB] px-8 py-4 text-lg font-semibold text-white shadow-lg hover:bg-blue-700"
             >
               {t("upgrade.hero.button")}
               <span className="ml-2">→</span>
@@ -240,7 +240,7 @@ export default function UpgradePage() {
               </button>
               <button
                 onClick={handleConfirmUpgrade}
-                className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                className="px-4 py-2 rounded-lg bg-[#2563EB] text-white hover:bg-blue-700"
               >
                {t("upgrade.hero.understand")}
               </button>

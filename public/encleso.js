@@ -1,10 +1,12 @@
 if (!window.__ENCLESO_INITIALIZED__) {
   window.__ENCLESO_INITIALIZED__ = true;
 
+
   const EMPTY_COMBOSELECT = "<option selected>Choose...</option>";
   const CAPCTL_UNSUPPORTED_INNERHTML = "Unsupported";
   const CAPCOMBO_UNSUPPORTEDCAP_INNERHTML = `<option selected>- ${CAPCTL_UNSUPPORTED_INNERHTML} -</option>`;
 
+  let monitorIntervalId = null
   function SetScannerCapsControlsState(bReady, jsonCaps = null) {
     if (bReady == false) {
       $("#btnScan").prop("disabled", true);
@@ -266,10 +268,11 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
       function setupConnectionMonitor() {
         let lastConnected = true;
+       
 
-        setInterval(async () => {
+        monitorIntervalId = setInterval(async () => {
           try {
-            await Encleso.ImageLibGetCount();
+            await Encleso.GetClientAppVersion();
             if (!lastConnected) {
               lastConnected = true;
 
@@ -297,13 +300,13 @@ if (!window.__ENCLESO_INITIALIZED__) {
               attemptReconnection();
             }
           }
-        }, 1000);
+        }, 5000);
       }
 
       function attemptReconnection() {
         setTimeout(async () => {
           try {
-            await Encleso.ImageLibGetCount();
+            await Encleso.GetClientAppVersion();
           } catch (e) {
             $("#alert-warn-error").html(
               "Still not connected. Please restart Encleso client app."
@@ -323,6 +326,11 @@ if (!window.__ENCLESO_INITIALIZED__) {
         };
 
         Encleso.OnReady = async (ret) => {
+          if (typeof monitorIntervalId !== 'undefined' && monitorIntervalId !== null) {
+        clearInterval(monitorIntervalId);
+        monitorIntervalId = null; 
+
+    }
           try {
              const userEmail = window.__USER_EMAIL__;
             if (!userEmail) throw new Error("User email not set");

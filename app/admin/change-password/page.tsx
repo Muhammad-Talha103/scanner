@@ -115,7 +115,7 @@ export default function ChangePasswordForm() {
             </p>
             <Link
               href="/admin"
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+              className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-[#2563EB] transition-colors"
             >
              {t("changePassword_admin.goToDashboard")}
             </Link>
@@ -217,7 +217,7 @@ export default function ChangePasswordForm() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+                className="w-full bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-[#2563EB] disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? t("changePassword_admin.verifying")  :t("changePassword_admin.verifyButton") }
               </button>
@@ -282,7 +282,7 @@ export default function ChangePasswordForm() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 bg-blue-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-[#2563EB] disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
                 >
                   {loading ? t("changePassword_admin.updating") : t("changePassword_admin.updateButton")  }
                 </button>

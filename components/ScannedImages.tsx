@@ -153,7 +153,7 @@ export const ScannedImages: React.FC<ScannedImagesProps> = ({
                   </div>
                   <div
                     className={`absolute top-2 right-2 text-white text-xs px-2 py-1 rounded
-                 ${image.id.startsWith("import-") ? "bg-blue-600" : "bg-green-600"}`}
+                 ${image.id.startsWith("import-") ? "bg-[#2563EB]" : "bg-green-600"}`}
                   >
                     {image.id.startsWith("import-")
                       ? t("imported")

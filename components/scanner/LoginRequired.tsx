@@ -48,7 +48,7 @@ export const LoginRequired = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl font-bold bg-blue-600 text-transparent bg-clip-text mb-4 animate-gradient">
+          <h1 className="text-3xl font-bold bg-[#2563EB] text-transparent bg-clip-text mb-4 animate-gradient">
             {t("authRequired")}
           </h1>
 

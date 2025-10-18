@@ -37,7 +37,7 @@ export default function AboutPage() {
         <section className="fade-in-up-delay-1">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-blue-900 mb-4"> {t("whatIsGreweScanTitle")}</h2>
-            <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-[#2563EB] mx-auto mb-6"></div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -83,19 +83,19 @@ export default function AboutPage() {
               <h3 className="text-xl font-semibold text-blue-900 mb-4"> {t("keyBenefitsTitle")}</h3>
               <ul className="space-y-3 text-gray-800">
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full mt-2 flex-shrink-0"></div>
                  <span>{t("keyBenefitsList.0")}</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full mt-2 flex-shrink-0"></div>
                   <span>{t("keyBenefitsList.1")}</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full mt-2 flex-shrink-0"></div>
                    <span>{t("keyBenefitsList.2")}</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="w-2 h-2 bg-[#2563EB] rounded-full mt-2 flex-shrink-0"></div>
                    <span>{t("keyBenefitsList.3")}</span>
                 </li>
               </ul>
@@ -109,7 +109,7 @@ export default function AboutPage() {
         <section className="fade-in-up-delay-2">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("howItWorksTitle")}</h2>
-            <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-[#2563EB] mx-auto mb-6"></div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-8">
@@ -201,7 +201,7 @@ export default function AboutPage() {
         <section className="fade-in-up-delay-3">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-blue-900 mb-4">{t("aboutJSETitle")}</h2>
-            <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-[#2563EB] mx-auto mb-6"></div>
           </div>
 
           <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
@@ -218,7 +218,7 @@ export default function AboutPage() {
                   href="https://www.jse.de"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                  className="inline-block bg-[#2563EB] hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                 >
                   {t("visitJSE")}
                 </a>
@@ -251,7 +251,7 @@ export default function AboutPage() {
         <section className="fade-in-up-delay-1">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-blue-900 mb-4"> {t("poweredByEnclesoTitle")}</h2>
-            <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-[#2563EB] mx-auto mb-6"></div>
           </div>
 
           <div className="bg-[#F7FBFF] border border-gray-200 rounded-lg p-8 shadow-sm">
@@ -301,7 +301,7 @@ export default function AboutPage() {
                 href="https://encleso.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="inline-block border border-blue-600 text-blue-600 hover:bg-[#2563EB] hover:text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
                {t("learnMoreEncleso")}
               </a>

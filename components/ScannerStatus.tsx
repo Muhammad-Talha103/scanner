@@ -396,7 +396,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                 onToggleUI?.(checked);
               }}
             />
-            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-[#2563EB] transition-all duration-300"></div>
             <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
           </label>
         </div>
@@ -559,7 +559,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                   onCapabilitiesChange?.(undefined, undefined, newValue);
                 }}
               />
-              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-[#2563EB] transition-all duration-300"></div>
               <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
             </label>
           </div>
@@ -580,7 +580,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
                   handleDiscardBlankPagesToggle(e.target.checked);
                 }}
               />
-              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-all duration-300"></div>
+              <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-[#2563EB] transition-all duration-300"></div>
               <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-300 peer-checked:translate-x-4"></div>
             </label>
           </div>
