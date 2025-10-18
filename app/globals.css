@@ -1,33 +1,29 @@
 @import "tailwindcss";
 
-/* 🌞 Light theme only (disable system dark mode) */
+/* Force light mode only */
 :root {
+  color-scheme: light;
   --color-background: #ffffff;
-  --color-foreground: #171717;
+  --color-foreground: #111111;
   --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
   --font-mono: var(--font-geist-mono, monospace);
 }
 
-/* 🚫 Force disable browser/system dark adjustments */
-:root {
-  color-scheme: light !important;
-}
-
-/* 🌐 Prevent high-contrast or forced-color overrides */
+/* Disable system overrides */
 @media (forced-colors: active) {
   * {
     forced-color-adjust: none !important;
   }
 }
 
-/* ✅ Always keep visible text */
+/* Apply global colors */
 html, body {
   background-color: var(--color-background);
   color: var(--color-foreground);
   font-family: var(--font-sans);
 }
 
-/* Tailwind custom animation */
+/* Custom animation */
 @layer utilities {
   @keyframes marquee {
     0% { transform: translateX(0%); }
