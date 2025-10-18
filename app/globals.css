@@ -1,44 +1,46 @@
 @import "tailwindcss";
 
-/* 🚫 Disable browser/system color mode effects */
-:root {
+/* 🧱 Force light mode everywhere */
+html, body, * {
   color-scheme: light !important;
+  forced-color-adjust: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background-color: inherit !important;
 }
 
-/* ❌ Disable dark mode color adjustments */
+/* 💡 Prevent system or OS color mode changes */
 @media (prefers-color-scheme: dark) {
-  :root {
+  html, body, * {
+    background-color: inherit !important;
     color-scheme: light !important;
+    forced-color-adjust: none !important;
   }
 }
 
-/* 🌐 Prevent high-contrast / forced-color overrides */
+/* 🎨 Prevent high-contrast and forced-color system themes */
 @media (forced-colors: active) {
   * {
     forced-color-adjust: none !important;
   }
 }
 
-/* ✅ Keep your own design exactly same */
+/* 🧩 Maintain your designed colors only */
+:root {
+  color-scheme: light !important;
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+}
+
+/* 🧭 Optional: disable smooth transitions when OS switches theme */
 html, body {
   transition: none !important;
 }
 
-/* 🔄 Marquee animation (keep as is) */
-@layer utilities {
-  @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
-  }
-  .animate-marquee {
-    animation: marquee 15s linear infinite;
-  }
-}
-
-/* 🖱️ Custom scrollbar */
+/* 🖱️ Scrollbar style */
 ::-webkit-scrollbar {
-  height: 2px;
-  width: 3px;
+  width: 4px;
+  height: 4px;
 }
 ::-webkit-scrollbar-thumb {
   background: #9ca3af;
