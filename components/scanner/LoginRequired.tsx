@@ -98,7 +98,8 @@ export const LoginRequired = () => {
           {/* Manual Login Button */}
           <button
             onClick={() => router.push("/signin")}
-            className="mt-6 w-full bg-gradient-to-r z-50 from-blue-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+            // bg-gradient-to-r from-blue-500 to-purple-600
+            className="mt-6 w-full bg-red-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
              {t("loginNow")}
           </button>
