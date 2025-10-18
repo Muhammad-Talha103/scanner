@@ -72,7 +72,7 @@ export default function UpgradePage() {
 
    if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-blue-50">
+      <main className="min-h-screen flex items-center justify-center bg-[#F7FBFF]">
         <div className="text-center text-gray-600 text-lg animate-pulse">
           {t("upgrade.hero.loading")}
         </div>
@@ -83,7 +83,7 @@ export default function UpgradePage() {
     // 🎉 Already Premium
   if (isPremiumUser) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white to-blue-50">
+      <main className="min-h-screen flex items-center justify-center bg-[#F7FBFF]">
         <div className="text-center max-w-md p-8 bg-white rounded-2xl shadow-md">
           <h1 className="text-3xl font-bold text-blue-600 mb-4">
             🎉 {t("upgrade.hero.premium_user") }
@@ -93,7 +93,7 @@ export default function UpgradePage() {
           </p>
           <Link
             href="/"
-            className="inline-flex items-center rounded-full bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
+            className="inline-flex items-center rounded-full bg-[#2563EB] px-6 py-3 text-white font-semibold hover:bg-blue-700 transition"
           >
             {t("upgrade.hero.back")}
           </Link>
@@ -104,7 +104,7 @@ export default function UpgradePage() {
 
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-white to-blue-50 relative">
+    <main className="min-h-screen bg-[#F7FBFF] relative">
       {/* Back to Home */}
       <div className="fixed top-4 left-4 z-50">
         <Link
@@ -201,7 +201,7 @@ export default function UpgradePage() {
       {/* CTA */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="rounded-3xl bg-gradient-to-r from-blue-600 to-blue-800 p-8 text-white">
+          <div className="rounded-3xl bg-[#2252CD] p-8 text-white">
             <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
               {t("upgrade.cta.title")}
             </h2>

@@ -31,7 +31,7 @@ export default function CheckoutSuccess() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100"
+          className="min-h-screen flex items-center justify-center bg-[#F6F7F9]"
         >
           <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center">
             <motion.div
@@ -56,7 +56,7 @@ export default function CheckoutSuccess() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100"
+          className="min-h-screen flex items-center justify-center bg-[#F6F7F9]"
         >
           <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center">
             <motion.div
@@ -75,7 +75,7 @@ export default function CheckoutSuccess() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.replace("/")}
-              className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
+              className="bg-[#2563EB] text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
             >
              {t("payment_success.missing.button")}
             </motion.button>
@@ -90,7 +90,7 @@ export default function CheckoutSuccess() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100"
+          className="min-h-screen flex items-center justify-center bg-[#F6F7F9]"
         >
           <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full text-center">
             <motion.div
@@ -111,7 +111,7 @@ export default function CheckoutSuccess() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => router.replace("/")}
-              className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
+              className="bg-[#2563EB] text-white font-semibold py-3 px-6 rounded-full hover:bg-blue-700 transition-colors duration-200"
             >
               {t("payment_success.success.button")}
             </motion.button>

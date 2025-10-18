@@ -100,7 +100,7 @@ export default function SuccessModal({ isOpen, onClose, fileName }: SuccessModal
           </div>
 
           {/* Bottom accent bar */}
-          <div className="h-1 bg-gradient-to-r from-green-400 via-green-500 to-green-600" />
+          <div className="h-1 bg-[#18B681]" />
         </div>
       </div>
     </div>

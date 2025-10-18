@@ -254,7 +254,7 @@ export default function AboutPage() {
             <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-50 to-white border border-gray-200 rounded-lg p-8 shadow-sm">
+          <div className="bg-[#F7FBFF] border border-gray-200 rounded-lg p-8 shadow-sm">
             <div className="text-center mb-8">
               <p className="text-lg text-gray-800 leading-relaxed max-w-3xl mx-auto">
                {t("poweredByEnclesoDesc")}

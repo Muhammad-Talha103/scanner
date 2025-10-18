@@ -455,7 +455,7 @@ export default function PremiumUsersPage() {
                     aria-controls={`user-details-${user._id}`}
                     className="flex items-center gap-4 p-4 sm:p-6 cursor-pointer hover:bg-slate-50 rounded-2xl transition-colors min-h-[72px]"
                   >
-                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-slate-700 to-slate-900 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
+                    <div className="flex-shrink-0 w-12 h-12 bg-[#212C40] rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-md">
                       {getInitials(user.name, user.email)}
                     </div>
 

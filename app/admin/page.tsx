@@ -79,10 +79,10 @@ export default function AdminPage() {
   // Authorization checking state
   if (authChecking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#EDF2FE] flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <div className="relative mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto animate-gentle-bounce">
+            <div className="w-20 h-20 bg-[#4564EE] rounded-2xl flex items-center justify-center mx-auto animate-gentle-bounce">
               <Shield className="w-10 h-10 text-white" />
             </div>
             <div className="absolute -inset-4 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
@@ -115,7 +115,7 @@ export default function AdminPage() {
 
   if (!authorized) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#EDF2FE] flex items-center justify-center">
         <div className="text-center animate-fade-in">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Shield className="w-8 h-8 text-red-600" />
@@ -137,7 +137,7 @@ export default function AdminPage() {
         <div className="bg-white border-b border-gray-200 animate-fade-in">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-[#4564EE] rounded-xl flex items-center justify-center">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -166,7 +166,7 @@ export default function AdminPage() {
             <div className="p-6">
               <div className="text-center py-12">
                 <div className="relative mb-8">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 bg-[#4564EE] rounded-2xl flex items-center justify-center mx-auto">
                     <Loader2 className="w-8 h-8 text-white animate-spin" />
                   </div>
                   <div className="absolute -inset-4 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>

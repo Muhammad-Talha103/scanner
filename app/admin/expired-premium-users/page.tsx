@@ -157,7 +157,7 @@ const UserCard = ({ user, searchQuery, isDesktop }: UserCardProps) => {
       >
         <div className="flex items-center gap-3 min-w-0 flex-1">
           {/* Avatar placeholder */}
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-red-400 to-pink-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+          <div className="w-10 h-10 rounded-full bg-[#F25D85]  flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
             {user.email?.[0]?.toUpperCase() || "?"}
           </div>
 
@@ -387,7 +387,7 @@ export default function ExpiredPremiumUsersPage() {
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-[#F6F7F9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse space-y-6">
             <div className="h-12 bg-gray-200 rounded-xl w-1/3"></div>
@@ -402,7 +402,7 @@ export default function ExpiredPremiumUsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-[#F6F7F9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <header className="mb-8">

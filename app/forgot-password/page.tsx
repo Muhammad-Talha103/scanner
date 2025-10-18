@@ -117,7 +117,7 @@ export default function ForgetPassword() {
 
   return (
     <div className="min-h-screen py-6 bg-gray-50 flex flex-col justify-center sm:px-6 lg:px-8">
-     <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
+     <h2 className="text-2xl sm:text-[18px] font-extrabold text-[#675CF1]  bg-clip-text text-center drop-shadow-md">
            {t("forget_password.appTitle")}<br className="hidden sm:block" />
           </h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
