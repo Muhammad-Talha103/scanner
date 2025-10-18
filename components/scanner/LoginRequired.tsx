@@ -39,7 +39,7 @@ export const LoginRequired = () => {
         <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 text-center transform animate-fade-in-up">
           {/* Lock Icon with Animation */}
           <div className="relative mb-6">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto animate-pulse-slow">
+            <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto animate-pulse-slow">
               <Lock className="w-10 h-10 text-white animate-bounce-slow" />
             </div>
             {/* Floating particles */}
@@ -48,7 +48,7 @@ export const LoginRequired = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-transparent bg-clip-text mb-4 animate-gradient">
+          <h1 className="text-3xl font-bold bg-blue-600 text-transparent bg-clip-text mb-4 animate-gradient">
             {t("authRequired")}
           </h1>
 
@@ -99,7 +99,7 @@ export const LoginRequired = () => {
           <button
             onClick={() => router.push("/signin")}
             // bg-gradient-to-r from-blue-500 to-purple-600
-            className="mt-6 w-full bg-red-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="mt-6 w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-xl  transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
              {t("loginNow")}
           </button>

@@ -168,7 +168,7 @@ export default function Login() {
         {t("helpCenter.backToHome")}
         </Link>
       </div>
-      <h2 className="text-2xl sm:text-[18px] font-extrabold bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 text-transparent bg-clip-text text-center drop-shadow-md">
+      <h2 className="text-2xl sm:text-[18px] font-extrabold text-[#675CF1] to-pink-500  bg-clip-text text-center drop-shadow-md">
         {t("signin.appTitle")}<br className="hidden sm:block" />
       </h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
