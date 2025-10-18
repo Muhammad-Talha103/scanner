@@ -29,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang={lng} dir={dir(lng)}>
       <head>
+        <meta name="color-scheme" content="light" />
         {/* Add Script Tags Here */}
         <Script
           src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"

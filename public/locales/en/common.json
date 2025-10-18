@@ -291,9 +291,8 @@
     "perMonth": "per month",
     "button": "Upgrade Now",
     "important_notice":"⚠️ Important Notice",
-    "do":"Do",
-    "not_change_your_email":"not change your email",
-    "message":"on the Stripe checkout page. Your Premium will only be activated for the email:",
+   
+    "message":"Do not change your email address on the Stripe checkout page. Your Premium account will only be activated for the email address:",
     "cancel":"Cancel",
     "understand":"I Understand",
     "loading":"Checking your subscription...",

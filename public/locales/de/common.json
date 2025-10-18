@@ -303,10 +303,7 @@
     "button": "Jetzt upgraden",
     "important_notice": "⚠️ Wichtiger Hinweis",
     
-"do": "Tun",
-
-"not_change_your_email": "Ihre E-Mail-Adresse nicht",
-"message": "auf der Stripe-Bezahlseite. Ihr Premium wird nur für die folgende E-Mail aktiviert:",
+"message": "Ändern Sie Ihre E-Mail-Adresse nicht auf der Stripe-Checkout-Seite. Ihr Premium-Konto wird nur für die E-Mail-Adresse aktiviert:",
 "cancel": "Abbrechen",
 "understand": "Ich verstehe",
 

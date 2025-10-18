@@ -105,7 +105,7 @@ export default function CheckoutSuccess() {
             </motion.div>
             <h1 className="text-3xl font-bold text-gray-800 mb-2">{t("payment_success.success.title")}</h1>
             <p className="text-gray-500 mb-6">
-              {t("payment_success.success.message")}<strong>{t("payment_success.success.grew_scan_premium")}</strong>.
+              {t("payment_success.success.message")}<strong>{t("payment_success.success.grew_scan_premium")}</strong>
             </p>
             <motion.button
               whileHover={{ scale: 1.05 }}

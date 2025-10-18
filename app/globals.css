@@ -1,24 +1,30 @@
 @import "tailwindcss";
 
-/* Base light theme (default) */
+/* 🚫 Disable browser/system color mode effects */
 :root {
-  --color-background: #ffffff;
-  --color-foreground: #171717;
-  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
-  --font-mono: var(--font-geist-mono, monospace);
+  color-scheme: light !important;
 }
 
-/* Dark theme */
+/* ❌ Disable dark mode color adjustments */
 @media (prefers-color-scheme: dark) {
   :root {
-   --color-background: #ffffff;
-  --color-foreground: #171717;
-  --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
-  --font-mono: var(--font-geist-mono, monospace);
+    color-scheme: light !important;
   }
 }
 
+/* 🌐 Prevent high-contrast / forced-color overrides */
+@media (forced-colors: active) {
+  * {
+    forced-color-adjust: none !important;
+  }
+}
 
+/* ✅ Keep your own design exactly same */
+html, body {
+  transition: none !important;
+}
+
+/* 🔄 Marquee animation (keep as is) */
 @layer utilities {
   @keyframes marquee {
     0% { transform: translateX(0%); }
@@ -29,17 +35,15 @@
   }
 }
 
-
-/* global.css me add karo */
+/* 🖱️ Custom scrollbar */
 ::-webkit-scrollbar {
-  height: 2px; /* horizontal scrollbar ki height */
-  width: 3px; /* vertical scrollbar ki width */
+  height: 2px;
+  width: 3px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #9ca3af; /* gray color */
+  background: #9ca3af;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-

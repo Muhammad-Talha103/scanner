@@ -228,7 +228,7 @@ export default function UpgradePage() {
           <div className="bg-white rounded-2xl shadow-lg max-w-md w-full p-6 mx-4">
             <h2 className="text-xl font-bold mb-4 text-red-600">{t("upgrade.hero.important_notice")}</h2>
             <p className="text-gray-700 mb-6">
-              {t("upgrade.hero.do")} <strong>{t("upgrade.hero.not_change_your_email")}</strong> {t("upgrade.hero.message")}
+{t("upgrade.hero.message")}
               <span className="block font-semibold text-blue-600 mt-1">{userEmail}</span>
             </p>
             <div className="flex justify-end gap-3">
