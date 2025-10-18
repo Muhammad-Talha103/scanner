@@ -1,24 +1,16 @@
 @import "tailwindcss";
 
-/* 🌈 Global theme: white background (keep actual colors for text and elements) */
+/* 🌈 Global theme: white background (allow Tailwind classes to work) */
 :root {
-  --color-background: #ffffff; /* white background */
+  --color-background: #ffffff; /* default page background */
   --font-sans: var(--font-geist-sans, Arial, Helvetica, sans-serif);
   --font-mono: var(--font-geist-mono, monospace);
 }
 
-/* Apply globally */
+/* Apply only to body/html */
 html, body {
   background-color: var(--color-background);
-  font-family: var(--font-sans);
-  color-scheme: light !important; /* force light mode on all devices */
 }
-
-/* Remove forced color for all elements, use Tailwind/component colors */
-/* * {
-  color: inherit !important;
-  background-color: inherit !important;
-} */
 
 /* Scrollbar */
 ::-webkit-scrollbar {
