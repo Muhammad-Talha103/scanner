@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
-/* 🌈 Always use your Tailwind color system — ignore OS or browser color modes */
+/* 🌈 Always honor your Tailwind theme colors — ignore OS/browser modes */
 :root {
   color-scheme: light !important;
 }
 
-/* 🚫 Prevent OS / Browser dark mode from changing anything */
+/* 🛡️ Prevent OS/browser dark mode from changing anything */
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: light !important;
   }
 }
 
-/* 🧱 Global layout styling lock */
+/* 🧱 Keep body background and text colors controlled by Tailwind */
 html,
 body {
-  background-color: #ffffff !important; /* your Tailwind bg-base color */
-  color: #000000 !important;            /* your Tailwind text color */
+  background-color: var(--tw-bg-opacity, #fff);
+  color: var(--tw-text-opacity, #000);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -24,20 +24,22 @@ body {
   overflow-x: hidden;
 }
 
-/* 🚫 Stop Windows High Contrast or forced color overrides */
+/* 🚫 Ignore forced-color/high-contrast modes */
 @media (forced-colors: active) {
   * {
     forced-color-adjust: none !important;
   }
 }
 
-/* 🧱 Prevent any external script (like document.querySelectorAll hacks)
-   from overriding your design */
+/* 🧱 Prevent external JS or browser modes from overriding Tailwind styles */
 * {
-  background-color: inherit !important;
-  color: inherit !important;
-  border-color: inherit !important;
-  outline-color: inherit !important;
+  color-scheme: light !important;
+  forced-color-adjust: none !important;
+  /* ❌ Remove previous color override — don’t overwrite Tailwind’s colors */
+  background-color: revert-layer !important;
+  color: revert-layer !important;
+  border-color: revert-layer !important;
+  outline-color: revert-layer !important;
 }
 
 /* 🌀 Custom utility example */
