@@ -11,6 +11,7 @@ interface User {
   name: string;
   email: string;
   password: string;
+  createdAt: string;
   isPasswordUpdated?: boolean;
 }
 
@@ -201,7 +202,7 @@ export default function UserTable({ users: initialUsers }: UserTableProps) {
                {t("userTable.columnEmail")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-               {t("userTable.columnPassword")}
+               {t("userTable.columnCreatedAt")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 {t("userTable.columnAction")}

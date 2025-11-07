@@ -48,6 +48,7 @@ import { useScannerIntegration } from "@/hooks/useScannerIntegration"
 import Marquee from "@/components/scanner/Advertise"
 import { useTranslation } from "react-i18next"
 import type { SaveOptions } from "@/components/scanner/SaveModal"
+import QrCodeImage from "@/public/greweqr.png"
 
 interface DropdownItem {
   label: string
@@ -77,6 +78,55 @@ type SaveFormat =
   timestamp?: number
 }
 
+const WATERMARK_TEXT = "This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license."
+const QR_CODE_URL = QrCodeImage
+const QR_SIZE_MM = 12.17 
+const WATERMARK_FONT_SIZE = 10
+const PADDING_MM = 5 
+
+
+
+
+const applyWatermarkAndQr = async (dataUrl: string): Promise<string> => {
+  // Watermarking is now handled in PDF generation, so we just return the original image data
+  return dataUrl
+}
+
+const processImageForSave = async (image: ScannedImage, isPremium: boolean): Promise<string> => {
+  if (isPremium) {
+    return image.dataUrl
+  }
+  // This will now return the original image dataUrl, as PDF watermarking is done separately.
+  return await applyWatermarkAndQr(image.dataUrl)
+}
+
+// --- HELPER FUNCTION FOR PDF WATERMARKING ---
+const addWatermarkToPdf = async (pdf: jsPDF, isPremium: boolean) => {
+  if (isPremium) return
+
+  const pageWidth = pdf.internal.pageSize.getWidth()
+  const qrSize = QR_SIZE_MM
+  const padding = PADDING_MM
+  const textMargin = 2 
+
+
+  const qrImgDataUrl = QR_CODE_URL.src // Assuming this is a static path that needs to be loaded, or is already a base64 string.
+
+  const qrX = pageWidth - padding - qrSize
+  const qrY = padding
+  
+
+  const textX = qrX - textMargin
+  const textY = qrY + (qrSize / 2) 
+
+
+  pdf.setFontSize(WATERMARK_FONT_SIZE)
+  pdf.setTextColor(0, 0, 0) // Black, or a shade of gray
+  pdf.text(WATERMARK_TEXT, textX, textY, { align: "right" })
+
+  pdf.addImage(qrImgDataUrl, "PNG", qrX, qrY, qrSize, qrSize)
+}
+
 
 export default function ScannerApp() {
   const { t } = useTranslation()
@@ -94,7 +144,8 @@ export default function ScannerApp() {
   const [showScannerUI, setShowScannerUI] = useState(true)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [successInfo, setSuccessInfo] = useState({ fileName: "", folderPath: "" })
-
+const [isPremiumUser, setIsPremiumUser] = useState(false)
+  const [isPremiumCheckLoading, setIsPremiumCheckLoading] = useState(true)
   // Scanner integration hooks
   const {
     isReady,
@@ -134,28 +185,38 @@ export default function ScannerApp() {
   }, [userInfo?.email])
 
   // Fetch username from Sanity on email change
-  useEffect(() => {
-    if (!userInfo?.email) return
+ useEffect(() => {
+    if (!userInfo?.email) {
+      setUserName(null)
+      setIsPremiumUser(false)
+      setIsPremiumCheckLoading(false)
+      return
+    }
 
-    async function fetchUsername() {
+    async function fetchUserData() {
+      setIsPremiumCheckLoading(true)
       try {
-        const query = `*[_type == "user" && lower(email) == $email]{username}`
-        const results = await client.fetch(query, {
-          email: userInfo?.email?.toLowerCase(),
-        })
+        const email = userInfo?.email?.toLowerCase()
 
-        if (results.length > 0) {
-          setUserName(results[0].username ?? null)
-        } else {
-          setUserName(null)
-        }
+        // 1. Fetch Username
+        const userQuery = `*[_type == "user" && lower(email) == $email]{username}`
+        const userResults = await client.fetch(userQuery, { email })
+        setUserName(userResults.length > 0 ? userResults[0].username ?? null : null)
+
+        // 2. Check Premium Status
+        const premiumQuery = `*[_type == "premiumUser" && lower(email) == $email]`
+        const premiumResults = await client.fetch(premiumQuery, { email })
+        setIsPremiumUser(premiumResults.length > 0)
       } catch (err) {
-        console.error("Sanity fetch error:", err)
+        console.error("Sanity data fetch error:", err)
         setUserName(null)
+        setIsPremiumUser(false)
+      } finally {
+        setIsPremiumCheckLoading(false)
       }
     }
 
-    fetchUsername()
+    fetchUserData()
   }, [userInfo?.email])
 
   // Redirect if not logged in
@@ -189,8 +250,8 @@ export default function ScannerApp() {
   // Toolbar action handlers
   const handleScanClick = () => scannerName && !isScanning && startScan()
 
-  const handleSaveClick = async (options: SaveOptions) => {
-    if (scannedImages.length === 0 || isProcessing) return
+    const handleSaveClick = async (options: SaveOptions) => {
+    if (scannedImages.length === 0 || isProcessing || isPremiumCheckLoading) return
 
     try {
       // Get the images to save based on user selection
@@ -200,11 +261,10 @@ export default function ScannerApp() {
         throw new Error("No images selected to save")
       }
 
-      console.log("[v0] Save operation started:", {
+      console.log("[v1] Save operation started:", {
         format: options.format,
         imageCount: imagesToSave.length,
-        savePath: options.savePath,
-        saveType: options.saveType,
+        isPremium: isPremiumUser, // Log premium status
       })
 
       let fileName = ""
@@ -213,7 +273,8 @@ export default function ScannerApp() {
       // Process based on format and save type
       if (options.saveType === "folder" && options.directoryHandle) {
         // Save multiple files to a folder
-        await saveImagesToFolder(imagesToSave, options.format, options.directoryHandle)
+        // Pass isPremiumUser to enable conditional watermarking inside the utility
+        await saveImagesToFolder(imagesToSave, options.format, options.directoryHandle, isPremiumUser)
         folderPath = options.fullPath || options.directoryHandle.name
         if (options.format === "pdf-multi") {
           fileName = "scanned-document.pdf"
@@ -224,18 +285,19 @@ export default function ScannerApp() {
         }
       } else if (options.saveType === "file" && options.fileHandle) {
         // Save to a specific file
-        await saveToFile(imagesToSave, options.format, options.fileHandle)
+        // Pass isPremiumUser to enable conditional watermarking inside the utility
+        await saveToFile(imagesToSave, options.format, options.fileHandle, isPremiumUser)
         fileName = options.fileHandle.name
         folderPath = options.fullPath || options.fileHandle.name
       } else {
         throw new Error("Invalid save configuration. Please try again.")
       }
 
-      console.log("[v0] Save operation completed successfully")
+      console.log("[v1] Save operation completed successfully")
       setSuccessInfo({ fileName, folderPath })
       setShowSuccessModal(true)
     } catch (error) {
-      console.error("[v0] Save operation failed:", error)
+      console.error("[v1] Save operation failed:", error)
       throw error
     }
   }
@@ -553,7 +615,7 @@ export default function ScannerApp() {
   )
 }
 
-const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, directoryHandle: FileSystemDirectoryHandle) => {
+const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, directoryHandle: FileSystemDirectoryHandle, isPremium: boolean) => {
   try {
     if (format === "pdf-multi") {
       const pdf = new jsPDF()
@@ -564,7 +626,10 @@ const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, di
           pdf.addPage()
         }
 
-        const img = await loadImage(image.dataUrl)
+        // Process image data (will return original dataUrl since watermarking is now on the PDF)
+        const dataUrl = await processImageForSave(image, isPremium)
+        const img = await loadImage(dataUrl)
+
         const pageWidth = pdf.internal.pageSize.getWidth()
         const pageHeight = pdf.internal.pageSize.getHeight()
 
@@ -583,7 +648,12 @@ const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, di
         const x = (pageWidth - imgWidth) / 2
         const y = (pageHeight - imgHeight) / 2
 
-        pdf.addImage(image.dataUrl, "JPEG", x, y, imgWidth, imgHeight)
+        // 1. Add the main image
+        pdf.addImage(dataUrl, "JPEG", x, y, imgWidth, imgHeight)
+        
+        // 2. Add Watermark and QR Code at the STARTING of the page (Top Right Corner)
+        await addWatermarkToPdf(pdf, isPremium)
+        
         isFirstPage = false
       }
 
@@ -594,13 +664,16 @@ const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, di
       await writable.write(pdfBlob)
       await writable.close()
 
-      console.log(`[v0] Saved multi-page PDF: ${fileName}`)
+      console.log(`[v1] Saved multi-page PDF: ${fileName} (Watermarked: ${!isPremium ? 'YES' : 'NO'})`)
     } else if (format === "pdf-single") {
       for (let i = 0; i < images.length; i++) {
         const image = images[i]
+
+        // Process image data (will return original dataUrl since watermarking is now on the PDF)
+        const dataUrl = await processImageForSave(image, isPremium)
         const pdf = new jsPDF()
 
-        const img = await loadImage(image.dataUrl)
+        const img = await loadImage(dataUrl)
         const pageWidth = pdf.internal.pageSize.getWidth()
         const pageHeight = pdf.internal.pageSize.getHeight()
 
@@ -619,8 +692,12 @@ const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, di
         const x = (pageWidth - imgWidth) / 2
         const y = (pageHeight - imgHeight) / 2
 
-        pdf.addImage(image.dataUrl, "JPEG", x, y, imgWidth, imgHeight)
+        // 1. Add the main image
+        pdf.addImage(dataUrl, "JPEG", x, y, imgWidth, imgHeight)
 
+        // 2. Add Watermark and QR Code at the STARTING of the page (Top Right Corner)
+        await addWatermarkToPdf(pdf, isPremium)
+        
         const pdfBlob = pdf.output("blob")
         const fileName = `scanned-image-${i + 1}.pdf`
         const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true })
@@ -628,45 +705,60 @@ const saveImagesToFolder = async (images: ScannedImage[], format: SaveFormat, di
         await writable.write(pdfBlob)
         await writable.close()
 
-        console.log(`[v0] Saved single-page PDF: ${fileName}`)
+        console.log(`[v1] Saved single-page PDF: ${fileName} (Watermarked: ${!isPremium ? 'YES' : 'NO'})`)
       }
     } else {
       for (let i = 0; i < images.length; i++) {
         const image = images[i]
+
+        // Process image data (apply watermark if not premium)
+        // NOTE: For non-PDF formats, the original canvas-based watermarking approach is implicitly needed if watermarking is required.
+        // Since we removed that logic, non-PDF saves will *not* have a watermark unless you reimplement image watermarking.
+        const dataUrl = await processImageForSave(image, isPremium) 
+
         const extension = getFileExtension(format)
         const fileName = `scanned-image-${i + 1}${extension}`
 
         const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true })
         const writable = await fileHandle.createWritable()
 
-        const blob = await convertImageFormat(image.dataUrl, format)
+        // Convert the UNWATERMARKED (now) image data URL to the desired format blob
+        const blob = await convertImageFormat(dataUrl, format)
 
         await writable.write(blob)
         await writable.close()
 
-        console.log(`[v0] Saved file: ${fileName}`)
+        console.log(`[v1] Saved file: ${fileName} (Watermarked: NO - PDF watermarking only)`)
       }
     }
   } catch (error) {
-    console.error("[v0] Error saving to folder:", error)
+    console.error("[v1] Error saving to folder:", error)
     throw new Error("Failed to save files to folder. Please check permissions and try again.")
   }
+
 }
 
-const saveToFile = async (images: ScannedImage[], format: SaveFormat, fileHandle: FileSystemFileHandle) => {
+const saveToFile = async (images: ScannedImage[], format: SaveFormat, fileHandle: FileSystemFileHandle, isPremium: boolean) => {
   try {
     const writable = await fileHandle.createWritable()
 
-    if (format === "pdf-multi") {
+    // For non-PDF saves, we process the first image (which is now unwatermarked)
+    const image = images[0]
+    const dataUrl = await processImageForSave(image, isPremium)
+
+    if (format === "pdf-multi" || format === "pdf-single") {
       const pdf = new jsPDF()
       let isFirstPage = true
 
-      for (const image of images) {
+      for (const currentImage of images) {
         if (!isFirstPage) {
           pdf.addPage()
         }
 
-        const img = await loadImage(image.dataUrl)
+        // Process *each* image (unwatermarked dataUrl)
+        const currentDataUrl = await processImageForSave(currentImage, isPremium)
+        const img = await loadImage(currentDataUrl)
+
         const pageWidth = pdf.internal.pageSize.getWidth()
         const pageHeight = pdf.internal.pageSize.getHeight()
 
@@ -685,51 +777,31 @@ const saveToFile = async (images: ScannedImage[], format: SaveFormat, fileHandle
         const x = (pageWidth - imgWidth) / 2
         const y = (pageHeight - imgHeight) / 2
 
-        pdf.addImage(image.dataUrl, "JPEG", x, y, imgWidth, imgHeight)
+        // 1. Add the main image
+        pdf.addImage(currentDataUrl, "JPEG", x, y, imgWidth, imgHeight)
+
+        // 2. Add Watermark and QR Code at the STARTING of the page (Top Right Corner)
+        await addWatermarkToPdf(pdf, isPremium)
+        
         isFirstPage = false
       }
 
       const pdfBlob = pdf.output("blob")
       await writable.write(pdfBlob)
-    } else if (format === "pdf-single") {
-      const pdf = new jsPDF()
-      const image = images[0]
-
-      const img = await loadImage(image.dataUrl)
-      const pageWidth = pdf.internal.pageSize.getWidth()
-      const pageHeight = pdf.internal.pageSize.getHeight()
-
-      const imgAspectRatio = img.width / img.height
-      const pageAspectRatio = pageWidth / pageHeight
-
-      let imgWidth = pageWidth
-      let imgHeight = pageHeight
-
-      if (imgAspectRatio > pageAspectRatio) {
-        imgHeight = pageWidth / imgAspectRatio
-      } else {
-        imgWidth = pageHeight * imgAspectRatio
-      }
-
-      const x = (pageWidth - imgWidth) / 2
-      const y = (pageHeight - imgHeight) / 2
-
-      pdf.addImage(image.dataUrl, "JPEG", x, y, imgWidth, imgHeight)
-
-      const pdfBlob = pdf.output("blob")
-      await writable.write(pdfBlob)
     } else if (format === "tiff-multi" || format === "tiff-single") {
-      const blob = await convertImageFormat(images[0].dataUrl, "png")
+      // NOTE: For TIFF, we are saving the *unwatermarked* PNG version of the first image due to limitations
+      const blob = await convertImageFormat(dataUrl, "png")
       await writable.write(blob)
     } else {
-      const blob = await convertImageFormat(images[0].dataUrl, format)
+      // For single image formats (PNG, JPEG, etc.), convert the UNWATERMARKED dataUrl
+      const blob = await convertImageFormat(dataUrl, format)
       await writable.write(blob)
     }
 
     await writable.close()
-    console.log("[v0] File saved successfully")
+    console.log(`[v1] File saved successfully (Watermarked: ${!isPremium && (format.startsWith('pdf') ? 'YES' : 'NO - PDF watermarking only')})`)
   } catch (error) {
-    console.error("[v0] Error saving file:", error)
+    console.error("[v1] Error saving file:", error)
     throw new Error("Failed to save file. Please check permissions and try again.")
   }
 }
@@ -789,6 +861,7 @@ const convertImageFormat = async (dataUrl: string, format: string): Promise<Blob
     img.src = dataUrl
   })
 }
+
 
 const getFileExtension = (format: string): string => {
   switch (format) {

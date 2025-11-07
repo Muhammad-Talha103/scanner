@@ -87,7 +87,7 @@ export default function ConfirmModal({
                   {t("deleteUser.confirmTitle")}
                 </h3>
                 <p className="text-sm text-gray-600 mb-6">
-                   {t("deleteUser.confirmMessageP1")} <span className="font-medium text-gray-900">{userName}</span>?                
+                   {t("deleteUser.confirmMessageP1")} <span className="font-medium text-gray-900">{userName}</span>         
                    {t("deleteUser.confirmMessageP2")}
                 </p>
                             

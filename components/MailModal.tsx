@@ -8,6 +8,10 @@ import { client } from "@/sanity/lib/client"; //
 import emailjs from "@emailjs/browser";
 import { uploadFileToSanity } from "@/sanity/lib/uploadFile";
 import { useTranslation } from "next-i18next";
+import  QrCode  from '@/public/greweqr.png'
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
 
 interface MailModalProps {
   isOpen: boolean;
@@ -30,6 +34,7 @@ export const MailModal: React.FC<MailModalProps> = ({
   scannedImages,
 }) => {
   const { t } = useTranslation();
+  const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
   const [formData, setFormData] = useState<FormData>({
     to: "",
@@ -81,48 +86,81 @@ export const MailModal: React.FC<MailModalProps> = ({
     }
   };
   const generatePDF = async (): Promise<Blob> => {
-    const jsPDFModule = await import("jspdf");
-    const jsPDF = jsPDFModule.default;
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
+  const jsPDFModule = await import("jspdf");
+  const jsPDF = jsPDFModule.default;
+
+  let isPremium = false;
+  try {
+    const premiumUser = await client.fetch(
+      `*[_type == "premiumUser" && email == $email][0]`,
+      { email: userInfo?.email || "" }
+    );
+    isPremium = Boolean(premiumUser);
+  } catch (err) {
+    console.warn("Premium check failed, applying demo watermark.");
+  }
+
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+  });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const margin = 10;
+
+  for (let i = 0; i < scannedImages.length; i++) {
+    const image = scannedImages[i];
+    if (i > 0) pdf.addPage();
+
+   if (!isPremium) {
+      const textContent =
+        "This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.";
+      
+      pdf.setFont("Helvetica", "bold");
+      pdf.setFontSize(10);
+
+      const textWidth = pdf.getTextWidth(textContent);
+      const qrSize = 20;
+      const textX = pageWidth - qrSize - 5 - textWidth;
+
+      pdf.text(textContent, textX, 7);
+
+      const qrImg = new Image();
+      qrImg.crossOrigin = "anonymous";
+      qrImg.src = QrCode.src;
+      await new Promise<void>((resolveQR) => (qrImg.onload = () => resolveQR()));
+      pdf.addImage(qrImg, "PNG", pageWidth - qrSize - 5, 2, qrSize, qrSize);
+    }
+    
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = () => reject(new Error(t("failedToLoadImage")));
+      img.src = image.dataUrl;
     });
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const margin = 10;
 
-    for (let i = 0; i < scannedImages.length; i++) {
-      const image = scannedImages[i];
-      if (i > 0) pdf.addPage();
+    const imgWidth = img.width;
+    const imgHeight = img.height;
+    const availableWidth = pageWidth - 2 * margin;
+    const availableHeight = pageHeight - 2 * margin;
 
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      await new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error(t("failedToLoadImage")));
-        img.src = image.dataUrl;
-      });
-
-      const imgWidth = img.width;
-      const imgHeight = img.height;
-      const availableWidth = pageWidth - 2 * margin;
-      const availableHeight = pageHeight - 2 * margin;
-
-      let finalWidth = availableWidth;
-      let finalHeight = (imgHeight * availableWidth) / imgWidth;
-      if (finalHeight > availableHeight) {
-        finalHeight = availableHeight;
-        finalWidth = (imgWidth * availableHeight) / imgHeight;
-      }
-
-      const x = (pageWidth - finalWidth) / 2;
-      const y = (pageHeight - finalHeight) / 2;
-      pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight);
+    let finalWidth = availableWidth;
+    let finalHeight = (imgHeight * availableWidth) / imgWidth;
+    if (finalHeight > availableHeight) {
+      finalHeight = availableHeight;
+      finalWidth = (imgWidth * availableHeight) / imgHeight;
     }
 
-    return pdf.output("blob");
-  };
+    const x = (pageWidth - finalWidth) / 2;
+    const y = (pageHeight - finalHeight) / 2;
+    pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight);
+  }
+
+  return pdf.output("blob");
+};
+
 
   const validateForm = (): boolean => {
     if (!formData.to.trim()) {
@@ -150,31 +188,39 @@ export const MailModal: React.FC<MailModalProps> = ({
     setIsLoading(true);
     // console.log("Sending email to:", formData.to)
     try {
-      let pdfUrl: string | null = null;
+      let finalMessage = formData.message;
       let fileUrl: string[] = [];
+      let pdfUrls: string | null = null;
 
-      if (formData.includePDF && scannedImages.length > 0) {
-        const pdfBlob = await generatePDF();
-        const asset = await client.assets.upload("file", pdfBlob, {
-          filename: `${formData.pdfName || "document"}.pdf`,
-        });
+       if (formData.includePDF && scannedImages.length > 0) {
+      const pdfBlob = await generatePDF();
+      const pdfAsset = await client.assets.upload("file", pdfBlob, {
+        filename: `${formData.pdfName || "document"}.pdf`,
+      });
 
-        pdfUrl = asset.url;
-      }
+      const pdfProxyUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
+      pdfUrls = pdfProxyUrl;
+      finalMessage += `\n\nDownload PDF: ${pdfProxyUrl}`;
+    }
+
       if (formData.attachFiles.length > 0) {
-        fileUrl = await Promise.all(
-          formData.attachFiles.map((file) =>
-            uploadFileToSanity(file, file.name)
-          )
-        );
-      }
+      const uploads = await Promise.all(
+        formData.attachFiles.map(async (file) => {
+          const asset = await uploadFileToSanity(file, file.name);
+          return `${window.location.origin}/api/pdf/${asset._id}`;
+        })
+      );
 
+      fileUrl = uploads;
+      finalMessage += `\n\nAttachments:\n${fileUrl.map((u) => `- ${u}`).join("\n")}`;
+    }
       let body = formData.message;
-      if (pdfUrl) {
-         body += `\n\n${t("downloadPDF", { url: pdfUrl })}`;
+
+      if (pdfUrls) {
+         finalMessage += `\n\n${t("downloadPDF", { url: pdfUrls })}`;
       }
       if (fileUrl.length > 0) {
-        body += `\n\n${t("attachments")}:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
+        finalMessage += `\n\n${t("attachments")}:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
       }
 
       const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
@@ -198,58 +244,65 @@ export const MailModal: React.FC<MailModalProps> = ({
     }
   };
 
-  const handleSendWithGrewScannerEmail = async () => {
-    if (!validateForm()) return;
+const handleSendWithGrewScannerEmail = async () => {
+  if (!validateForm()) return;
 
-    try {
-      setIsLoading(true);
-      setError(null);
+  try {
+    setIsLoading(true);
+    setError(null);
 
-      let finalMessage = formData.message;
-      let pdfUrl: string | null = null;
-      let fileUrl: string[] | null = null;
+    let finalMessage = formData.message;
+    let fileUrls: string[] = [];
 
-      if (formData.includePDF && scannedImages.length > 0) {
-        const pdfBlob = await generatePDF();
+    // ✅ Include PDF from scanned images
+    if (formData.includePDF && scannedImages.length > 0) {
+      const pdfBlob = await generatePDF();
+      const pdfAsset = await client.assets.upload("file", pdfBlob, {
+        filename: `${formData.pdfName || "document"}.pdf`,
+      });
 
-        const asset = await client.assets.upload("file", pdfBlob, {
-          filename: `${formData.pdfName || "document"}.pdf`,
-        });
-        pdfUrl = asset.url;
+      const pdfProxyUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
+      finalMessage += `\n\nDownload PDF: ${pdfProxyUrl}`;
+    }
 
-        finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
-      }
-
-      if (formData.attachFiles.length > 0) {
-        fileUrl = await Promise.all(
-          formData.attachFiles.map((file) =>
-            uploadFileToSanity(file, file.name)
-          )
-        );
-        finalMessage += `\n\nAttachments:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
-      }
-
-      const templateParams = {
-        to_email: formData.to,
-        subject: formData.subject,
-        message: finalMessage,
-      };
-
-      await emailjs.send(
-        "service_slh2t1t",
-        "template_rhbj1ta",
-        templateParams,
-        "yElbkX08frFpeH4BD"
+    // ✅ Upload Attachment Files
+    if (formData.attachFiles.length > 0) {
+      const uploads = await Promise.all(
+        formData.attachFiles.map(async (file) => {
+          const asset = await uploadFileToSanity(file, file.name);
+          return `${window.location.origin}/api/pdf/${asset._id}`;
+        })
       );
 
-      setIsSuccess(true);
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(message);
-    } finally {
-      setIsLoading(false);
+      fileUrls = uploads;
+      finalMessage += `\n\nAttachments:\n${fileUrls.map((u) => `- ${u}`).join("\n")}`;
     }
-  };
+
+    // ✅ Email Parameters
+    const templateParams = {
+      to_email: formData.to,
+      subject: formData.subject,
+      message: finalMessage,
+    };
+
+    await emailjs.send(
+      "service_slh2t1t", // ✅ Your EmailJS service ID
+      "template_rhbj1ta", // ✅ Your template ID
+      templateParams,
+      "yElbkX08frFpeH4BD" // ✅ Your EmailJS public key
+    );
+
+    setIsSuccess(true);
+  } catch (err: unknown) {
+    const message =
+      err instanceof Error ? err.message : typeof err === "string" ? err : String(err);
+    setError(message || "Something went wrong");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
 
   const handleSend = () => {
     if (senderType === "own") {
@@ -420,7 +473,7 @@ export const MailModal: React.FC<MailModalProps> = ({
                     >
                       {t("includePDF", {
                         count: scannedImages.length,
-                        plural: scannedImages.length !== 1 ? "n" : "",
+                        plural: scannedImages.length !== 1 ? "s" : "",
                       })}
                     </label>
                   </div>
