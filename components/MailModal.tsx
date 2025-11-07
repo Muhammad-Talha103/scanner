@@ -183,102 +183,95 @@ export const MailModal: React.FC<MailModalProps> = ({
     return true;
   };
 
-  const handleSendWithUserEmail = async () => {
-    if (!validateForm()) return;
-    setIsLoading(true);
-    // console.log("Sending email to:", formData.to)
-    try {
-      let finalMessage = formData.message;
-      let fileUrl: string[] = [];
-      let pdfUrls: string | null = null;
-
-       if (formData.includePDF && scannedImages.length > 0) {
-      const pdfBlob = await generatePDF();
-      const pdfAsset = await client.assets.upload("file", pdfBlob, {
-        filename: `${formData.pdfName || "document"}.pdf`,
-      });
-
-      const pdfProxyUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
-      pdfUrls = pdfProxyUrl;
-      finalMessage += `\n\nDownload PDF: ${pdfProxyUrl}`;
-    }
-
-      if (formData.attachFiles.length > 0) {
-      const uploads = await Promise.all(
-        formData.attachFiles.map(async (file) => {
-          const asset = await uploadFileToSanity(file, file.name);
-          return `${window.location.origin}/api/pdf/${asset._id}`;
-        })
-      );
-
-      fileUrl = uploads;
-      finalMessage += `\n\nAttachments:\n${fileUrl.map((u) => `- ${u}`).join("\n")}`;
-    }
-    
-
-      if (pdfUrls) {
-         finalMessage += `\n\n${t("downloadPDF", { url: pdfUrls })}`;
-      }
-      if (fileUrl.length > 0) {
-        finalMessage += `\n\n${t("attachments")}:\n${fileUrl.map((url) => `- ${url}`).join("\n")}`;
-      }
-
-      const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
-        formData.subject
-      )}&body=${encodeURIComponent(finalMessage)}`;
-
-      const a = document.createElement("a");
-      a.href = mailtoLink;
-      a.style.display = "none";
-      document.body.appendChild(a);
-
-      a.click();
-      document.body.removeChild(a);
-
-      setTimeout(() => setIsSuccess(true), 25000);
-      setIsLoading(false);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(message);
-      setIsLoading(false);
-    }
-  };
-
-const handleSendWithGrewScannerEmail = async () => {
+const handleSendWithUserEmail = async () => {
   if (!validateForm()) return;
+  setIsLoading(true);
+  setError(null);
 
   try {
-    setIsLoading(true);
-    setError(null);
-
     let finalMessage = formData.message;
     let fileUrls: string[] = [];
+    let pdfUrl: string | null = null;
 
-    // ✅ Include PDF from scanned images
+    // ✅ Generate PDF if required
     if (formData.includePDF && scannedImages.length > 0) {
       const pdfBlob = await generatePDF();
       const pdfAsset = await client.assets.upload("file", pdfBlob, {
         filename: `${formData.pdfName || "document"}.pdf`,
       });
-
-      const pdfProxyUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
-      finalMessage += `\n\nDownload PDF: ${pdfProxyUrl}`;
+      pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
+      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
     }
 
-    // ✅ Upload Attachment Files
+    // ✅ Upload attachments
     if (formData.attachFiles.length > 0) {
-      const uploads = await Promise.all(
-        formData.attachFiles.map(async (file) => {
-          const asset = await uploadFileToSanity(file, file.name);
-          return `${window.location.origin}/api/pdf/${asset._id}`;
-        })
+      const uploadedAssets = await Promise.all(
+        formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
       );
+      fileUrls = uploadedAssets.map(
+        (asset) => `${window.location.origin}/api/pdf/${asset._id}`
+      );
+      finalMessage += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
+    }
 
-      fileUrls = uploads;
+    // ✅ Optional translation messages
+    if (pdfUrl) finalMessage += `\n\n${t("downloadPDF", { url: pdfUrl })}`;
+    if (fileUrls.length > 0)
+      finalMessage += `\n\n${t("attachments")}:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
+
+    // ✅ Construct mailto link
+    const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
+      formData.subject
+    )}&body=${encodeURIComponent(finalMessage)}`;
+
+    const a = document.createElement("a");
+    a.href = mailtoLink;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    setTimeout(() => setIsSuccess(true), 500);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    setError(message);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+const handleSendWithGrewScannerEmail = async () => {
+  if (!validateForm()) return;
+  setIsLoading(true);
+  setError(null);
+
+  try {
+    let finalMessage = formData.message;
+    let fileUrls: string[] = [];
+    let pdfUrl: string | null = null;
+
+    // ✅ Generate PDF if required
+    if (formData.includePDF && scannedImages.length > 0) {
+      const pdfBlob = await generatePDF();
+      const pdfAsset = await client.assets.upload("file", pdfBlob, {
+        filename: `${formData.pdfName || "document"}.pdf`,
+      });
+      pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
+      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
+    }
+
+    // ✅ Upload attachments
+    if (formData.attachFiles.length > 0) {
+      const uploadedAssets = await Promise.all(
+        formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
+      );
+      fileUrls = uploadedAssets.map(
+        (asset) => `${window.location.origin}/api/pdf/${asset._id}`
+      );
       finalMessage += `\n\nAttachments:\n${fileUrls.map((u) => `- ${u}`).join("\n")}`;
     }
 
-    // ✅ Email Parameters
+    // ✅ EmailJS parameters
     const templateParams = {
       to_email: formData.to,
       subject: formData.subject,
@@ -286,10 +279,10 @@ const handleSendWithGrewScannerEmail = async () => {
     };
 
     await emailjs.send(
-      "service_slh2t1t", // ✅ Your EmailJS service ID
-      "template_rhbj1ta", // ✅ Your template ID
+      "service_slh2t1t", // EmailJS service ID
+      "template_rhbj1ta", // EmailJS template ID
       templateParams,
-      "yElbkX08frFpeH4BD" // ✅ Your EmailJS public key
+      "yElbkX08frFpeH4BD" // EmailJS public key
     );
 
     setIsSuccess(true);
