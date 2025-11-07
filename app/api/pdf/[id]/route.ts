@@ -1,18 +1,16 @@
 import { NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 
-export async function GET(
-  req: Request,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params;
+export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
+  // ✅ Await params first
+  const { id } = await context.params;
 
   if (!id) {
     return NextResponse.json({ error: "Invalid file request: ID is missing" }, { status: 400 });
   }
 
   try {
-    // Fetch the asset metadata from Sanity
+    // Fetch asset metadata from Sanity
     const asset = await client.fetch(
       `*[_id == $id][0]{url, originalFilename, mimeType}`,
       { id }
