@@ -214,7 +214,7 @@ export const MailModal: React.FC<MailModalProps> = ({
       fileUrl = uploads;
       finalMessage += `\n\nAttachments:\n${fileUrl.map((u) => `- ${u}`).join("\n")}`;
     }
-      let body = formData.message;
+    
 
       if (pdfUrls) {
          finalMessage += `\n\n${t("downloadPDF", { url: pdfUrls })}`;
@@ -225,7 +225,7 @@ export const MailModal: React.FC<MailModalProps> = ({
 
       const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
         formData.subject
-      )}&body=${encodeURIComponent(body)}`;
+      )}&body=${encodeURIComponent(finalMessage)}`;
 
       const a = document.createElement("a");
       a.href = mailtoLink;
