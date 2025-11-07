@@ -1,10 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+interface Props {
+  params: { id: string };
+}
+
+export async function GET(req: Request, { params }: Props) {
   const { id } = params;
 
   if (!id) {
