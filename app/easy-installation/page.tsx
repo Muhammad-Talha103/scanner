@@ -98,10 +98,10 @@ export default function InstallationGuide() {
           <p className="text-gray-700 mb-6 leading-relaxed">
            {t("installation.downloadSectionDescription")}
           </p>
-          <button className="inline-flex items-center gap-3 bg-[#2563EB] hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
+          <Link href="https://encleso.com/Home/Download" className="inline-flex items-center gap-3 bg-[#2563EB] hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl">
             <Download className="w-6 h-6" />
             {t("installation.downloadButton")}
-          </button>
+          </Link>
         </div>
 
         {/* Steps Section */}
