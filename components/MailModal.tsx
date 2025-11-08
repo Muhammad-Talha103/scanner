@@ -67,6 +67,14 @@ export const MailModal: React.FC<MailModalProps> = ({
     }
   }, [isOpen]);
 
+  // --- helper: format date used for display ---
+const formatDateForFilename = (date = new Date()) => {
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${dd}-${mm}-${yyyy}`; // e.g. 08-10-2025
+};
+
   const handleInputChange = (
     field: keyof FormData,
     value: string | boolean | File | null
@@ -113,25 +121,28 @@ export const MailModal: React.FC<MailModalProps> = ({
     const image = scannedImages[i];
     if (i > 0) pdf.addPage();
 
-   if (!isPremium) {
-      const textContent =
-        "This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.";
-      
-      pdf.setFont("Helvetica", "bold");
-      pdf.setFontSize(10);
+  if (!isPremium) {
+  const textContent =
+    "This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.";
+  
+  pdf.setFont("Helvetica", "bold");
+  pdf.setFontSize(8);
 
-      const textWidth = pdf.getTextWidth(textContent);
-      const qrSize = 20;
-      const textX = pageWidth - qrSize - 5 - textWidth;
+  const textWidth = pdf.getTextWidth(textContent);
+  const qrSize = 20;
+  const gap = 8; 
+  
+  const textX = pageWidth - qrSize - gap - textWidth;
 
-      pdf.text(textContent, textX, 7);
+  pdf.text(textContent, textX, 7);
 
-      const qrImg = new Image();
-      qrImg.crossOrigin = "anonymous";
-      qrImg.src = QrCode.src;
-      await new Promise<void>((resolveQR) => (qrImg.onload = () => resolveQR()));
-      pdf.addImage(qrImg, "PNG", pageWidth - qrSize - 5, 2, qrSize, qrSize);
-    }
+  const qrImg = new Image();
+  qrImg.crossOrigin = "anonymous";
+  qrImg.src = QrCode.src;
+  await new Promise<void>((resolveQR) => (qrImg.onload = () => resolveQR()));
+  pdf.addImage(qrImg, "PNG", pageWidth - qrSize - 5, 2, qrSize, qrSize);
+}
+
     
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -189,21 +200,26 @@ const handleSendWithUserEmail = async () => {
   setError(null);
 
   try {
-    let finalMessage = formData.message;
+    let finalMessage = formData.message || "";
     let fileUrls: string[] = [];
     let pdfUrl: string | null = null;
 
-    // ✅ Generate PDF if required
+    // Generate PDF if required
     if (formData.includePDF && scannedImages.length > 0) {
       const pdfBlob = await generatePDF();
       const pdfAsset = await client.assets.upload("file", pdfBlob, {
         filename: `${formData.pdfName || "document"}.pdf`,
       });
       pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
-      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
+
+      // display text (user-visible) with date
+      const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`;
+
+      // NOTE: mailto is plain text for most clients — we append display text then the URL.
+      finalMessage += `\n\n${pdfDisplay}\n${pdfUrl}`;
     }
 
-    // ✅ Upload attachments
+    // Upload attachments
     if (formData.attachFiles.length > 0) {
       const uploadedAssets = await Promise.all(
         formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
@@ -214,12 +230,7 @@ const handleSendWithUserEmail = async () => {
       finalMessage += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
     }
 
-    // ✅ Optional translation messages
-    if (pdfUrl) finalMessage += `\n\n${t("downloadPDF", { url: pdfUrl })}`;
-    if (fileUrls.length > 0)
-      finalMessage += `\n\n${t("attachments")}:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
-
-    // ✅ Construct mailto link
+    // mailto link (plain text body). Most clients will auto-linkify the raw URL above.
     const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
       formData.subject
     )}&body=${encodeURIComponent(finalMessage)}`;
@@ -246,21 +257,29 @@ const handleSendWithGrewScannerEmail = async () => {
   setError(null);
 
   try {
-    let finalMessage = formData.message;
+    let finalMessagePlain = formData.message || "";
     let fileUrls: string[] = [];
     let pdfUrl: string | null = null;
+    let finalMessageHtml = `<p>${(formData.message || "").replace(/\n/g, "<br/>")}</p>`;
 
-    // ✅ Generate PDF if required
+    // Generate PDF if required
     if (formData.includePDF && scannedImages.length > 0) {
       const pdfBlob = await generatePDF();
       const pdfAsset = await client.assets.upload("file", pdfBlob, {
         filename: `${formData.pdfName || "document"}.pdf`,
       });
       pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
-      finalMessage += `\n\nDownload PDF: ${pdfUrl}`;
+
+      const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`;
+
+      // Plain fallback (for clients that render text)
+      finalMessagePlain += `\n\n${pdfDisplay}\n${pdfUrl}`;
+
+      // HTML with anchor so the visible text is clickable and hides the raw URL
+      finalMessageHtml += `<p>Download PDF: <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer">${pdfDisplay}</a></p>`;
     }
 
-    // ✅ Upload attachments
+    // Upload attachments
     if (formData.attachFiles.length > 0) {
       const uploadedAssets = await Promise.all(
         formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
@@ -268,14 +287,18 @@ const handleSendWithGrewScannerEmail = async () => {
       fileUrls = uploadedAssets.map(
         (asset) => `${window.location.origin}/api/pdf/${asset._id}`
       );
-      finalMessage += `\n\nAttachments:\n${fileUrls.map((u) => `- ${u}`).join("\n")}`;
+      finalMessagePlain += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
+      finalMessageHtml += `<p>Attachments:<br/>${fileUrls.map((u) => `<a href="${u}" target="_blank">${u}</a>`).join("<br/>")}</p>`;
     }
 
-    // ✅ EmailJS parameters
+    // EmailJS: include both plain text and HTML version in template params.
+    // NOTE: your EmailJS template must use the message_html (or equivalent) variable
+    // and allow HTML content. If not, update the EmailJS template to use this field.
     const templateParams = {
       to_email: formData.to,
       subject: formData.subject,
-      message: finalMessage,
+      message: finalMessagePlain,
+      message_html: finalMessageHtml, // HTML version with clickable text
     };
 
     await emailjs.send(
