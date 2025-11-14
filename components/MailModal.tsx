@@ -165,7 +165,7 @@ const generatePDF = async (): Promise<Blob> => {
   // Draw vertical text first
   pdf.setFont("Helvetica", "normal");
   pdf.setFontSize(10);
-  (pdf as any).setTextColor(0, 0, 0, textOpacity);
+  (pdf).setTextColor(0, 0, 0, textOpacity);
 
   pdf.saveGraphicsState();
   const textX = leftMargin;
