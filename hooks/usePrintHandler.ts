@@ -48,21 +48,21 @@ export const usePrintHandler = () => {
         <head>
         <title>&#8203;</title>
           <style>
-           @page {
-  size: auto;
-  margin: 0;
-}
+            @page {
+              size: auto;
+              margin: 0;
+            }
+            body {
+              margin: 0 !important;
+              padding: 0 !important;
+            }
 
-body {
-  margin: 0 !important;
-  padding: 0 !important;
-}
             .page {
               width: 100%;
               height: 100vh;
               display: flex;
-              align-items: center;
               justify-content: center;
+              align-items: center;
               position: relative;
               page-break-after: always;
             }
@@ -82,31 +82,41 @@ body {
                 ? `
             .watermark-container {
               position: absolute;
-              top: 10px;
-              right: 16px;
+              top: 75%;
+              left: 0;
+              margin-left: 10px;
+              transform: translateY(-50%) rotate(-90deg);
+              transform-origin: left top;
               display: flex;
               align-items: center;
-              gap: 6px;
+              gap: 4px;
               z-index: 9999;
               opacity: 0.85;
               white-space: nowrap;
             }
+
             .watermark-text {
-              font-size: 14px;
+              font-size: 12px;
               font-weight: bold;
-              text-align: right;
+              border: 2px solid #000;
+              padding: 4px 8px;
+             
               white-space: nowrap;
+              line-height: 1;
             }
+
             .qr {
-              width: 46px;
-              height: 46px;
+              width: 38px;
+              height: 38px;
               flex-shrink: 0;
+               transform: rotate(90deg);
             }
             `
                 : ""
             }
           </style>
         </head>
+
         <body>
           ${images
             .map(
@@ -117,14 +127,15 @@ body {
                     ? `
                     <div class="watermark-container">
                       <span class="watermark-text">
-                        This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.
+                       This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.
                       </span>
-                      <img src="${QrCode.src}" class="qr" alt="QR Code" crossorigin="anonymous" />
+                      -
+                      <img src="${QrCode.src}" class="qr" crossorigin="anonymous" />
                     </div>
                   `
                     : ""
                 }
-                <img src="${image.dataUrl}" class="scan-img" alt="Page ${index + 1}" crossorigin="anonymous" />
+                <img src="${image.dataUrl}" class="scan-img" />
               </div>
             `
             )

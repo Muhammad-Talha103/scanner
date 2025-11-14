@@ -1,39 +1,34 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState, useEffect, useRef } from "react";
-import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react";
-import type { ScannedImage } from "./scanner/Dropdown";
-import { client } from "@/sanity/lib/client"; //
-import emailjs from "@emailjs/browser";
-import { uploadFileToSanity } from "@/sanity/lib/uploadFile";
-import { useTranslation } from "next-i18next";
-import  QrCode  from '@/public/greweqr.png'
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-
+import type React from "react"
+import { useState, useEffect, useRef } from "react"
+import { X, Mail, Paperclip, FileText, Check, Loader2 } from "lucide-react"
+import type { ScannedImage } from "./scanner/Dropdown"
+import { client } from "@/sanity/lib/client"
+import emailjs from "@emailjs/browser"
+import { uploadFileToSanity } from "@/sanity/lib/uploadFile"
+import { useTranslation } from "next-i18next"
+import QrCode from "@/public/greweqr.png"
+import { useSelector } from "react-redux"
+import type { RootState } from "@/redux/store"
 
 interface MailModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  scannedImages: ScannedImage[];
+  isOpen: boolean
+  onClose: () => void
+  scannedImages: ScannedImage[]
 }
 
 interface FormData {
-  to: string;
-  subject: string;
-  message: string;
-  attachFiles: File[];
-  includePDF: boolean;
-  pdfName: string;
+  to: string
+  subject: string
+  message: string
+  attachFiles: File[]
+  includePDF: boolean
+  pdfName: string
 }
 
-export const MailModal: React.FC<MailModalProps> = ({
-  isOpen,
-  onClose,
-  scannedImages,
-}) => {
-  const { t } = useTranslation();
+export const MailModal: React.FC<MailModalProps> = ({ isOpen, onClose, scannedImages }) => {
+  const { t } = useTranslation()
   const userInfo = useSelector((state: RootState) => state.user.userInfo)
 
   const [formData, setFormData] = useState<FormData>({
@@ -43,12 +38,12 @@ export const MailModal: React.FC<MailModalProps> = ({
     attachFiles: [],
     includePDF: false,
     pdfName: "",
-  });
-  const [senderType, setSenderType] = useState<"own" | "grewscanner">("own");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  })
+  const [senderType, setSenderType] = useState<"own" | "grewscanner">("own")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (isOpen) {
@@ -59,41 +54,38 @@ export const MailModal: React.FC<MailModalProps> = ({
         attachFiles: [],
         includePDF: false,
         pdfName: "",
-      });
-      setSenderType("own");
-      setIsLoading(false);
-      setIsSuccess(false);
-      setError(null);
+      })
+      setSenderType("own")
+      setIsLoading(false)
+      setIsSuccess(false)
+      setError(null)
     }
-  }, [isOpen]);
+  }, [isOpen])
 
-  // --- helper: format date used for display ---
-const formatDateForFilename = (date = new Date()) => {
-  const dd = String(date.getDate()).padStart(2, "0");
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const yyyy = date.getFullYear();
-  return `${dd}-${mm}-${yyyy}`; // e.g. 08-10-2025
-};
+  const formatDateForFilename = (date = new Date()) => {
+    const dd = String(date.getDate()).padStart(2, "0")
+    const mm = String(date.getMonth() + 1).padStart(2, "0")
+    const yyyy = date.getFullYear()
+    return `${dd}-${mm}-${yyyy}`
+  }
 
-  const handleInputChange = (
-    field: keyof FormData,
-    value: string | boolean | File | null
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setError(null);
-  };
+  const handleInputChange = (field: keyof FormData, value: string | boolean | File | null) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setError(null)
+  }
 
-  const handleFileSelect = () => fileInputRef.current?.click();
+  const handleFileSelect = () => fileInputRef.current?.click()
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || [])
     if (files.length > 0) {
       setFormData((prev) => ({
         ...prev,
         attachFiles: [...prev.attachFiles, ...files],
-      }));
+      }))
     }
-  };
-  const generatePDF = async (): Promise<Blob> => {
+  }
+
+const generatePDF = async (): Promise<Blob> => {
   const jsPDFModule = await import("jspdf");
   const jsPDF = jsPDFModule.default;
 
@@ -104,7 +96,7 @@ const formatDateForFilename = (date = new Date()) => {
       { email: userInfo?.email || "" }
     );
     isPremium = Boolean(premiumUser);
-  } catch (err) {
+  } catch {
     console.warn("Premium check failed, applying demo watermark.");
   }
 
@@ -113,52 +105,32 @@ const formatDateForFilename = (date = new Date()) => {
     unit: "mm",
     format: "a4",
   });
+
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 10;
+  const margin = 2;
 
   for (let i = 0; i < scannedImages.length; i++) {
     const image = scannedImages[i];
     if (i > 0) pdf.addPage();
 
-  if (!isPremium) {
-  const textContent =
-    "This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.";
-  
-  pdf.setFont("Helvetica", "bold");
-  pdf.setFontSize(8);
-
-  const textWidth = pdf.getTextWidth(textContent);
-  const qrSize = 20;
-  const gap = 8; 
-  
-  const textX = pageWidth - qrSize - gap - textWidth;
-
-  pdf.text(textContent, textX, 7);
-
-  const qrImg = new Image();
-  qrImg.crossOrigin = "anonymous";
-  qrImg.src = QrCode.src;
-  await new Promise<void>((resolveQR) => (qrImg.onload = () => resolveQR()));
-  pdf.addImage(qrImg, "PNG", pageWidth - qrSize - 5, 2, qrSize, qrSize);
-}
-
-    
     const img = new Image();
     img.crossOrigin = "anonymous";
-    await new Promise<void>((resolve, reject) => {
+
+    await new Promise<void>((resolve) => {
       img.onload = () => resolve();
-      img.onerror = () => reject(new Error(t("failedToLoadImage")));
       img.src = image.dataUrl;
     });
 
     const imgWidth = img.width;
     const imgHeight = img.height;
+
     const availableWidth = pageWidth - 2 * margin;
     const availableHeight = pageHeight - 2 * margin;
 
     let finalWidth = availableWidth;
     let finalHeight = (imgHeight * availableWidth) / imgWidth;
+
     if (finalHeight > availableHeight) {
       finalHeight = availableHeight;
       finalWidth = (imgWidth * availableHeight) / imgHeight;
@@ -166,179 +138,199 @@ const formatDateForFilename = (date = new Date()) => {
 
     const x = (pageWidth - finalWidth) / 2;
     const y = (pageHeight - finalHeight) / 2;
+
     pdf.addImage(image.dataUrl, "JPEG", x, y, finalWidth, finalHeight);
+
+    // 🌊 WATERMARK
+  if (!isPremium) {
+  const leftMargin = 10; // X coordinate
+  const qrSize = 15; // QR code size in mm
+  const textOpacity = 0.35;
+  const gapBetweenTextAndQr = 0.5; // gap between text and QR
+
+  const watermarkText =
+    "--This document is created with the demo version of Grewe Web Scan. Visit grewescan.de to purchase a license.";
+
+  const qrImg = new Image();
+  qrImg.crossOrigin = "anonymous";
+  qrImg.src = QrCode.src;
+
+  await new Promise<void>((resolveQR) => {
+    qrImg.onload = () => resolveQR();
+  });
+
+  // 70% from top
+  const startY = pageHeight * 0.70;
+
+  // Draw vertical text first
+  pdf.setFont("Helvetica", "normal");
+  pdf.setFontSize(10);
+  (pdf as any).setTextColor(0, 0, 0, textOpacity);
+
+  pdf.saveGraphicsState();
+  const textX = leftMargin;
+  const textY = startY;
+  pdf.text(watermarkText, textX, textY, { angle: 90 }); // vertical text
+  pdf.restoreGraphicsState();
+
+  // Measure text height to place QR below it
+  const textLengthMM = pdf.getTextDimensions(watermarkText).h; // text height in mm
+  const qrStartY = startY + textLengthMM + gapBetweenTextAndQr;
+const qrX = leftMargin - 7;
+  // Draw QR below text
+  pdf.addImage(qrImg, "PNG", qrX, qrStartY, qrSize, qrSize);
+
+  pdf.setTextColor(0, 0, 0);
+    }
   }
 
   return pdf.output("blob");
 };
 
 
+
+
   const validateForm = (): boolean => {
     if (!formData.to.trim()) {
-      setError(t("errorRecipientRequired"));
-      return false;
+      setError(t("errorRecipientRequired"))
+      return false
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.to)) {
-      setError(t("errorInvalidEmail"));
-      return false;
+      setError(t("errorInvalidEmail"))
+      return false
     }
     if (!formData.subject.trim()) {
-      setError(t("errorSubjectRequired"));
-      return false;
+      setError(t("errorSubjectRequired"))
+      return false
     }
     if (formData.includePDF && !formData.pdfName.trim()) {
-      setError(t("errorPdfNameRequired"));
-      return false;
+      setError(t("errorPdfNameRequired"))
+      return false
     }
-    return true;
-  };
-
-const handleSendWithUserEmail = async () => {
-  if (!validateForm()) return;
-  setIsLoading(true);
-  setError(null);
-
-  try {
-    let finalMessage = formData.message || "";
-    let fileUrls: string[] = [];
-    let pdfUrl: string | null = null;
-
-    // Generate PDF if required
-    if (formData.includePDF && scannedImages.length > 0) {
-      const pdfBlob = await generatePDF();
-      const pdfAsset = await client.assets.upload("file", pdfBlob, {
-        filename: `${formData.pdfName || "document"}.pdf`,
-      });
-      pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
-
-      // display text (user-visible) with date
-      const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`;
-
-      // NOTE: mailto is plain text for most clients — we append display text then the URL.
-      finalMessage += `\n\n${pdfDisplay}\n${pdfUrl}`;
-    }
-
-    // Upload attachments
-    if (formData.attachFiles.length > 0) {
-      const uploadedAssets = await Promise.all(
-        formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
-      );
-      fileUrls = uploadedAssets.map(
-        (asset) => `${window.location.origin}/api/pdf/${asset._id}`
-      );
-      finalMessage += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
-    }
-
-    // mailto link (plain text body). Most clients will auto-linkify the raw URL above.
-    const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(finalMessage)}`;
-
-    const a = document.createElement("a");
-    a.href = mailtoLink;
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    setTimeout(() => setIsSuccess(true), 500);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    setError(message);
-  } finally {
-    setIsLoading(false);
+    return true
   }
-};
 
-const handleSendWithGrewScannerEmail = async () => {
-  if (!validateForm()) return;
-  setIsLoading(true);
-  setError(null);
+  const handleSendWithUserEmail = async () => {
+    if (!validateForm()) return
+    setIsLoading(true)
+    setError(null)
 
-  try {
-    let finalMessagePlain = formData.message || "";
-    let fileUrls: string[] = [];
-    let pdfUrl: string | null = null;
-    let finalMessageHtml = `<p>${(formData.message || "").replace(/\n/g, "<br/>")}</p>`;
+    try {
+      let finalMessage = formData.message || ""
+      let fileUrls: string[] = []
+      let pdfUrl: string | null = null
 
-    // Generate PDF if required
-    if (formData.includePDF && scannedImages.length > 0) {
-      const pdfBlob = await generatePDF();
-      const pdfAsset = await client.assets.upload("file", pdfBlob, {
-        filename: `${formData.pdfName || "document"}.pdf`,
-      });
-      pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`;
+      if (formData.includePDF && scannedImages.length > 0) {
+        const pdfBlob = await generatePDF()
+        const pdfAsset = await client.assets.upload("file", pdfBlob, {
+          filename: `${formData.pdfName || "document"}.pdf`,
+        })
+        pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`
 
-      const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`;
+        const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`
+        finalMessage += `\n\n${pdfDisplay}\n${pdfUrl}`
+      }
 
-      // Plain fallback (for clients that render text)
-      finalMessagePlain += `\n\n${pdfDisplay}\n${pdfUrl}`;
+      if (formData.attachFiles.length > 0) {
+        const uploadedAssets = await Promise.all(
+          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name)),
+        )
+        fileUrls = uploadedAssets.map((asset) => `${window.location.origin}/api/pdf/${asset._id}`)
+        finalMessage += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`
+      }
 
-      // HTML with anchor so the visible text is clickable and hides the raw URL
-      finalMessageHtml += `<p>Download PDF: <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer">${pdfDisplay}</a></p>`;
+      const mailtoLink = `mailto:${encodeURIComponent(formData.to)}?subject=${encodeURIComponent(
+        formData.subject,
+      )}&body=${encodeURIComponent(finalMessage)}`
+
+      const a = document.createElement("a")
+      a.href = mailtoLink
+      a.style.display = "none"
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+
+      setTimeout(() => setIsSuccess(true), 500)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err)
+      setError(message)
+    } finally {
+      setIsLoading(false)
     }
-
-    // Upload attachments
-    if (formData.attachFiles.length > 0) {
-      const uploadedAssets = await Promise.all(
-        formData.attachFiles.map((file) => uploadFileToSanity(file, file.name))
-      );
-      fileUrls = uploadedAssets.map(
-        (asset) => `${window.location.origin}/api/pdf/${asset._id}`
-      );
-      finalMessagePlain += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`;
-      finalMessageHtml += `<p>Attachments:<br/>${fileUrls.map((u) => `<a href="${u}" target="_blank">${u}</a>`).join("<br/>")}</p>`;
-    }
-
-    // EmailJS: include both plain text and HTML version in template params.
-    // NOTE: your EmailJS template must use the message_html (or equivalent) variable
-    // and allow HTML content. If not, update the EmailJS template to use this field.
-    const templateParams = {
-      to_email: formData.to,
-      subject: formData.subject,
-      message: finalMessagePlain,
-      message_html: finalMessageHtml, // HTML version with clickable text
-    };
-
-    await emailjs.send(
-      "service_slh2t1t", // EmailJS service ID
-      "template_rhbj1ta", // EmailJS template ID
-      templateParams,
-      "yElbkX08frFpeH4BD" // EmailJS public key
-    );
-
-    setIsSuccess(true);
-  } catch (err: unknown) {
-    const message =
-      err instanceof Error ? err.message : typeof err === "string" ? err : String(err);
-    setError(message || "Something went wrong");
-  } finally {
-    setIsLoading(false);
   }
-};
 
+  const handleSendWithGrewScannerEmail = async () => {
+    if (!validateForm()) return
+    setIsLoading(true)
+    setError(null)
 
+    try {
+      let finalMessagePlain = formData.message || ""
+      let fileUrls: string[] = []
+      let pdfUrl: string | null = null
+      let finalMessageHtml = `<p>${(formData.message || "").replace(/\n/g, "<br/>")}</p>`
+
+      if (formData.includePDF && scannedImages.length > 0) {
+        const pdfBlob = await generatePDF()
+        const pdfAsset = await client.assets.upload("file", pdfBlob, {
+          filename: `${formData.pdfName || "document"}.pdf`,
+        })
+        pdfUrl = `${window.location.origin}/api/pdf/${pdfAsset._id}`
+
+        const pdfDisplay = `${formData.pdfName || "Document"} - ${formatDateForFilename()}`
+
+        finalMessagePlain += `\n\n${pdfDisplay}\n${pdfUrl}`
+        finalMessageHtml += `<p>Download PDF: <a href="${pdfUrl}" target="_blank" rel="noopener noreferrer">${pdfDisplay}</a></p>`
+      }
+
+      if (formData.attachFiles.length > 0) {
+        const uploadedAssets = await Promise.all(
+          formData.attachFiles.map((file) => uploadFileToSanity(file, file.name)),
+        )
+        fileUrls = uploadedAssets.map((asset) => `${window.location.origin}/api/pdf/${asset._id}`)
+        finalMessagePlain += `\n\nAttachments:\n${fileUrls.map((url) => `- ${url}`).join("\n")}`
+        finalMessageHtml += `<p>Attachments:<br/>${fileUrls.map((u) => `<a href="${u}" target="_blank">${u}</a>`).join("<br/>")}</p>`
+      }
+
+      const templateParams = {
+        to_email: formData.to,
+        subject: formData.subject,
+        message: finalMessagePlain,
+        message_html: finalMessageHtml,
+      }
+
+      await emailjs.send("service_slh2t1t", "template_rhbj1ta", templateParams, "yElbkX08frFpeH4BD")
+
+      setIsSuccess(true)
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : typeof err === "string" ? err : String(err)
+      setError(message || "Something went wrong")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleSend = () => {
     if (senderType === "own") {
-      handleSendWithUserEmail();
+      handleSendWithUserEmail()
     } else {
-      handleSendWithGrewScannerEmail();
+      handleSendWithGrewScannerEmail()
     }
-  };
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") onClose();
-  };
-  if (!isOpen) return null;
+    if (e.key === "Escape") onClose()
+  }
+
+  if (!isOpen) return null
 
   const removeFile = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       attachFiles: prev.attachFiles.filter((_, i) => i !== index),
-    }));
-  };
+    }))
+  }
 
   return (
     <div className="fixed inset-0 bg-white/80  flex items-center justify-center z-50 p-4">
@@ -351,9 +343,7 @@ const handleSendWithGrewScannerEmail = async () => {
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <Mail className="w-5 h-5 text-blue-600" />
-            <h2 className="text-lg font-semibold text-gray-900">
-              {t("title")}
-            </h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t("title")}</h2>
           </div>
           <button
             onClick={onClose}
@@ -368,10 +358,7 @@ const handleSendWithGrewScannerEmail = async () => {
           {!isSuccess ? (
             <div className="space-y-4">
               <div>
-                <label
-                  htmlFor="to"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
+                <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-2">
                   {t("to")} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -386,10 +373,7 @@ const handleSendWithGrewScannerEmail = async () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="subject"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
                   {t("subject")} <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -404,10 +388,7 @@ const handleSendWithGrewScannerEmail = async () => {
               </div>
 
               <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                   {t("message")}
                 </label>
                 <textarea
@@ -422,9 +403,7 @@ const handleSendWithGrewScannerEmail = async () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {t("fileAttachment")}
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t("fileAttachment")}</label>
                 <div className="flex items-center space-x-3">
                   <button
                     type="button"
@@ -448,15 +427,10 @@ const handleSendWithGrewScannerEmail = async () => {
               {formData.attachFiles.length > 0 && (
                 <div className="space-y-2">
                   {formData.attachFiles.map((file, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between text-sm text-gray-600"
-                    >
+                    <div key={idx} className="flex items-center justify-between text-sm text-gray-600">
                       <div className="flex items-center space-x-2">
                         <FileText className="w-4 h-4" />
-                        <span className="truncate max-w-[180px]">
-                          {file.name}
-                        </span>
+                        <span className="truncate max-w-[180px]">{file.name}</span>
                       </div>
                       <button
                         onClick={() => removeFile(idx)}
@@ -477,16 +451,11 @@ const handleSendWithGrewScannerEmail = async () => {
                       id="includePDF"
                       type="checkbox"
                       checked={formData.includePDF}
-                      onChange={(e) =>
-                        handleInputChange("includePDF", e.target.checked)
-                      }
+                      onChange={(e) => handleInputChange("includePDF", e.target.checked)}
                       className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label
-                      htmlFor="includePDF"
-                      className="text-sm font-medium text-gray-700"
-                    >
+                    <label htmlFor="includePDF" className="text-sm font-medium text-gray-700">
                       {t("includePDF", {
                         count: scannedImages.length,
                         plural: scannedImages.length !== 1 ? "s" : "",
@@ -496,10 +465,7 @@ const handleSendWithGrewScannerEmail = async () => {
 
                   {formData.includePDF && (
                     <div>
-                      <label
-                        htmlFor="pdfName"
-                        className="block text-sm font-medium text-gray-700 mb-2"
-                      >
+                      <label htmlFor="pdfName" className="block text-sm font-medium text-gray-700 mb-2">
                         {t("pdfName")} <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
@@ -507,9 +473,7 @@ const handleSendWithGrewScannerEmail = async () => {
                           id="pdfName"
                           type="text"
                           value={formData.pdfName}
-                          onChange={(e) =>
-                            handleInputChange("pdfName", e.target.value)
-                          }
+                          onChange={(e) => handleInputChange("pdfName", e.target.value)}
                           placeholder={t("pdfNamePlaceholder")}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           disabled={isLoading}
@@ -524,9 +488,7 @@ const handleSendWithGrewScannerEmail = async () => {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  {t("sendFrom")}{" "}
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-3">{t("sendFrom")}</label>
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <input
@@ -535,16 +497,11 @@ const handleSendWithGrewScannerEmail = async () => {
                       name="senderType"
                       value="own"
                       checked={senderType === "own"}
-                      onChange={(e) =>
-                        setSenderType(e.target.value as "own" | "grewscanner")
-                      }
+                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
                       className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label
-                      htmlFor="own-email"
-                      className="ml-2 text-sm text-gray-700"
-                    >
+                    <label htmlFor="own-email" className="ml-2 text-sm text-gray-700">
                       {t("ownEmail")}
                     </label>
                   </div>
@@ -555,16 +512,11 @@ const handleSendWithGrewScannerEmail = async () => {
                       name="senderType"
                       value="grewscanner"
                       checked={senderType === "grewscanner"}
-                      onChange={(e) =>
-                        setSenderType(e.target.value as "own" | "grewscanner")
-                      }
+                      onChange={(e) => setSenderType(e.target.value as "own" | "grewscanner")}
                       className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                       disabled={isLoading}
                     />
-                    <label
-                      htmlFor="grewscanner-email"
-                      className="ml-2 text-sm text-gray-700"
-                    >
+                    <label htmlFor="grewscanner-email" className="ml-2 text-sm text-gray-700">
                       {t("grewScannerEmail")}
                     </label>
                   </div>
@@ -608,17 +560,12 @@ const handleSendWithGrewScannerEmail = async () => {
               <div className="mx-auto flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <Check className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {t("successTitle")}
-              </h3>
-              <p className="text-sm text-gray-600">
-                {" "}
-                {t("successMessage", { email: formData.to })}
-              </p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{t("successTitle")}</h3>
+              <p className="text-sm text-gray-600">{t("successMessage", { email: formData.to })}</p>
             </div>
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
