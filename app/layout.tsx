@@ -105,6 +105,7 @@ export default function RootLayout({
     <html lang={lng} dir={dir(lng)}>
       <head>
         {/* Add Script Tags Here */}
+        <meta name="google-site-verification" content="vP1M5mm-6MiR2x_Q6YpZKpdWvmHRuZJ8Kv5gMCjP60Q" />
         <Script
           src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"
           strategy="afterInteractive"
