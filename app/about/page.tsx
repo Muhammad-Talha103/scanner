@@ -1,22 +1,8 @@
 "use client"
 import VERSION from "@/version"
-import { Metadata } from "next";
 import Link from "next/link"
 import { useTranslation } from "react-i18next";
 
-export const metadata: Metadata = {
-  title: "About Us | GreweScan",
-  description:
-    "Learn more about GreweScan, our mission, values, and our commitment to delivering advanced scanning solutions for businesses and professionals.",
-
-  keywords: [
-    "About GreweScan",
-    "company information",
-    "document scanning solutions",
-    "GreweScan mission",
-    "scanning software",
-  ],
-};
 
 export default function AboutPage() {
   
