@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: "%s | GreweScan",
   },
   description:
-    "GrewScan offers advanced document scanning, imaging solutions, and software tools for efficient business operations across Europe and beyond.",
+    "GreweScan offers advanced document scanning, imaging solutions, and software tools for efficient business operations across Europe and beyond.",
   keywords: [
     "GreweScan",
     "Document Scanning",
