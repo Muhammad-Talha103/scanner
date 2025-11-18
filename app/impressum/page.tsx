@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
-export const metadata: Metadata = {
+export const metadata:Metadata= {
   title: "Impressum | GreweScan",
   description:
     "Official legal information for GreweScan, including company details, contact information, and responsible authorities.",
