@@ -13,13 +13,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "GrewScan - Innovative Document & Imaging Solutions",
-    template: "%s | GrewScan",
+    default: "GreweScan - Innovative Document & Imaging Solutions",
+    template: "%s | GreweScan",
   },
   description:
     "GrewScan offers advanced document scanning, imaging solutions, and software tools for efficient business operations across Europe and beyond.",
   keywords: [
-    "GrewScan",
+    "GreweScan",
     "Document Scanning",
     "Grewe Scanner Interface Online Document Scanning",
     "Browser TWAIN scan application",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
     "Enterprise Solutions",
     "Germany Technology",
   ],
-  authors: [{ name: "GrewScan", url: "https://grewscan.de" }],
-  creator: "GrewScan",
-  publisher: "GrewScan",
+  authors: [{ name: "GreweScan", url: "https://grewescan.de" }],
+  creator: "GreweScan",
+  publisher: "GreweScan",
   robots: {
     index: true,
     follow: true,
@@ -50,30 +50,30 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "GrewScan - Innovative Document & Imaging Solutions",
+    title: "GreweScan - Innovative Document & Imaging Solutions",
     description:
-      "Follow GrewScan on Facebook, Instagram, LinkedIn, Threads, and TikTok for updates, document imaging tips, and software innovations for businesses.",
-    url: "https://grewscan.de",
-    siteName: "GrewScan",
+      "Follow GreweScan on Facebook, Instagram, LinkedIn, Threads, and TikTok for updates, document imaging tips, and software innovations for businesses.",
+    url: "https://grewescan.de",
+    siteName: "GreweScan",
     locale: "de_DE",
     type: "website",
     images: [
       {
-        url: "https://grewscan.de/og-image.jpg",
+        url: "https://grewescan.de/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "GrewScan - Digital Document Experts",
+        alt: "GreweScan - Digital Document Experts",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GrewScan - Smart Document Solutions",
+    title: "GreweScan - Smart Document Solutions",
     description:
       "Discover efficient document scanning and imaging solutions with GrewScan: software, automation tools, and digital services for modern businesses.",
-    site: "@GrewScan_DE",
-    creator: "@GrewScan_DE",
-    images: ["https://grewscan.de/twitter-card.jpg"],
+    site: "@GreweScan_DE",
+    creator: "@GreweScan_DE",
+    images: ["https://grewescan.de/twitter-card.jpg"],
   },
   icons: {
     icon: "/favicon.ico",
@@ -81,12 +81,12 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   alternates: {
-    canonical: "https://grewscan.de",
+    canonical: "https://grewescan.de",
     languages: {
-      "de-DE": "https://grewscan.de",
+      "de-DE": "https://grewescan.de",
     },
   },
-  metadataBase: new URL("https://grewscan.de"),
+  metadataBase: new URL("https://grewescan.de"),
 };
 
 

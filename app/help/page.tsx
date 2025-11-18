@@ -1,7 +1,39 @@
 "use client"
+import { Metadata } from "next";
 import Link from "next/link"
 import { useTranslation } from "react-i18next";
 
+export const metadata:Metadata = {
+  title: "Help & Support | GreweScan",
+  description:
+    "Need assistance? Find answers, troubleshooting tips, and support resources for using GreweScan effectively.",
+
+  keywords: [
+    "GreweScan help",
+    "GreweScan support",
+    "scanner troubleshooting",
+    "GreweScan guide",
+    "customer support",
+  ],
+
+  openGraph: {
+    title: "Help & Support | GreweScan",
+    description:
+      "Explore help articles, troubleshooting guides, and support resources to get the best out of GreweScan.",
+    url: "https://grewescan.de/help",
+    type: "website",
+    images: [
+      { url: "https://grewescan.de/images/og-help.jpg" },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Help & Support | GreweScan",
+    description:
+      "Find assistance, FAQs, and troubleshooting steps for GreweScan.",
+  },
+};
 
 
 

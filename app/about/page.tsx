@@ -1,11 +1,48 @@
 "use client"
 import VERSION from "@/version"
+import { Metadata } from "next";
 import Link from "next/link"
 import { useTranslation } from "react-i18next";
 
+export const metadata: Metadata = {
+  title: "About Us | GreweScan",
+  description:
+    "Learn more about GreweScan, our mission, values, and our commitment to delivering advanced scanning solutions for businesses and professionals.",
+
+  keywords: [
+    "About GreweScan",
+    "company information",
+    "document scanning solutions",
+    "GreweScan mission",
+    "scanning software",
+  ],
+
+  openGraph: {
+    title: "About Us | GreweScan",
+    description:
+      "Discover who we are, what we do, and how GreweScan delivers powerful scanning technology tailored to your needs.",
+    url: "https://grewescan.de/about",
+    type: "website",
+    images: [
+      {
+        url: "https://grewescan.de/images/og-about.jpg",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "About Us | GreweScan",
+    description:
+      "Learn more about GreweScan and our mission to deliver advanced scanning solutions.",
+  },
+};
+
 export default function AboutPage() {
+  
   const { t } = useTranslation();
   return (
+    
     <div className="min-h-screen bg-white">
       <div className="fixed top-4 left-4 z-50">
         <Link
