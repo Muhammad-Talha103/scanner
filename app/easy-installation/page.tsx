@@ -10,40 +10,6 @@ import Step6Image from "@/public/easy_installation_images/step6.png"
 import Step7Image from "@/public/easy_installation_images/step7.png"
 import { useTranslation } from "react-i18next"
 import Link from "next/link"
-import { Metadata } from "next"
-
-
-export const metadata:Metadata = {
-  title: "Easy Installation | GreweScan",
-  description:
-    "Learn how GreweScan makes setup simple with quick, user-friendly installation steps for all devices.",
-
-  keywords: [
-    "GreweScan easy installation",
-    "installation guide",
-    "scanner setup",
-    "quick installation",
-    "GreweScan setup",
-  ],
-
-  openGraph: {
-    title: "Easy Installation | GreweScan",
-    description:
-      "Follow the simple and quick installation process to get started with GreweScan instantly.",
-    url: "https://grewescan.de/easy-installation",
-    type: "website",
-    images: [
-      { url: "https://grewescan.de/images/og-easy-installation.jpg" },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "Easy Installation | GreweScan",
-    description:
-      "A quick and simple setup guide to help you start using GreweScan right away.",
-  },
-};
 
 export default function InstallationGuide() {
   const { t } = useTranslation();

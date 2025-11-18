@@ -15,23 +15,6 @@ export const metadata: Metadata = {
     "provider identification",
     "GreweScan legal",
   ],
-
-  openGraph: {
-    title: "Impressum | GreweScan",
-    description:
-      "View the official legal notice and company details for GreweScan.",
-    url: "https://grewescan.de/impressum",
-    type: "website",
-    images: [
-      { url: "https://grewescan.de/images/og-impressum.jpg" },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "Impressum | GreweScan",
-    description: "Legal information and provider identification for GreweScan.",
-  },
 };
 
 
