@@ -1,21 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Impressum | GreweScan",
-  description:
-    "Official legal information for GreweScan, including company details, contact information, and responsible authorities.",
-
-  keywords: [
-    "GreweScan Impressum",
-    "legal notice",
-    "company information",
-    "provider identification",
-    "GreweScan legal",
-  ],
-};
 
 
 export default function ImpressumPage() {
