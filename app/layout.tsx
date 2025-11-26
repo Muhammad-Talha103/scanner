@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://grewescan.de/og-image.jpg",
+        url: "https://grewescan.de/grewescanner.png",
         width: 1200,
         height: 630,
         alt: "GreweScan - Digital Document Experts",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
       "Discover efficient document scanning and imaging solutions with GrewScan: software, automation tools, and digital services for modern businesses.",
     site: "@GreweScan_DE",
     creator: "@GreweScan_DE",
-    images: ["https://grewescan.de/twitter-card.jpg"],
+    images: ["https://grewescan.de/grewescanner.png"],
   },
   icons: {
     icon: "/favicon.ico",
