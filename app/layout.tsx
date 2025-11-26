@@ -12,6 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 const seoKeywords = [
   "GreweScan",
   "Document Scanning",
+  "online document scanning",
   "Grewe Scanner Interface Online Document Scanning",
   "Browser TWAIN scan application",
   "Web Scanner",
