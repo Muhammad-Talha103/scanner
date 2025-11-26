@@ -11,8 +11,10 @@ import I18nProvider from "./i18n-provider";
 const inter = Inter({ subsets: ["latin"] });
 const seoKeywords = [
   "GreweScan",
-  "Document Scanning Software",
+  "Document Scanning",
   "Grewe Scanner Interface Online",
+  "Browser TWAIN scan application",
+  "Document Scanning Software",
   "Online Document Scanning",
   "Browser-Based TWAIN Scanner",
   "Web Scanner Application",
