@@ -11,16 +11,25 @@ import I18nProvider from "./i18n-provider";
 const inter = Inter({ subsets: ["latin"] });
 const seoKeywords = [
   "GreweScan",
-  "Document Scanning",
-  "online document scanning",
-  "Grewe Scanner Interface Online Document Scanning",
-  "Browser TWAIN scan application",
-  "Web Scanner",
+  "Document Scanning Software",
+  "Grewe Scanner Interface Online",
+  "Online Document Scanning",
+  "Browser-Based TWAIN Scanner",
+  "Web Scanner Application",
   "TWAIN Scanner Online",
-  "PDF Generation",
-  "Image Processing",
-  "Cloud Scanning"
+  "PDF Generation Tool",
+  "Scan to PDF Online",
+  "Image Processing Software",
+  "Cloud Document Scanning",
+  "Digital Document Management",
+  "Business Scanning Solutions",
+  "Secure Online Scanning",
+  "Enterprise Document Workflow",
+  "Send PDF via Email",
+  "Email PDF Attachment Tool",
+  "Share Scanned Documents via Email"
 ];
+
 const generatedTitle = `${seoKeywords.join(" | ")} - Innovative Document & Imaging Solutions`;
 
 export const metadata: Metadata = {
@@ -28,17 +37,16 @@ export const metadata: Metadata = {
     default: generatedTitle,
     template: "%s | GreweScan",
   },
+
   description:
-    "GreweScan offers advanced document scanning, imaging solutions, and software tools for efficient business operations across Europe and beyond.",
-  keywords: [
-    "GreweScan",
-    "Document Scanning",
-    "Grewe Scanner Interface Online Document Scanning",
-    "Browser TWAIN scan application",
-  ],
+    "GreweScan provides advanced browser-based TWAIN document scanning, PDF generation, and secure email delivery. Scan documents online, convert them to PDF, and instantly send them via email for fast and professional digital workflows.",
+
+  keywords: seoKeywords,
+
   authors: [{ name: "GreweScan", url: "https://grewescan.de" }],
   creator: "GreweScan",
   publisher: "GreweScan",
+
   robots: {
     index: true,
     follow: true,
@@ -52,10 +60,11 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+
   openGraph: {
-    title: "GreweScan - Innovative Document & Imaging Solutions",
+    title: "GreweScan – Online Document Scanning, PDF Tools & Email PDF Sending",
     description:
-      "Follow GreweScan on Facebook, Instagram, LinkedIn, Threads, and TikTok for updates, document imaging tips, and software innovations for businesses.",
+      "Use GreweScan to scan documents directly in your browser, generate high-quality PDFs, and send them instantly via email. Secure, fast, and built for modern businesses.",
     url: "https://grewescan.de",
     siteName: "GreweScan",
     locale: "de_DE",
@@ -65,32 +74,38 @@ export const metadata: Metadata = {
         url: "https://grewescan.de/grewescanner.png",
         width: 1200,
         height: 630,
-        alt: "GreweScan - Digital Document Experts",
+        alt: "GreweScan – Scan Documents, Create PDFs & Send via Email",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "GreweScan - Smart Document Solutions",
+    title: "GreweScan – Scan, Create PDFs & Send via Email",
     description:
-      "Discover efficient document scanning and imaging solutions with GrewScan: software, automation tools, and digital services for modern businesses.",
+      "A complete online scanning solution: scan documents, generate PDFs, process images, and send files via email with one click.",
     site: "@GreweScan_DE",
     creator: "@GreweScan_DE",
     images: ["https://grewescan.de/grewescanner.png"],
   },
+
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+
   alternates: {
     canonical: "https://grewescan.de",
     languages: {
       "de-DE": "https://grewescan.de",
+      "en-US": "https://grewescan.de/en",
     },
   },
+
   metadataBase: new URL("https://grewescan.de"),
 };
+
 
 
 // 🟢 Default language (agar params nahi hain)
