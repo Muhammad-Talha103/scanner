@@ -9,11 +9,22 @@ import { dir } from "i18next";
 import I18nProvider from "./i18n-provider";
 
 const inter = Inter({ subsets: ["latin"] });
-
+const seoKeywords = [
+  "GreweScan",
+  "Document Scanning",
+  "Grewe Scanner Interface Online Document Scanning",
+  "Browser TWAIN scan application",
+  "Web Scanner",
+  "TWAIN Scanner Online",
+  "PDF Generation",
+  "Image Processing",
+  "Cloud Scanning"
+];
+const generatedTitle = `${seoKeywords.join(" | ")} - Innovative Document & Imaging Solutions`;
 
 export const metadata: Metadata = {
   title: {
-    default: "GreweScan - Innovative Document & Imaging Solutions",
+    default: generatedTitle,
     template: "%s | GreweScan",
   },
   description:
@@ -23,15 +34,6 @@ export const metadata: Metadata = {
     "Document Scanning",
     "Grewe Scanner Interface Online Document Scanning",
     "Browser TWAIN scan application",
-    "Imaging Solutions",
-    "GreweScan",
-    "Digital Transformation",
-    "Business Automation",
-    "PDF Management",
-    "Scanning Software",
-    "OCR Solutions",
-    "Enterprise Solutions",
-    "Germany Technology",
   ],
   authors: [{ name: "GreweScan", url: "https://grewescan.de" }],
   creator: "GreweScan",
