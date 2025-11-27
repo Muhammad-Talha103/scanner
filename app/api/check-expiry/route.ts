@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const totalPayment = user.payments.reduce((sum: number, p: any) => sum + (p.amount_total || 0), 0)
+    const totalPayment = user.payments.reduce((sum: number, p) => sum + (p.amount_total || 0), 0)
 
     return NextResponse.json({
       isPremium: true,

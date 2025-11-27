@@ -1,11 +1,51 @@
 import { client } from "@/sanity/lib/client"
 import { isPremiumExpired } from "./premium-calculation"
 
+interface PaymentCard {
+  brand: string
+  last4: string
+  exp_month: number
+  exp_year: number
+}
+
+interface BillingAddress {
+  line1?: string
+  line2?: string
+  city?: string
+  state?: string
+  postal_code?: string
+  country?: string
+}
+
+interface Payment {
+  _key: string
+  stripeSessionId: string
+  stripePaymentIntentId?: string
+  stripeChargeId?: string
+  amount_total: number
+  currency: string
+  status: string
+  payment_method_type?: string
+  card?: PaymentCard
+  billing_address?: BillingAddress
+  metadata: { key: string; value: string }[]
+  lineItems: {
+    id: string
+    description?: string
+    price?: string
+    product?: string
+    quantity?: number
+    amount_total?: number
+    currency?: string
+  }[]
+  createdAt: string
+}
+
 interface PremiumUser {
   _id: string
   email: string
   name?: string
-  payments: any[]
+  payments: Payment[]
   premiumStart: string
   premiumEnd: string
   createdAt: string
@@ -24,7 +64,6 @@ export async function moveExpiredPremiumUsers(): Promise<{
   try {
     console.log("[Sanity Admin] Starting expired user migration...")
 
-    // Fetch all premium users
     const premiumUsers: PremiumUser[] = await client.fetch(`*[_type == "premiumUser"] | order(_createdAt desc)`)
 
     console.log(`[Sanity Admin] Found ${premiumUsers.length} premium users`)
@@ -34,7 +73,6 @@ export async function moveExpiredPremiumUsers(): Promise<{
         if (isPremiumExpired(user.premiumEnd)) {
           console.log(`[Sanity Admin] Moving expired user: ${user.email}`)
 
-          // Create expired user document
           const expiredUserDoc = {
             _type: "premium_user_ends",
             email: user.email,
@@ -48,7 +86,6 @@ export async function moveExpiredPremiumUsers(): Promise<{
           const created = await client.create(expiredUserDoc)
           console.log(`[Sanity Admin] Created expired user doc: ${created._id}`)
 
-          // Delete original premium user
           await client.delete(user._id)
           console.log(`[Sanity Admin] Deleted premium user: ${user._id}`)
 
@@ -91,7 +128,7 @@ export async function updatePremiumUser(
   userId: string,
   premiumStart: string,
   premiumEnd: string,
-  newPayment: any,
+  newPayment: Payment,
 ): Promise<boolean> {
   try {
     await client
@@ -116,7 +153,7 @@ export async function updatePremiumUser(
 export async function createPremiumUser(
   email: string,
   name: string | undefined,
-  payments: any[],
+  payments: Payment[],
   premiumStart: string,
   premiumEnd: string,
 ): Promise<string | null> {
