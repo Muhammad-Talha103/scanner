@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     const months = euros;
     const startDate = new Date();
     const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + 3);
+    endDate.setMonth(endDate.getMonth() + months);
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
