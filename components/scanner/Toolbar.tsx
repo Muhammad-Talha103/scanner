@@ -10,6 +10,9 @@ import { useTranslation } from "react-i18next"
 import { MdInstallDesktop } from "react-icons/md"
 import Link from "next/link"
 import { SaveModal, type SaveOptions } from "@/components/scanner/SaveModal"
+import { useSelector } from "react-redux"
+import { RootState } from "@/redux/store"
+import toast, { Toaster } from "react-hot-toast"
 
 interface ToolbarProps {
   scannerName: string | null
@@ -55,7 +58,7 @@ export const Toolbar = ({
   selectedImages = [],
 }: ToolbarProps) => {
   const { t } = useTranslation()
-
+  const userInfo = useSelector((state: RootState) => state.user.userInfo);
   const [language, setLanguage] = useState<string>(i18n.language || "en")
   const [isMounted, setIsMounted] = useState(false) // check if client-side
   const [showSaveModal, setShowSaveModal] = useState(false)
@@ -87,8 +90,32 @@ export const Toolbar = ({
     setShowSaveModal(false)
   }
 
+
+    const requireLogin = (callback: () => void) => {
+    if (userInfo?.email) {
+      callback()
+    } else {
+      toast(
+      (toastObj) => (
+        <div className="flex flex-col">
+          <span className="font-semibold">⚠ {t("not_logged_in_message")}</span>
+          <Link
+            href="/signin"
+            className="mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm text-center"
+            onClick={() => toast.dismiss(toastObj.id)} 
+          >
+           {t("login_admin.signIn")}
+          </Link>
+        </div>
+      ),
+      { duration: 2000 }
+    );
+    }
+  }
+
   return (
     <>
+    <Toaster position="top-center" reverseOrder={false} />
       <div className="border-b border-gray-300 px-2 py-2 relative">
         {/* Scrollable content */}
         <div className="flex justify-between items-center overflow-x-auto min-w-0">
@@ -99,7 +126,7 @@ export const Toolbar = ({
               className={`flex flex-col items-center px-3 py-2 ${
                 scannerName && !isScanning ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
               }`}
-              onClick={onScanClick}
+              onClick={() => requireLogin(onScanClick)}
             >
               <FileText className="w-6 h-6 text-blue-600 mb-1" />
               <span className="text-xs">{t("scan")}</span>
@@ -112,7 +139,7 @@ export const Toolbar = ({
                   ? "hover:bg-gray-100 cursor-pointer"
                   : "cursor-not-allowed opacity-50"
               }`}
-              onClick={handleSaveButtonClick}
+              onClick={() => requireLogin(handleSaveButtonClick)}
             >
               <Save className="w-6 h-6 text-gray-600 mb-1" />
               <span className="text-xs">{t("save")}</span>
@@ -125,7 +152,7 @@ export const Toolbar = ({
                   ? "hover:bg-gray-100 cursor-pointer"
                   : "cursor-not-allowed opacity-50"
               }`}
-              onClick={onPrintClick}
+             onClick={() => requireLogin(onPrintClick)}
             >
               <Printer className="w-6 h-6 text-gray-600 mb-1" />
               <span className="text-xs">{t("print")}</span>
@@ -134,7 +161,7 @@ export const Toolbar = ({
             {/* Mail */}
             <button
               className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={onMailClick}
+           onClick={() => requireLogin(onMailClick)}
             >
               <Mail className="w-6 h-6 text-gray-600 mb-1" />
               <span className="text-xs">{t("mail")}</span>
@@ -143,7 +170,7 @@ export const Toolbar = ({
             {/* New */}
             <button
               className="flex flex-col items-center px-3 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={onNewDocument}
+                onClick={() => requireLogin(onNewDocument)}
             >
               <Plus className="w-6 h-6 text-gray-600 mb-1" />
               <span className="text-xs">{t("new")}</span>
@@ -154,7 +181,7 @@ export const Toolbar = ({
               className={`flex flex-col items-center px-3 py-2 ${
                 selectedImage ? "hover:bg-gray-100 cursor-pointer" : "cursor-not-allowed opacity-50"
               }`}
-              onClick={onEditClick}
+           onClick={() => requireLogin(onEditClick)}
               disabled={!selectedImage}
             >
               <Scissors className="w-6 h-6 text-gray-600 mb-1" />
@@ -186,6 +213,7 @@ export const Toolbar = ({
             <span className="text-sm text-gray-600 font-medium">
               {t("version")} <b>{VERSION}</b>
             </span>
+      
 
             <button
               className="flex items-center p-2 hover:bg-gray-100 rounded cursor-pointer border border-gray-400"
@@ -194,15 +222,17 @@ export const Toolbar = ({
             >
               <User className="w-6 h-6 text-gray-600" />
             </button>
+  
           </div>
         </div>
 
-        {/* Dropdown outside scroll container */}
+            
         {showUserDropdown && (
           <div className="absolute right-2 top-full -mt-6 z-50">
             <UserDropdown isOpen={showUserDropdown} userName={userName} userEmail={userEmail} onLogout={onLogout} />
           </div>
         )}
+             
       </div>
 
       <SaveModal

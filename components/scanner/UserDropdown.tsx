@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { GrUpgrade } from "react-icons/gr";
+import { IoMdLogIn } from "react-icons/io";
 
 interface UserDropdownProps {
   isOpen: boolean;
@@ -89,60 +90,76 @@ export const UserDropdown = ({
 
   return (
     <div
-      className={`absolute top-full right-0 mt-2 w-64 bg-white border border-gray-300 rounded-lg shadow-lg z-50 transform transition-all duration-200 ease-in-out ${
+      className={`absolute top-full right-0 mt-2 ${userInfo ? "w-64" : "w-[200px]"} bg-white border border-gray-300 rounded-lg shadow-lg z-50 transform transition-all duration-200 ease-in-out ${
         isOpen
           ? "opacity-100 scale-100 translate-y-0"
           : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
       }`}
     >
-      <div className="p-4 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div
-            className={`w-10 h-10 ${isPremium ? "bg-yellow-400" : "bg-blue-500"} rounded-full flex items-center justify-center`}
-          >
-            <User className="w-5 h-5 text-white" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-extrabold text-gray-900  truncate">
-              {userName}
-            </p>
-            {isPremium && (
-              <div className="flex items-center space-x-1 bg-yellow-400 w-fit p-1 text-white rounded-2xl mt-1">
-                <MdOutlineWorkspacePremium />
-                <p className="text-xs font-medium truncate">{t("premium")}</p>
+      {userInfo?.email ? (
+        <>
+          <div className="p-4 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div
+                className={`w-10 h-10 ${isPremium ? "bg-yellow-400" : "bg-blue-500"} rounded-full flex items-center justify-center`}
+              >
+                <User className="w-5 h-5 text-white" />
               </div>
-            )}
-            <p className="text-[13px] text-gray-500 truncate mt-1">
-              {userEmail}
-            </p>
-            {timeLeft && (
-              <p className="text-[12px] text-gray-600 mt-1">
-                {t("expiresIn")}:{" "}
-                <span className="font-semibold">{timeLeft}</span>
-              </p>
-            )}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-extrabold text-gray-900 truncate">
+                  {userName}
+                </p>
+                {isPremium && (
+                  <div className="flex items-center space-x-1 bg-yellow-400 w-fit p-1 text-white rounded-2xl mt-1">
+                    <MdOutlineWorkspacePremium />
+                    <p className="text-xs font-medium truncate">{t("premium")}</p>
+                  </div>
+                )}
+                <p className="text-[13px] text-gray-500 truncate mt-1">
+                  {userEmail}
+                </p>
+                {timeLeft && (
+                  <p className="text-[12px] text-gray-600 mt-1">
+                    {t("expiresIn")}:{" "}
+                    <span className="font-semibold">{timeLeft}</span>
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <div className="py-2">
-        {!isPremium && (
-          <Link
-            href="/upgrade"
-            className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+          <div className="py-2">
+            {!isPremium && (
+              <Link
+                href="/upgrade"
+                className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+              >
+                <GrUpgrade className="w-4 h-4 mr-3 text-gray-500" />
+                <span>{t("admin.upgrade")}</span>
+              </Link>
+            )}
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+            >
+              <LogOut className="w-4 h-4 mr-3 text-gray-500" />
+              <span>{t("admin.logout")}</span>
+            </button>
+          </div>
+        </>
+      ) : (
+        // Show only Login button if email not present
+        <div className="py-2 px-2 flex justify-center ">
+          <Link href="/signin" className=" gap-x-3 w-full flex justify-center items-center px-4 py-2 text-sm  text-black font-semibold hover:text-white rounded-lg hover:bg-blue-700 transition-colors duration-150">
+            
+            <IoMdLogIn className="w-6 h-6 " /> 
+          <button
+  
           >
-            <GrUpgrade className="w-4 h-4 mr-3 text-gray-500" />
-            <span>{t("admin.upgrade")}</span>
+            {t("login_admin.signIn")}
+          </button>
           </Link>
-        )}
-
-        <button
-          onClick={onLogout}
-          className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
-        >
-          <LogOut className="w-4 h-4 mr-3 text-gray-500" />
-          <span>{t("admin.logout")}</span>
-        </button>
-      </div>
+        </div>
+      )}
     </div>
   );
 };

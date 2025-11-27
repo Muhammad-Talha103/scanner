@@ -115,6 +115,8 @@
   "on": "Ein",
   "off": "Aus",
 
+  "not_logged_in_message":"Sie sind nicht angemeldet. Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
+
   "pageNotFound": "Seite nicht gefunden",
   "goHome": "Zur Startseite",
   "oops_message":"Hoppla! Die gesuchte Seite existiert nicht.",

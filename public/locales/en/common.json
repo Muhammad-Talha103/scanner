@@ -103,6 +103,7 @@
   "on": "On",
   "off": "Off",
 
+  "not_logged_in_message":"You are not logged in. Please login to access this feature.",
 
   "pageNotFound": "Page Not Found",
   "goHome": "Go Home",

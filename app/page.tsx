@@ -38,7 +38,6 @@ import { ScannerStatus } from "@/components/ScannerStatus";
 import { ScannedImages } from "@/components/ScannedImages";
 import { MailModal } from "@/components/MailModal";
 import { ImageEditor } from "@/components/ImageEditor";
-import { LoginRequired } from "@/components/scanner/LoginRequired";
 import { MenuBar } from "@/components/scanner/MenuBar";
 import { Toolbar } from "@/components/scanner/Toolbar";
 import Header from "@/components/scanner/Header";
@@ -230,7 +229,6 @@ export default function ScannerApp() {
     fetchUserData();
   }, [userInfo?.email]);
 
-  if (!userInfo?.email) return <LoginRequired />;
 
   const selectedImage = getSelectedImage();
 
@@ -249,7 +247,6 @@ export default function ScannerApp() {
       await firebaseSignOut(auth);
       dispatch(signOut());
       setShowUserDropdown(false);
-      router.push("/signin");
     } catch (err) {
       console.error("Error signing out:", err);
     }
@@ -551,7 +548,7 @@ export default function ScannerApp() {
         onNewDocument={handleNewDocument}
         onEditClick={handleEditClick}
         userName={userName}
-        userEmail={userInfo.email || ""}
+        userEmail={userInfo?.email || ""}
         showUserDropdown={showUserDropdown}
         onUserDropdownToggle={handleUserDropdownToggle}
         onLogout={handleLogout}
