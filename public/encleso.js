@@ -304,77 +304,68 @@ if (!window.__ENCLESO_INITIALIZED__) {
         };
 
         Encleso.OnReady = async (ret) => {
-          if (
-            typeof monitorIntervalId !== "undefined" &&
-            monitorIntervalId !== null
-          ) {
+          if (monitorIntervalId !== null) {
             clearInterval(monitorIntervalId);
             monitorIntervalId = null;
           }
 
-          let userEmail = window.__USER_EMAIL__;
+          window.ExportedScannerNames = ret.ScannersList || [];
 
-          try {
-            if (!userEmail) {
-              // console.warn("No email found → Running scanner in FREE MODE.");
+          // Export functions globally
+          window.StartScanning = StartScanning;
+          window.SaveImageToFilesystem = SaveImageToFilesystem;
+          window.scan = scan;
+          window.Encleso = Encleso;
 
+          const applyLicense = async (email) => {
+            try {
+              const resp = await fetch(`/api/encleso?email=${encodeURIComponent(email)}`, {
+                method: "GET",
+                credentials: "same-origin",
+              });
+              const json = await resp.json();
+              if (json.token) {
+                const licState = await Encleso.SetLicense(json.token).catch(() => false);
+                if (!licState || licState.ReturnCode !== 0) {
+                  $("#alert-warn-error")
+                    .removeClass("d-none")
+                    .addClass("d-block")
+                    .html("Failed to apply license. Running in free mode.");
+                }
+              }
+            } catch (err) {
               $("#alert-warn-error")
                 .removeClass("d-none")
                 .addClass("d-block")
-                .html("Free Mode Active — No license applied.");
-            } else {
-              const resp = await fetch(
-                `/api/encleso?email=${encodeURIComponent(userEmail)}`,
-                {
-                  method: "GET",
-                  credentials: "same-origin",
-                }
-              );
-
-              const json = await resp.json();
-
-              if (!resp.ok || !json.token) {
-                $("#alert-warn-error")
-                  .removeClass("d-none")
-                  .addClass("d-block")
-                  .html("Failed to fetch license token.");
-                return;
-              }
-
-              // Apply license
-              const licState = await Encleso.SetLicense(json.token).catch(
-                () => false
-              );
-              if (!licState || licState.ReturnCode !== 0) {
-                $("#alert-warn-error")
-                  .removeClass("d-none")
-                  .addClass("d-block")
-                  .html("Failed to apply license.");
-                return;
-              }
-
-              // console.log("License applied successfully.");
+                .html("Unable to contact license server. Running in free mode.");
             }
-          } catch (err) {
-            // console.error("License flow error:", err);
-            $("#alert-warn-error")
-              .removeClass("d-none")
-              .addClass("d-block")
-              .html("Unable to contact license server.");
-          }
+          };
 
-          window.ExportedScannerNames = ret.ScannersList || [];
-          if (!window.ExportedScannerNames.length) {
-            $("#ScannerName").html(EMPTY_COMBOSELECT);
-            SetScannerCapsControlsState(true, null);
+          let userEmail = window.__USER_EMAIL__;
+          if (userEmail) {
+            await applyLicense(userEmail);
+          } else {
             $("#alert-warn-error")
               .removeClass("d-none")
               .addClass("d-block")
-              .html("No scanners detected. Please connect a scanner.");
-            return;
+              .html("Free Mode Active — No license applied.");
+            // Watch for email availability after page refresh
+            const interval = setInterval(async () => {
+              if (window.__USER_EMAIL__) {
+                clearInterval(interval);
+                await applyLicense(window.__USER_EMAIL__);
+              }
+            }, 500);
           }
 
           // Populate scanner dropdown
+          if (!window.ExportedScannerNames.length) {
+            $("#ScannerName").html("<option selected>Choose...</option>");
+            SetScannerCapsControlsState(true, null);
+            $("#alert-warn-error").removeClass("d-none").addClass("d-block").html("No scanners detected. Please connect a scanner.");
+            return;
+          }
+
           let options = "";
           for (let i = 0; i < ret.ScannersList.length; i++) {
             options += `<option value="${ret.ScannersList[i]}" ${i == ret.DefaultIndex ? "selected" : ""}>${ret.ScannersList[i]}</option>`;
@@ -383,19 +374,10 @@ if (!window.__ENCLESO_INITIALIZED__) {
 
           $("#ScannerName").on("change", () => {
             ShowScannedImage(false);
-            $("#alert-warn-error")
-              .removeClass("d-block")
-              .addClass("d-none")
-              .html("");
+            $("#alert-warn-error").removeClass("d-block").addClass("d-none").html("");
           });
 
           SetScannerCapsControlsState(false);
-
-          // Export functions globally
-          window.StartScanning = StartScanning;
-          window.SaveImageToFilesystem = SaveImageToFilesystem;
-          window.scan = scan;
-          window.Encleso = Encleso;
         };
       }
     };
