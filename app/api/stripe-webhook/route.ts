@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature")!;
   
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const stripeSecret = process.env.STRIPE_SECRET_KEY; // LIVE secret key
+  const stripeSecret = process.env.STRIPE_SECRET_KEY; 
 
   if (!webhookSecret || !stripeSecret) {
     console.error("❌ Missing Stripe webhook secret or live secret key");
@@ -75,7 +75,7 @@ export async function POST(req: Request) {
     const months = euros;
     const startDate = new Date();
     const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + months);
+    endDate.setMonth(endDate.getMonth() + 3);
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
