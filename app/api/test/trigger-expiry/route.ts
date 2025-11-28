@@ -7,6 +7,8 @@ import { processExpiredUsers } from "@/utils/premium-expiry"
  *
  * In production, the cron job handles this automatically every minute
  */
+
+
 export async function GET() {
   try {
     console.log("[v0] 🧪 Manual trigger: Running premium expiry check...")
