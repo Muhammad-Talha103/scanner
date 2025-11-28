@@ -35,10 +35,7 @@ export async function fetchExpiredUsers(): Promise<ExpiredUser[]> {
   }))
 }
 
-/**
- * Move expired user from premiumUser to premium_user_ends
- * This happens in real-time as soon as expiry is detected
- */
+
 export async function moveExpiredUser(user: ExpiredUser): Promise<void> {
   const movedAt = new Date().toISOString()
 
