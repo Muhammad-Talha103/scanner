@@ -1,86 +1,278 @@
-import { NextResponse } from "next/server";
-import Stripe from "stripe";
-import { client } from "@/sanity/lib/client"; 
+// import { NextResponse } from "next/server";
+// import Stripe from "stripe";
+// import { client } from "@/sanity/lib/client"; 
+
+// export const config = {
+//   api: {
+//     bodyParser: false, 
+//   },
+// };
+
+// export async function POST(req: Request) {
+//   console.log("🚀 Incoming Stripe webhook...");
+
+//   const payload = await req.text();
+//   const sig = req.headers.get("stripe-signature")!;
+  
+//   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+//   const stripeSecret = process.env.STRIPE_SECRET_KEY; 
+
+//   if (!webhookSecret || !stripeSecret) {
+//     console.error("❌ Missing Stripe webhook secret or live secret key");
+//     return new NextResponse("Missing env vars", { status: 500 });
+//   }
+
+//   const stripe = new Stripe(stripeSecret);
+
+//   let event: Stripe.Event;
+//   try {
+//     event = stripe.webhooks.constructEvent(payload, sig, webhookSecret);
+//     console.log("✅ Webhook verified:", event.type);
+//   } catch (err) {
+//     console.error("❌ Webhook verification failed:", err);
+//     return new NextResponse("Webhook verification failed", { status: 400 });
+//   }
+
+//   if (event.type !== "checkout.session.completed") {
+//     console.log("⚠️ Ignoring event:", event.type);
+//     return NextResponse.json({ received: true });
+//   }
+
+//   try {
+//     const session = event.data.object as Stripe.Checkout.Session;
+//     console.log("💡 Checkout session:", session.id);
+
+//     // get email
+//     let userEmail =
+//       session.customer_details?.email || session.customer_email || null;
+
+//     if (!userEmail && session.customer) {
+//       const customer = await stripe.customers.retrieve(session.customer as string);
+//       if (!("deleted" in customer)) userEmail = (customer).email ?? null;
+//     }
+
+//     if (!userEmail) {
+//       console.error("❌ No email in session");
+//       return NextResponse.json({ received: true, warning: "No email" });
+//     }
+
+//     // optional: retrieve paymentIntent to get charges/payment method
+//     let paymentIntent: (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> }) | null = null;
+//     if (session.payment_intent) {
+//       paymentIntent = await stripe.paymentIntents.retrieve(
+//         session.payment_intent as string,
+//         { expand: ["charges"] }
+//       ) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+//     }
+
+//     const charge = paymentIntent?.charges?.data?.[0];
+//     const paymentMethod = charge?.payment_method_details;
+//     const billingAddress = charge?.billing_details?.address || session.customer_details?.address;
+
+//     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+
+//     const euros = session.amount_total ? session.amount_total / 100 : 0;
+//     const months = euros;
+//     const startDate = new Date();
+//     const endDate = new Date(startDate);
+//     endDate.setMonth(endDate.getMonth() + months);
+
+//     const metadata =
+//       session.metadata && Object.keys(session.metadata).length > 0
+//         ? Object.entries(session.metadata).map(([k, v]) => ({ key: k, value: String(v) }))
+//         : [];
+
+//     const newPayment = {
+//       _key: session.id,
+//       stripeSessionId: session.id,
+//       stripePaymentIntentId: paymentIntent?.id,
+//       stripeChargeId: charge?.id,
+//       amount_total: session.amount_total,
+//       currency: session.currency,
+//       status: session.payment_status,
+//       payment_method_type: paymentMethod?.type,
+//       card: paymentMethod?.card
+//         ? {
+//             brand: paymentMethod.card.brand,
+//             last4: paymentMethod.card.last4,
+//             exp_month: paymentMethod.card.exp_month,
+//             exp_year: paymentMethod.card.exp_year,
+//           }
+//         : undefined,
+//       billing_address: billingAddress
+//         ? {
+//             line1: billingAddress.line1,
+//             line2: billingAddress.line2,
+//             city: billingAddress.city,
+//             state: billingAddress.state,
+//             postal_code: billingAddress.postal_code,
+//             country: billingAddress.country,
+//           }
+//         : undefined,
+//       metadata,
+//       lineItems: lineItems.data.map((item) => ({
+//         id: item.id,
+//         description: item.description,
+//         price: item.price?.id,
+//         product: item.price?.product,
+//         quantity: item.quantity,
+//         amount_total: item.amount_total,
+//         currency: item.currency,
+//       })),
+//       createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
+//     };
+
+//     console.log("💳 Prepared payment for:", userEmail);
+
+//     // Update or create premiumUser
+//     const existingUser = await client.fetch(
+//       `*[_type == "premiumUser" && email == $email][0]`,
+//       { email: userEmail }
+//     );
+
+//     if (existingUser) {
+//       console.log("🧾 Updating existing user:", existingUser._id);
+//       await client
+//         .patch(existingUser._id)
+//         .setIfMissing({ payments: [] })
+//         .append("payments", [newPayment])
+//         .set({
+//           premiumStart: startDate.toISOString(),
+//           premiumEnd: endDate.toISOString(),
+//         })
+//         .commit();
+//       console.log("✅ Updated user:", userEmail);
+//     } else {
+//       console.log("🆕 Creating new premium user:", userEmail);
+//       await client.create({
+//         _type: "premiumUser",
+//         email: userEmail,
+//         name: charge?.billing_details?.name || session.customer_details?.name || undefined,
+//         payments: [newPayment],
+//         premiumStart: startDate.toISOString(),
+//         premiumEnd: endDate.toISOString(),
+//         createdAt: new Date().toISOString(),
+//       });
+//       console.log("✅ Created new premium user:", userEmail);
+//     }
+//   } catch (err) {
+//     console.error("❌ Error handling session:", err);
+//     return new NextResponse("Handler error", { status: 500 });
+//   }
+
+//   return NextResponse.json({ received: true });
+// }
+
+
+
+
+
+
+
+
+
+
+import { NextResponse } from "next/server"
+import Stripe from "stripe"
+import { client } from "@/sanity/lib/client"
 
 export const config = {
   api: {
-    bodyParser: false, 
+    bodyParser: false,
   },
-};
+}
+
+const TEST_MODE = true
+const TEST_DURATION_MINUTES = 3 // 3 minutes for testing
 
 export async function POST(req: Request) {
-  console.log("🚀 Incoming Stripe webhook...");
+  console.log("🚀 Incoming Stripe webhook...")
+  const payload = await req.text()
+  const sig = req.headers.get("stripe-signature")!
 
-  const payload = await req.text();
-  const sig = req.headers.get("stripe-signature")!;
-  
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const stripeSecret = process.env.STRIPE_SECRET_KEY; 
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+  const stripeSecret = process.env.STRIPE_SECRET_KEY
 
   if (!webhookSecret || !stripeSecret) {
-    console.error("❌ Missing Stripe webhook secret or live secret key");
-    return new NextResponse("Missing env vars", { status: 500 });
+    console.error("❌ Missing Stripe webhook secret or live secret key")
+    return new NextResponse("Missing env vars", { status: 500 })
   }
 
-  const stripe = new Stripe(stripeSecret);
+  const stripe = new Stripe(stripeSecret)
 
-  let event: Stripe.Event;
+  let event: Stripe.Event
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, webhookSecret);
-    console.log("✅ Webhook verified:", event.type);
+    event = stripe.webhooks.constructEvent(payload, sig, webhookSecret)
+    console.log("✅ Webhook verified:", event.type)
   } catch (err) {
-    console.error("❌ Webhook verification failed:", err);
-    return new NextResponse("Webhook verification failed", { status: 400 });
+    console.error("❌ Webhook verification failed:", err)
+    return new NextResponse("Webhook verification failed", { status: 400 })
   }
 
   if (event.type !== "checkout.session.completed") {
-    console.log("⚠️ Ignoring event:", event.type);
-    return NextResponse.json({ received: true });
+    console.log("⚠️ Ignoring event:", event.type)
+    return NextResponse.json({ received: true })
   }
 
   try {
-    const session = event.data.object as Stripe.Checkout.Session;
-    console.log("💡 Checkout session:", session.id);
+    const session = event.data.object as Stripe.Checkout.Session
+    console.log("💡 Checkout session:", session.id)
 
-    // get email
-    let userEmail =
-      session.customer_details?.email || session.customer_email || null;
+    // Get email
+    let userEmail = session.customer_details?.email || session.customer_email || null
 
     if (!userEmail && session.customer) {
-      const customer = await stripe.customers.retrieve(session.customer as string);
-      if (!("deleted" in customer)) userEmail = (customer).email ?? null;
+      const customer = await stripe.customers.retrieve(session.customer as string)
+      if (!("deleted" in customer)) userEmail = customer.email ?? null
     }
 
     if (!userEmail) {
-      console.error("❌ No email in session");
-      return NextResponse.json({ received: true, warning: "No email" });
+      console.error("❌ No email in session")
+      return NextResponse.json({ received: true, warning: "No email" })
     }
 
-    // optional: retrieve paymentIntent to get charges/payment method
-    let paymentIntent: (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> }) | null = null;
+    // Retrieve payment intent and charges
+    let paymentIntent:
+      | (Stripe.PaymentIntent & {
+          charges?: Stripe.ApiList<Stripe.Charge>
+        })
+      | null = null
+
     if (session.payment_intent) {
-      paymentIntent = await stripe.paymentIntents.retrieve(
-        session.payment_intent as string,
-        { expand: ["charges"] }
-      ) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+      paymentIntent = (await stripe.paymentIntents.retrieve(session.payment_intent as string, {
+        expand: ["charges"],
+      })) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> }
     }
 
-    const charge = paymentIntent?.charges?.data?.[0];
-    const paymentMethod = charge?.payment_method_details;
-    const billingAddress = charge?.billing_details?.address || session.customer_details?.address;
+    const charge = paymentIntent?.charges?.data?.[0]
+    const paymentMethod = charge?.payment_method_details
+    const billingAddress = charge?.billing_details?.address || session.customer_details?.address
 
-    const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+    const lineItems = await stripe.checkout.sessions.listLineItems(session.id)
 
-    const euros = session.amount_total ? session.amount_total / 100 : 0;
-    const months = euros;
-    const startDate = new Date();
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + months);
+    const amountInEUR = session.amount_total ? session.amount_total / 100 : 0
+
+    const startDate = new Date()
+    const endDate = new Date(startDate)
+
+    if (TEST_MODE) {
+      // Test mode: 3 minutes
+      endDate.setMinutes(endDate.getMinutes() + TEST_DURATION_MINUTES)
+      console.log(`📋 TEST MODE: Premium will expire in ${TEST_DURATION_MINUTES} minutes`)
+    } else {
+      // Real formula: amount in EUR × 30 days
+      const daysToAdd = amountInEUR * 30
+      endDate.setDate(endDate.getDate() + daysToAdd)
+      console.log(`💰 PRODUCTION: ${amountInEUR} EUR = ${daysToAdd} days premium`)
+    }
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
-        ? Object.entries(session.metadata).map(([k, v]) => ({ key: k, value: String(v) }))
-        : [];
+        ? Object.entries(session.metadata).map(([k, v]) => ({
+            key: k,
+            value: String(v),
+          }))
+        : []
 
     const newPayment = {
       _key: session.id,
@@ -120,18 +312,15 @@ export async function POST(req: Request) {
         currency: item.currency,
       })),
       createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
-    };
+    }
 
-    console.log("💳 Prepared payment for:", userEmail);
+    console.log("💳 Prepared payment for:", userEmail)
 
     // Update or create premiumUser
-    const existingUser = await client.fetch(
-      `*[_type == "premiumUser" && email == $email][0]`,
-      { email: userEmail }
-    );
+    const existingUser = await client.fetch(`*[_type == "premiumUser" && email == $email][0]`, { email: userEmail })
 
     if (existingUser) {
-      console.log("🧾 Updating existing user:", existingUser._id);
+      console.log("🧾 Updating existing user:", existingUser._id)
       await client
         .patch(existingUser._id)
         .setIfMissing({ payments: [] })
@@ -140,10 +329,10 @@ export async function POST(req: Request) {
           premiumStart: startDate.toISOString(),
           premiumEnd: endDate.toISOString(),
         })
-        .commit();
-      console.log("✅ Updated user:", userEmail);
+        .commit()
+      console.log("✅ Updated user premium duration:", userEmail)
     } else {
-      console.log("🆕 Creating new premium user:", userEmail);
+      console.log("🆕 Creating new premium user:", userEmail)
       await client.create({
         _type: "premiumUser",
         email: userEmail,
@@ -152,13 +341,13 @@ export async function POST(req: Request) {
         premiumStart: startDate.toISOString(),
         premiumEnd: endDate.toISOString(),
         createdAt: new Date().toISOString(),
-      });
-      console.log("✅ Created new premium user:", userEmail);
+      })
+      console.log("✅ Created new premium user:", userEmail)
     }
   } catch (err) {
-    console.error("❌ Error handling session:", err);
-    return new NextResponse("Handler error", { status: 500 });
+    console.error("❌ Error handling session:", err)
+    return new NextResponse("Handler error", { status: 500 })
   }
 
-  return NextResponse.json({ received: true });
+  return NextResponse.json({ received: true })
 }
