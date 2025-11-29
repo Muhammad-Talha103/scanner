@@ -7,9 +7,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { GrUpgrade } from "react-icons/gr";
 import { IoMdLogIn } from "react-icons/io";
+import { setUserInfo } from "@/redux/slice";
 
 interface UserDropdownProps {
   isOpen: boolean;
@@ -34,9 +35,12 @@ export const UserDropdown = ({
   onLogout,
 }: UserDropdownProps) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
+
   const [isPremium, setIsPremium] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -75,6 +79,9 @@ export const UserDropdown = ({
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ email: userInfo.email }),
             });
+
+            // Update Redux state to reflect expiration globally
+            dispatch(setUserInfo({ ...userInfo, isPremium: false }));
           } catch (err) {
             console.error("Error moving user to premium_ends:", err);
           }
@@ -90,7 +97,7 @@ export const UserDropdown = ({
         setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
       };
 
-      // Start countdown
+      // Start countdown immediately
       updateCountdown();
       timerRef.current = setInterval(updateCountdown, 1000);
     };
@@ -100,7 +107,7 @@ export const UserDropdown = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [userInfo?.email]);
+  }, [userInfo?.email, dispatch]);
 
   return (
     <div
@@ -185,6 +192,7 @@ export const UserDropdown = ({
     </div>
   );
 };
+
 
 
 

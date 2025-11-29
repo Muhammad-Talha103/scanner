@@ -28,6 +28,7 @@ export async function POST(req: Request) {
       await client.create({
         _type: "premium_ends",
         name: user.name,
+        _id: docId,
         email: user.email,
         payments: user.payments || [],
         premiumStart: user.premiumStart,
