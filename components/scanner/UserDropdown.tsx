@@ -6,7 +6,7 @@ import { RootState } from "@/redux/store";
 import { client } from "@/sanity/lib/client";
 import { User, LogOut } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -40,40 +40,12 @@ export const UserDropdown = ({
   const [isPremium, setIsPremium] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (!userInfo?.email) return;
 
-    let timer: NodeJS.Timeout | null = null;
-    
-    const updateCountdown = async (premiumEnd: string) => {
-      const now = new Date().getTime();
-      const end = new Date(premiumEnd).getTime();
-      const diff = end - now;
-
-      if (diff <= 0) {
-        setTimeLeft("Premium Expired");
-        setIsPremium(false);
-
-        if (timer) clearInterval(timer);
-
-        // 🔥 Move user instantly
-        await fetch("/api/check-premium-expire", {
-          method: "POST",
-          body: JSON.stringify({ email: userInfo.email }),
-        });
-
-        return;
-      }
-
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-
-      setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
-    };
-
-    const fetchPremium = async () => {
+    const checkPremium = async () => {
       const data: PremiumUser = await client.fetch(
         `*[_type == "premiumUser" && email == $email][0]`,
         { email: userInfo.email }
@@ -81,23 +53,54 @@ export const UserDropdown = ({
 
       if (!data?.premiumEnd) {
         setIsPremium(false);
+        setTimeLeft(null);
         return;
       }
 
       setIsPremium(true);
-      updateCountdown(data.premiumEnd);
 
-      timer = setInterval(() => {
-        updateCountdown(data.premiumEnd!);
-      }, 1000);
+      const updateCountdown = async () => {
+        const now = Date.now();
+        const end = new Date(data.premiumEnd!).getTime();
+        const diff = end - now;
+
+        if (diff <= 0) {
+          setTimeLeft("Premium Expired");
+          setIsPremium(false);
+          if (timerRef.current) clearInterval(timerRef.current);
+
+          try {
+            await fetch("/api/check-premium-expire", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: userInfo.email }),
+            });
+          } catch (err) {
+            console.error("Error moving user to premium_ends:", err);
+          }
+          return;
+        }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
+      };
+
+      updateCountdown();
+      timerRef.current = setInterval(updateCountdown, 1000);
     };
 
-    fetchPremium();
+    checkPremium();
 
     return () => {
-      if (timer) clearInterval(timer);
+      if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [userInfo?.email]);
+
+
 
   return (
     <div
