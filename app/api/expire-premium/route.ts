@@ -58,19 +58,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // 1️⃣ Move expired user
-    await client.create({
-      _type: "premium_user_ends",
-      name: data.name || "",
-      email: data.email,
-      payments: data.payments || [],
-      premiumStart: data.premiumStart,
-      premiumEnd: data.premiumEnd,
-      movedAt: new Date().toISOString(),
-    });
+    // // 1️⃣ Move expired user
+    // await client.create({
+    //   _type: "premium_user_ends",
+    //   name: data.name || "",
+    //   email: data.email,
+    //   payments: data.payments || [],
+    //   premiumStart: data.premiumStart,
+    //   premiumEnd: data.premiumEnd,
+    //   movedAt: new Date().toISOString(),
+    // });
 
     // 2️⃣ Delete from premiumUser
-    await client.delete(data._id);
+    // await client.delete(data._id);
 
     return NextResponse.json({ success: true });
   } catch (error) {
