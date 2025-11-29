@@ -1,115 +1,100 @@
-//components/scanner/UserDropdown.tsx
+"use client"
 
-"use client";
-
-import { RootState } from "@/redux/store";
-import { client } from "@/sanity/lib/client";
-import { User, LogOut } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { MdOutlineWorkspacePremium } from "react-icons/md";
-import { useSelector } from "react-redux";
-import { GrUpgrade } from "react-icons/gr";
-import { IoMdLogIn } from "react-icons/io";
+import type { RootState } from "@/redux/store"
+import { client } from "@/sanity/lib/client"
+import { User, LogOut } from "lucide-react"
+import Link from "next/link"
+import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { MdOutlineWorkspacePremium } from "react-icons/md"
+import { useSelector } from "react-redux"
+import { GrUpgrade } from "react-icons/gr"
+import { IoMdLogIn } from "react-icons/io"
+import { movePremiumToEnds } from "@/app/premium_actions"
 
 interface UserDropdownProps {
-  isOpen: boolean;
-  userName: string | null;
-  userEmail: string;
-  onLogout: () => void;
+  isOpen: boolean
+  userName: string | null
+  userEmail: string
+  onLogout: () => void
 }
 
 interface PremiumUser {
-  _id?: string;
-  email: string;
-  name?: string;
-  payments?: unknown[];
-  premiumStart?: string;
-  premiumEnd?: string;
+  _id?: string
+  email: string
+  name?: string
+  payments?: unknown[]
+  premiumStart?: string
+  premiumEnd?: string
 }
 
-export const UserDropdown = ({
-  isOpen,
-  userName,
-  userEmail,
-  onLogout,
-}: UserDropdownProps) => {
-  const { t } = useTranslation();
-  const userInfo = useSelector((state: RootState) => state.user.userInfo);
-  const [isPremium, setIsPremium] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<string | null>(null);
-
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+export const UserDropdown = ({ isOpen, userName, userEmail, onLogout }: UserDropdownProps) => {
+  const { t } = useTranslation()
+  const userInfo = useSelector((state: RootState) => state.user.userInfo)
+  const [isPremium, setIsPremium] = useState(false)
+  const [timeLeft, setTimeLeft] = useState<string | null>(null)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const hasMovedRef = useRef(false)
 
   useEffect(() => {
-    if (!userInfo?.email) return;
+    if (!userInfo?.email) return
 
     const checkPremium = async () => {
-      const data: PremiumUser = await client.fetch(
-        `*[_type == "premiumUser" && email == $email][0]`,
-        { email: userInfo.email }
-      );
+      const data: PremiumUser = await client.fetch(`*[_type == "premiumUser" && email == $email][0]`, {
+        email: userInfo.email,
+      })
 
       if (!data?.premiumEnd) {
-        setIsPremium(false);
-        setTimeLeft(null);
-        return;
+        setIsPremium(false)
+        setTimeLeft(null)
+        return
       }
 
-      setIsPremium(true);
+      setIsPremium(true)
 
       const updateCountdown = async () => {
-        const now = Date.now();
-        const end = new Date(data.premiumEnd!).getTime();
-        const diff = end - now;
+        const now = Date.now()
+        const end = new Date(data.premiumEnd!).getTime()
+        const diff = end - now
 
         if (diff <= 0) {
-          setTimeLeft("Premium Expired");
-          setIsPremium(false);
-          if (timerRef.current) clearInterval(timerRef.current);
+          if (!hasMovedRef.current) {
+            hasMovedRef.current = true
+            setTimeLeft("Premium Expired")
+            setIsPremium(false)
+            if (timerRef.current) clearInterval(timerRef.current)
 
-          try {
-            await fetch("/api/check-premium-expire", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ email: userInfo.email }),
-            });
-          } catch (err) {
-            console.error("Error moving user to premium_ends:", err);
+            // Instantly trigger server action without waiting
+            await movePremiumToEnds(userInfo.email || "")
           }
-          return;
+          return
         }
 
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
+        // Calculate and display remaining time
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24))
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24)
+        const m = Math.floor((diff / (1000 * 60)) % 60)
+        const s = Math.floor((diff / 1000) % 60)
+        setTimeLeft(`${d}d ${h}h ${m}m ${s}s`)
+      }
 
-        setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
-      };
+      updateCountdown()
+      timerRef.current = setInterval(updateCountdown, 100)
+    }
 
-      updateCountdown();
-      timerRef.current = setInterval(updateCountdown, 1000);
-    };
-
-    checkPremium();
+    checkPremium()
 
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [userInfo?.email]);
-
-
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [userInfo?.email])
 
   return (
     <div
       className={`absolute top-full right-0 mt-2 ${
         userInfo ? "w-64" : "w-[200px]"
       } bg-white border border-gray-300 rounded-lg shadow-lg z-50 transform transition-all duration-200 ease-in-out ${
-        isOpen
-          ? "opacity-100 scale-100 translate-y-0"
-          : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+        isOpen ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
       }`}
     >
       {userInfo?.email ? (
@@ -124,33 +109,22 @@ export const UserDropdown = ({
                 <User className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-extrabold text-gray-900 truncate">
-                  {userName}
-                </p>
-
+                <p className="text-sm font-extrabold text-gray-900 truncate">{userName}</p>
                 {isPremium && (
                   <div className="flex items-center space-x-1 bg-yellow-400 w-fit p-1 text-white rounded-2xl mt-1">
                     <MdOutlineWorkspacePremium />
-                    <p className="text-xs font-medium truncate">
-                      {t("premium")}
-                    </p>
+                    <p className="text-xs font-medium truncate">{t("premium")}</p>
                   </div>
                 )}
-
-                <p className="text-[13px] text-gray-500 truncate mt-1">
-                  {userEmail}
-                </p>
-
+                <p className="text-[13px] text-gray-500 truncate mt-1">{userEmail}</p>
                 {timeLeft && (
                   <p className="text-[12px] text-gray-600 mt-1">
-                    {t("expiresIn")}:{" "}
-                    <span className="font-semibold">{timeLeft}</span>
+                    {t("expiresIn")}: <span className="font-semibold">{timeLeft}</span>
                   </p>
                 )}
               </div>
             </div>
           </div>
-
           <div className="py-2">
             {!isPremium && (
               <Link
@@ -161,7 +135,6 @@ export const UserDropdown = ({
                 <span>{t("admin.upgrade")}</span>
               </Link>
             )}
-
             <button
               onClick={onLogout}
               className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -183,9 +156,8 @@ export const UserDropdown = ({
         </div>
       )}
     </div>
-  );
-};
-
+  )
+}
 
 
 
