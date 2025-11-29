@@ -54,12 +54,12 @@ export const UserDropdown = ({
       if (diff <= 0) {
         setTimeLeft("Premium Expired");
 
-        // Call API to move and delete user
-        await fetch("/api/expire-premium", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(premiumUser),
-        });
+        // // Call API to move and delete user
+        // await fetch("/api/expire-premium", {
+        //   method: "POST",
+        //   headers: { "Content-Type": "application/json" },
+        //   body: JSON.stringify(premiumUser),
+        // });
 
         setIsPremium(false);
         return;
