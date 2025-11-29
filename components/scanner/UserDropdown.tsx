@@ -17,11 +17,20 @@ interface UserDropdownProps {
   onLogout: () => void;
 }
 
+interface Payment {
+  id?: string;
+  amount?: number;
+  status?: string;
+  createdAt?: string;
+  [key: string]: string | number | boolean | undefined;
+}
+
+
 interface PremiumUser {
   _id?: string;
   email: string;
   name?: string;
-  payments?: any[];
+  payments?: Payment[];
   premiumStart?: string;
   premiumEnd?: string;
 }
