@@ -1,4 +1,7 @@
+//components/scanner/UserDropdown.tsx
+
 "use client";
+
 import { RootState } from "@/redux/store";
 import { client } from "@/sanity/lib/client";
 import { User, LogOut } from "lucide-react";
@@ -17,20 +20,11 @@ interface UserDropdownProps {
   onLogout: () => void;
 }
 
-interface Payment {
-  id?: string;
-  amount?: number;
-  status?: string;
-  createdAt?: string;
-  [key: string]: string | number | boolean | undefined;
-}
-
-
 interface PremiumUser {
   _id?: string;
   email: string;
   name?: string;
-  payments?: Payment[];
+  payments?: unknown[];
   premiumStart?: string;
   premiumEnd?: string;
 }
@@ -49,43 +43,25 @@ export const UserDropdown = ({
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    const handlePremiumExpiration = async (premiumUser: PremiumUser) => {
-      try {
-        if (!premiumUser?._id) return;
-
-        // 1️⃣ Move to "premium_user_ends"
-        await client.create({
-          _type: "premium_user_ends",
-          name: premiumUser.name || "",
-          email: premiumUser.email,
-          payments: premiumUser.payments || [],
-          premiumStart: premiumUser.premiumStart,
-          premiumEnd: premiumUser.premiumEnd,
-          movedAt: new Date().toISOString(),
-        });
-
-        // 2️⃣ Delete from "premiumUser"
-        await client.delete(premiumUser._id);
-
-        console.log("Premium expired — user moved to premium_user_ends");
-
-        // 3️⃣ Update UI instantly
-        setIsPremium(false);
-        setTimeLeft("Premium Expired");
-      } catch (err) {
-        console.error("❌ Failed to move expired premium user:", err);
-      }
-    };
-
-    const updateCountdown = async (premiumUser: PremiumUser, endDateStr: string) => {
+    const updateCountdown = async (
+      premiumUser: PremiumUser,
+      endDateStr: string
+    ) => {
       const end = new Date(endDateStr).getTime();
       const now = new Date().getTime();
       const diff = end - now;
 
-      // When expired
       if (diff <= 0) {
         setTimeLeft("Premium Expired");
-        await handlePremiumExpiration(premiumUser);
+
+        // Call API to move and delete user
+        await fetch("/api/expire-premium", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(premiumUser),
+        });
+
+        setIsPremium(false);
         return;
       }
 
@@ -109,24 +85,23 @@ export const UserDropdown = ({
           email: userInfo.email,
         });
 
-        if (premiumUser && premiumUser.premiumEnd) {
+        if (premiumUser?.premiumEnd) {
           setIsPremium(true);
 
-          // Initial check
           updateCountdown(premiumUser, premiumUser.premiumEnd);
 
-          // Live countdown
-         if (premiumUser.premiumEnd) {
-  timer = setInterval(() => {
-    updateCountdown(premiumUser, premiumUser.premiumEnd!);
-  }, 1000);
-}
+          // Start live countdown
+          timer = setInterval(() => {
+            if (premiumUser.premiumEnd) {
+              updateCountdown(premiumUser, premiumUser.premiumEnd);
+            }
+          }, 1000);
         } else {
           setIsPremium(false);
           setTimeLeft(null);
         }
-      } catch (err) {
-        console.error("❌ Failed to fetch premium user:", err);
+      } catch (error) {
+        console.error("❌ Failed to fetch premium user:", error);
       }
     };
 
@@ -166,7 +141,9 @@ export const UserDropdown = ({
                 {isPremium && (
                   <div className="flex items-center space-x-1 bg-yellow-400 w-fit p-1 text-white rounded-2xl mt-1">
                     <MdOutlineWorkspacePremium />
-                    <p className="text-xs font-medium truncate">{t("premium")}</p>
+                    <p className="text-xs font-medium truncate">
+                      {t("premium")}
+                    </p>
                   </div>
                 )}
 
@@ -188,7 +165,7 @@ export const UserDropdown = ({
             {!isPremium && (
               <Link
                 href="/upgrade"
-                className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+                className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 <GrUpgrade className="w-4 h-4 mr-3 text-gray-500" />
                 <span>{t("admin.upgrade")}</span>
@@ -197,7 +174,7 @@ export const UserDropdown = ({
 
             <button
               onClick={onLogout}
-              className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+              className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               <LogOut className="w-4 h-4 mr-3 text-gray-500" />
               <span>{t("admin.logout")}</span>
@@ -208,7 +185,7 @@ export const UserDropdown = ({
         <div className="py-2 px-2 flex justify-center">
           <Link
             href="/signin"
-            className="gap-x-3 w-full flex justify-center items-center px-4 py-2 text-sm text-black font-semibold hover:text-white rounded-lg hover:bg-blue-700 transition-colors duration-150"
+            className="gap-x-3 w-full flex justify-center items-center px-4 py-2 text-sm text-black font-semibold hover:text-white rounded-lg hover:bg-blue-700"
           >
             <IoMdLogIn className="w-6 h-6" />
             <button>{t("login_admin.signIn")}</button>
@@ -218,9 +195,6 @@ export const UserDropdown = ({
     </div>
   );
 };
-
-
-
 
 
 
