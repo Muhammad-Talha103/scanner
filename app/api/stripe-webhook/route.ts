@@ -72,10 +72,13 @@ export async function POST(req: Request) {
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
     const euros = session.amount_total ? session.amount_total / 100 : 0;
-    const months = euros;
+    // const months = euros;
+    // const startDate = new Date();
+    // const endDate = new Date(startDate);
+    // endDate.setMonth(endDate.getMonth() + months);
+
     const startDate = new Date();
-    const endDate = new Date(startDate);
-    endDate.setMonth(endDate.getMonth() + months);
+    const endDate = new Date(startDate.getTime() + 3 * 60 * 1000);
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
