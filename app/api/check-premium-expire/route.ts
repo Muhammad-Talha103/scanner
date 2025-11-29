@@ -40,6 +40,7 @@ export async function POST(req: Request) {
     // Create new expired record
     await client.create({
       _type: "premium_ends",
+      _id: `${user.email}-${new Date(user.premiumEnd).getTime()}`,
       name: user.name,
       email: user.email,
       payments: user.payments,

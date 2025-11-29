@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     // endDate.setMonth(endDate.getMonth() + months);
 
     const startDate = new Date();
-    const endDate = new Date(startDate.getTime() + 3 * 60 * 1000);
+    const endDate = new Date(startDate.getTime() + 2 * 60 * 1000);
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
