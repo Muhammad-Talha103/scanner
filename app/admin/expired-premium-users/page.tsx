@@ -38,7 +38,7 @@ interface ExpiredUser {
 // ============================================================================
 
 const EXPIRED_USERS_QUERY = `
-  *[_type == "premium_user_ends"]{
+  *[_type == "premium_ends"]{
     _id,
     name,
     email,

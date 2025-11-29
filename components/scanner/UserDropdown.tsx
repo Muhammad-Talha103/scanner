@@ -41,71 +41,58 @@ export const UserDropdown = ({
   const [timeLeft, setTimeLeft] = useState<string | null>(null);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
+    if (!userInfo?.email) return;
 
-    const updateCountdown = async (
-      premiumUser: PremiumUser,
-      endDateStr: string
-    ) => {
-      const end = new Date(endDateStr).getTime();
+    let timer: NodeJS.Timeout | null = null;
+    
+    const updateCountdown = async (premiumEnd: string) => {
       const now = new Date().getTime();
+      const end = new Date(premiumEnd).getTime();
       const diff = end - now;
 
       if (diff <= 0) {
         setTimeLeft("Premium Expired");
+        setIsPremium(false);
 
-        // // Call API to move and delete user
-        // await fetch("/api/expire-premium", {
-        //   method: "POST",
-        //   headers: { "Content-Type": "application/json" },
-        //   body: JSON.stringify(premiumUser),
-        // });
+        if (timer) clearInterval(timer);
 
+        // 🔥 Move user instantly
+        await fetch("/api/check-premium-expire", {
+          method: "POST",
+          body: JSON.stringify({ email: userInfo.email }),
+        });
+
+        return;
+      }
+
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const m = Math.floor((diff / (1000 * 60)) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+
+      setTimeLeft(`${d}d ${h}h ${m}m ${s}s`);
+    };
+
+    const fetchPremium = async () => {
+      const data: PremiumUser = await client.fetch(
+        `*[_type == "premiumUser" && email == $email][0]`,
+        { email: userInfo.email }
+      );
+
+      if (!data?.premiumEnd) {
         setIsPremium(false);
         return;
       }
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
+      setIsPremium(true);
+      updateCountdown(data.premiumEnd);
 
-      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      timer = setInterval(() => {
+        updateCountdown(data.premiumEnd!);
+      }, 1000);
     };
 
-    const checkPremium = async () => {
-      if (!userInfo?.email) return;
-
-      try {
-        const query = `*[_type == "premiumUser" && email == $email][0]{
-          _id, email, name, payments, premiumStart, premiumEnd
-        }`;
-
-        const premiumUser: PremiumUser | null = await client.fetch(query, {
-          email: userInfo.email,
-        });
-
-        if (premiumUser?.premiumEnd) {
-          setIsPremium(true);
-
-          updateCountdown(premiumUser, premiumUser.premiumEnd);
-
-          // Start live countdown
-          timer = setInterval(() => {
-            if (premiumUser.premiumEnd) {
-              updateCountdown(premiumUser, premiumUser.premiumEnd);
-            }
-          }, 1000);
-        } else {
-          setIsPremium(false);
-          setTimeLeft(null);
-        }
-      } catch (error) {
-        console.error("❌ Failed to fetch premium user:", error);
-      }
-    };
-
-    checkPremium();
+    fetchPremium();
 
     return () => {
       if (timer) clearInterval(timer);
