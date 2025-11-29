@@ -17,6 +17,8 @@ interface UserDropdownProps {
   onLogout: () => void;
 }
 
+
+
 interface Payment {
   id?: string;
   amount?: number;
