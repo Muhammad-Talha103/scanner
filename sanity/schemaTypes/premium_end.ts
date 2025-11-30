@@ -7,6 +7,11 @@ export default {
   title: "Expired Premium Users",
   fields: [
     {
+      name: "originalId",        
+      type: "string",
+      title: "Original Premium User ID",
+    },
+    {
       name: "name",
       type: "string",
       title: "Name",
