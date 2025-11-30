@@ -6,7 +6,7 @@ interface PremiumUser {
   name?: string;
   premiumStart?: string;
   premiumEnd?: string;
-  payments?: any[];
+  payments?: [];
 }
 
 // Store connected SSE clients
