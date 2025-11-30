@@ -1,3 +1,5 @@
+//app/api/check-premium-expire/route.ts
+
 import { NextResponse } from "next/server";
 import { client } from "@/sanity/lib/client";
 

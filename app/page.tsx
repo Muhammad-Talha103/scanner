@@ -1,3 +1,5 @@
+// app/page.tsx
+
 "use client";
 
 import type React from "react";
@@ -48,6 +50,7 @@ import Marquee from "@/components/scanner/Advertise";
 import { useTranslation } from "react-i18next";
 import type { SaveOptions } from "@/components/scanner/SaveModal";
 import QrCodeImage from "@/public/greweqr.png";
+import { usePremiumSSE } from "@/hooks/usePremiumSSE";
 
 interface DropdownItem {
   label: string;
@@ -135,7 +138,9 @@ const addWatermarkToPdf = async (pdf: jsPDF, isPremium: boolean) => {
   }
 };
 
+
 export default function ScannerApp() {
+   usePremiumSSE();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -187,11 +192,16 @@ export default function ScannerApp() {
     updateScannerCapabilities,
   } = useScannerIntegration(showScannerUI);
 
+
+
   useEffect(() => {
     if (userInfo?.email) {
       window.__USER_EMAIL__ = userInfo.email;
     }
   }, [userInfo?.email]);
+
+
+  
 
   useEffect(() => {
     if (!userInfo?.email) {
