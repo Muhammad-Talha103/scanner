@@ -69,7 +69,8 @@ const checkExpiredPremiumUsers = async () => {
 
       // Move user to expired
       await client.create({
-        _type: "premiumEndedUser",
+        _type: "premium_ends",
+        _id: `expired-${user._id}`,
         email: user.email,
         name: user.name || null,
         premiumStart: user.premiumStart || null,
