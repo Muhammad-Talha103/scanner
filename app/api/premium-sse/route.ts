@@ -31,7 +31,7 @@ const checkExpiredPremiumUsers = async () => {
     if (expiredEmails.has(emailLower)) continue;
 
     const alreadyExpired: { email: string }[] = await client.fetch(
-      `*[_type == "premiumEndedUser" && lower(email) == $email]`,
+      `*[_type == "premium_ends" && lower(email) == $email]`,
       { email: emailLower }
     );
 
