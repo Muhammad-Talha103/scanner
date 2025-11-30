@@ -27,7 +27,6 @@ import {
   BookOpenCheck,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 import { signOut as firebaseSignOut } from "firebase/auth";
 import { jsPDF } from "jspdf";
 
@@ -141,9 +140,10 @@ const addWatermarkToPdf = async (pdf: jsPDF, isPremium: boolean) => {
 
 export default function ScannerApp() {
    usePremiumSSE();
+   console.log("[v2] usePremiumSSE hook initialized");
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const router = useRouter();
+ 
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
 
   // Local states
