@@ -32,7 +32,8 @@ const seoKeywords = [
   "Share Scanned Documents via Email"
 ];
 
-const generatedTitle = `${seoKeywords.join(" | ")} - Innovative Document & Imaging Solutions`;
+const keywordString = seoKeywords.join(", ");
+const generatedTitle = `GreweScan - Innovative Document & Imaging Solutions`;
 
 export const metadata: Metadata = {
   title: {
@@ -43,7 +44,7 @@ export const metadata: Metadata = {
   description:
     "GreweScan provides advanced browser-based TWAIN document scanning, PDF generation, and secure email delivery. Scan documents online, convert them to PDF, and instantly send them via email for fast and professional digital workflows.",
 
-  keywords: seoKeywords,
+  keywords: keywordString,
 
   authors: [{ name: "GreweScan", url: "https://grewescan.de" }],
   creator: "GreweScan",
