@@ -7,7 +7,6 @@ import Script from "next/script";
 // 🟢 i18n imports
 import { dir } from "i18next";
 import I18nProvider from "./i18n-provider";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 const seoKeywords = [
@@ -127,7 +126,7 @@ export default function RootLayout({
 
   return (
     <html lang={lng} dir={dir(lng)}>
-      <Head>
+      <head>
         {/* Add Script Tags Here */}
         <meta name="google-site-verification" content="vP1M5mm-6MiR2x_Q6YpZKpdWvmHRuZJ8Kv5gMCjP60Q" />
         <Script
@@ -165,7 +164,7 @@ export default function RootLayout({
   }}
 />
 
-      </Head>
+      </head>
       <body className={inter.className}>
         <ClientProvider>
         
