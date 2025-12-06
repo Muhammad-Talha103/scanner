@@ -7,6 +7,7 @@ import Script from "next/script";
 // 🟢 i18n imports
 import { dir } from "i18next";
 import I18nProvider from "./i18n-provider";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 const seoKeywords = [
@@ -42,7 +43,8 @@ export const metadata: Metadata = {
   },
 
   description:
-    "GreweScan provides advanced browser-based TWAIN document scanning, PDF generation, and secure email delivery. Scan documents online, convert them to PDF, and instantly send them via email for fast and professional digital workflows.",
+  "GreweScanner is using the encleso TWAIN web scan component from encleso.com",
+    // "GreweScan provides advanced browser-based TWAIN document scanning, PDF generation, and secure email delivery. Scan documents online, convert them to PDF, and instantly send them via email for fast and professional digital workflows.",
 
   keywords: keywordString,
 
@@ -67,7 +69,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: "GreweScan – Online Document Scanning, PDF Tools & Email PDF Sending",
     description:
-      "Use GreweScan to scan documents directly in your browser, generate high-quality PDFs, and send them instantly via email. Secure, fast, and built for modern businesses.",
+      // "Use GreweScan to scan documents directly in your browser, generate high-quality PDFs, and send them instantly via email. Secure, fast, and built for modern businesses.",
+      "GreweScan provides advanced browser-based TWAIN document scanning, PDF generation, and secure email delivery. Scan documents online, convert them to PDF, and instantly send them via email for fast and professional digital workflows.",
     url: "https://grewescan.de",
     siteName: "GreweScan",
     locale: "de_DE",
@@ -124,7 +127,7 @@ export default function RootLayout({
 
   return (
     <html lang={lng} dir={dir(lng)}>
-      <head>
+      <Head>
         {/* Add Script Tags Here */}
         <meta name="google-site-verification" content="vP1M5mm-6MiR2x_Q6YpZKpdWvmHRuZJ8Kv5gMCjP60Q" />
         <Script
@@ -142,7 +145,27 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <Script src="/encleso.js" strategy="afterInteractive" />
-      </head>
+        <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "GreweScan",
+      operatingSystem: "Web",
+      applicationCategory: "BusinessApplication",
+      description:
+        "Browser-based TWAIN document scanning tool with PDF export, email sending, and cloud-friendly workflow.",
+      offers: {
+        "@type": "Offer",
+        price: "1.00",
+        priceCurrency: "eur",
+      },
+    }),
+  }}
+/>
+
+      </Head>
       <body className={inter.className}>
         <ClientProvider>
         
