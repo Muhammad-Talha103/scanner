@@ -33,11 +33,10 @@ const seoKeywords = [
 ];
 
 const keywordString = seoKeywords.join(", ");
-const generatedTitle = `GreweScan - Innovative Document & Imaging Solutions`;
 
 export const metadata: Metadata = {
   title: {
-    default: generatedTitle,
+    default: "GreweScan - Innovative Document & Imaging Solutions",
     template: "%s | GreweScan",
   },
 
