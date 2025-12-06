@@ -145,7 +145,7 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <Script src="/encleso.js" strategy="afterInteractive" />
-        <script
+        <Script
   type="application/ld+json"
   dangerouslySetInnerHTML={{
     __html: JSON.stringify({
