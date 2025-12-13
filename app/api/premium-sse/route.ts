@@ -35,11 +35,11 @@ const checkExpiredPremiumUsers = async () => {
       { now }
     );
 
-    console.log("[Expiration] Found expired users:", expiredUsers.length);
+  
 
     for (const user of expiredUsers) {
       if (!user._id) {
-        console.warn("[Expiration] User has no _id, skipping:", user.email);
+       
         continue;
       }
 
@@ -47,7 +47,7 @@ const checkExpiredPremiumUsers = async () => {
       if (expiredIds.has(user._id)) continue;
 
       const emailLower = user.email.toLowerCase();
-      console.log("[Expiration] Processing user:", user.email);
+
 
       // Double-check in Sanity if already moved (_id based)
       const alreadyExpired: { _id: string }[] = await client.fetch(
@@ -55,7 +55,6 @@ const checkExpiredPremiumUsers = async () => {
         { id: user._id }
       );
       if (alreadyExpired.length > 0) {
-        console.log("[Expiration] Already expired in Sanity:", user.email);
         expiredIds.add(user._id);
         continue;
       }
@@ -72,11 +71,11 @@ const checkExpiredPremiumUsers = async () => {
           payments: user.payments || [],
           movedAt: new Date().toISOString(),
         });
-        console.log("[Expiration] Moved to premium_ends:", created);
+        
 
         // Delete from active premium
         const deleted = await client.delete(user._id);
-        console.log("[Expiration] Deleted from premiumUser:", deleted);
+        
 
         // Mark as expired in memory
         expiredIds.add(user._id);

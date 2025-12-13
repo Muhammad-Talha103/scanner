@@ -168,7 +168,7 @@ class ImageStorageManager {
         if (cursor) {
           const backupData = cursor.value
           if (backupData.appState && this.validateAppState(backupData.appState)) {
-            console.log("Successfully recovered from backup")
+            
             resolve(backupData.appState)
           } else {
             cursor.continue() // Try next backup
@@ -251,7 +251,7 @@ private validateAppState(appState: Partial<AppState>): appState is AppState {
       // Try backups from newest to oldest
       for (let i = backups.length - 1; i >= 0; i--) {
         if (this.validateAppState(backups[i].appState)) {
-          console.log("Successfully recovered from localStorage backup")
+          
           return backups[i].appState
         }
       }
@@ -273,11 +273,9 @@ private validateAppState(appState: Partial<AppState>): appState is AppState {
   async saveWithFallback(appState: AppState): Promise<void> {
     try {
       await this.saveAppState(appState)
-      console.log("Successfully saved app state to IndexedDB")
     } catch (error) {
       console.warn("IndexedDB save failed, using localStorage:", error)
       this.fallbackSaveAppState(appState)
-      console.log("Successfully saved app state to localStorage")
     }
   }
 
@@ -285,7 +283,6 @@ private validateAppState(appState: Partial<AppState>): appState is AppState {
     try {
       const state = await this.loadAppState()
       if (state) {
-        console.log("Successfully loaded app state from IndexedDB")
         return state
       }
     } catch (error) {
@@ -294,7 +291,6 @@ private validateAppState(appState: Partial<AppState>): appState is AppState {
 
     const fallbackState = this.fallbackLoadAppState()
     if (fallbackState) {
-      console.log("Successfully loaded app state from localStorage")
     }
     return fallbackState
   }

@@ -207,7 +207,7 @@ export const ScannerStatus: React.FC<ScannerStatusProps> = ({
         setDiscardBlankPagesEnabled(false);
 
         const caps = await Encleso.GetCapabilities?.(selectedScanner);
-        // console.log("Fetched capabilities for", selectedScanner, caps);
+        
         if (!caps) return;
 
         if (caps.Resolution?.Values?.length) {

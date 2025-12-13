@@ -2,22 +2,20 @@
 
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { client } from "@/sanity/lib/client"; 
+import { client } from "@/sanity/lib/client";
 
 export const config = {
   api: {
-    bodyParser: false, 
+    bodyParser: false,
   },
 };
 
 export async function POST(req: Request) {
-  console.log("🚀 Incoming Stripe webhook...");
-
   const payload = await req.text();
   const sig = req.headers.get("stripe-signature")!;
-  
+
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  const stripeSecret = process.env.STRIPE_SECRET_KEY; 
+  const stripeSecret = process.env.STRIPE_SECRET_KEY;
 
   if (!webhookSecret || !stripeSecret) {
     console.error("❌ Missing Stripe webhook secret or live secret key");
@@ -29,28 +27,27 @@ export async function POST(req: Request) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(payload, sig, webhookSecret);
-    console.log("✅ Webhook verified:", event.type);
   } catch (err) {
     console.error("❌ Webhook verification failed:", err);
     return new NextResponse("Webhook verification failed", { status: 400 });
   }
 
   if (event.type !== "checkout.session.completed") {
-    console.log("⚠️ Ignoring event:", event.type);
     return NextResponse.json({ received: true });
   }
 
   try {
     const session = event.data.object as Stripe.Checkout.Session;
-    console.log("💡 Checkout session:", session.id);
 
     // get email
     let userEmail =
       session.customer_details?.email || session.customer_email || null;
 
     if (!userEmail && session.customer) {
-      const customer = await stripe.customers.retrieve(session.customer as string);
-      if (!("deleted" in customer)) userEmail = (customer).email ?? null;
+      const customer = await stripe.customers.retrieve(
+        session.customer as string
+      );
+      if (!("deleted" in customer)) userEmail = customer.email ?? null;
     }
 
     if (!userEmail) {
@@ -59,34 +56,40 @@ export async function POST(req: Request) {
     }
 
     // optional: retrieve paymentIntent to get charges/payment method
-    let paymentIntent: (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> }) | null = null;
+    let paymentIntent:
+      | (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> })
+      | null = null;
     if (session.payment_intent) {
-      paymentIntent = await stripe.paymentIntents.retrieve(
+      paymentIntent = (await stripe.paymentIntents.retrieve(
         session.payment_intent as string,
         { expand: ["charges"] }
-      ) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+      )) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
     }
 
     const charge = paymentIntent?.charges?.data?.[0];
     const paymentMethod = charge?.payment_method_details;
-    const billingAddress = charge?.billing_details?.address || session.customer_details?.address;
+    const billingAddress =
+      charge?.billing_details?.address || session.customer_details?.address;
 
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
     const euros = session.amount_total ? session.amount_total / 100 : 0;
 
-    
-    // const months = euros;
-    // const startDate = new Date();
-    // const endDate = new Date(startDate);
-    // endDate.setMonth(endDate.getMonth() + months);
+    const fullMonths = Math.floor(euros);
+    const extraDays = (euros - fullMonths) * 30;
 
     const startDate = new Date();
-    const endDate = new Date(startDate.getTime() + 2 * 60 * 1000);
+
+    const endDate = new Date(startDate);
+    endDate.setMonth(endDate.getMonth() + fullMonths);
+    endDate.setDate(endDate.getDate() + extraDays);
 
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
-        ? Object.entries(session.metadata).map(([k, v]) => ({ key: k, value: String(v) }))
+        ? Object.entries(session.metadata).map(([k, v]) => ({
+            key: k,
+            value: String(v),
+          }))
         : [];
 
     const newPayment = {
@@ -126,10 +129,10 @@ export async function POST(req: Request) {
         amount_total: item.amount_total,
         currency: item.currency,
       })),
-      createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
+      createdAt: session.created
+        ? new Date(session.created * 1000).toISOString()
+        : new Date().toISOString(),
     };
-
-    console.log("💳 Prepared payment for:", userEmail);
 
     // Update or create premiumUser
     const existingUser = await client.fetch(
@@ -138,7 +141,6 @@ export async function POST(req: Request) {
     );
 
     if (existingUser) {
-      console.log("🧾 Updating existing user:", existingUser._id);
       await client
         .patch(existingUser._id)
         .setIfMissing({ payments: [] })
@@ -148,19 +150,19 @@ export async function POST(req: Request) {
           premiumEnd: endDate.toISOString(),
         })
         .commit();
-      console.log("✅ Updated user:", userEmail);
     } else {
-      console.log("🆕 Creating new premium user:", userEmail);
       await client.create({
         _type: "premiumUser",
         email: userEmail,
-        name: charge?.billing_details?.name || session.customer_details?.name || undefined,
+        name:
+          charge?.billing_details?.name ||
+          session.customer_details?.name ||
+          undefined,
         payments: [newPayment],
         premiumStart: startDate.toISOString(),
         premiumEnd: endDate.toISOString(),
         createdAt: new Date().toISOString(),
       });
-      console.log("✅ Created new premium user:", userEmail);
     }
   } catch (err) {
     console.error("❌ Error handling session:", err);

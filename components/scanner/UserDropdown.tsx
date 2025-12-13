@@ -64,6 +64,7 @@ export const UserDropdown = ({
       const diff = end - now;
 
       if (diff <= 0) {
+        setIsPremium(false);
         setTimeLeft("Premium Expired");
         return;
       }

@@ -133,14 +133,13 @@ const addWatermarkToPdf = async (pdf: jsPDF, isPremium: boolean) => {
     pdf.text(WATERMARK_TEXT, textX, textY, { angle: 90, align: "left" });
     pdf.restoreGraphicsState();
   } catch (err) {
-    console.error("[v2] Error adding vertical watermark:", err);
+    console.error("Error adding vertical watermark:", err);
   }
 };
 
 
 export default function ScannerApp() {
    usePremiumSSE();
-   console.log("[v2] usePremiumSSE hook initialized");
   const { t } = useTranslation();
   const dispatch = useDispatch();
  
@@ -278,7 +277,7 @@ export default function ScannerApp() {
         throw new Error("No images selected to save");
       }
 
-      console.log("[v1] Save operation started:", {
+      console.log("Save operation started:", {
         format: options.format,
         imageCount: imagesToSave.length,
         isPremium: isPremiumUser,
@@ -320,11 +319,11 @@ export default function ScannerApp() {
         throw new Error("Invalid save configuration. Please try again.");
       }
 
-      console.log("[v1] Save operation completed successfully");
+
       setSuccessInfo({ fileName, folderPath });
       setShowSuccessModal(true);
     } catch (error) {
-      console.error("[v1] Save operation failed:", error);
+      console.error("Save operation failed:", error);
       throw error;
     }
   };
@@ -710,7 +709,6 @@ const saveImagesToFolder = async (
       await writable.close();
       writable = null;
 
-      console.log(`[v1] Saved multi-page PDF: ${fileName}`);
     } else if (format === "pdf-single") {
       for (let i = 0; i < images.length; i++) {
         const image = images[i];
@@ -749,7 +747,6 @@ const saveImagesToFolder = async (
         await writable.close();
         writable = null;
 
-        console.log(`[v1] Saved single-page PDF: ${fileName}`);
       }
     } else {
       for (let i = 0; i < images.length; i++) {
@@ -770,7 +767,7 @@ const saveImagesToFolder = async (
         await writable.close();
         writable = null;
 
-        console.log(`[v1] Saved file: ${fileName}`);
+        
       }
     }
   } catch (error) {
@@ -781,7 +778,6 @@ const saveImagesToFolder = async (
         console.error("[v1] Error closing writable stream:", closeErr);
       }
     }
-    console.error("[v1] Error saving to folder:", error);
     throw new Error(
       `Failed to save files to folder: ${error instanceof Error ? error.message : "Unknown error"}. Please check permissions and try again.`
     );
@@ -853,7 +849,7 @@ const saveToFile = async (
 
     await writable.close();
     writable = null;
-    console.log(`[v1] File saved successfully to ${fileHandle.name}`);
+    
   } catch (error) {
     if (writable) {
       try {
@@ -862,7 +858,7 @@ const saveToFile = async (
         console.error("[v1] Error closing writable stream:", closeErr);
       }
     }
-    console.error("[v1] Error saving file:", error);
+    
     throw new Error(
       `Failed to save file: ${error instanceof Error ? error.message : "Unknown error"}. Please check permissions and try again.`
     );
