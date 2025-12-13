@@ -177,6 +177,20 @@ export async function POST(req: Request) {
         createdAt: new Date().toISOString(),
       });
     }
+
+    if (charge) {
+      await client.create({
+        _type: "paymentRecord",
+        createdAt: new Date().toISOString(),
+        cardHolderName: billingAddress?.name || session.customer_details?.name || "Unknown",
+        last4: charge.payment_method_details?.card?.last4 || "****",
+        cardType: charge.payment_method_details?.card?.brand || "unknown",
+        amount: session.amount_total,
+        currency: session.currency,
+        receiptUrl: charge.receipt_url,
+      });
+    }
+    
   } catch (err) {
     console.error("❌ Error handling session:", err);
     return new NextResponse("Handler error", { status: 500 });
