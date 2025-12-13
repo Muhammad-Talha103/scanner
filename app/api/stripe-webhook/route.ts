@@ -1,4 +1,4 @@
-//app/api/stripe-webhook/route.ts
+// app/api/stripe-webhook/route.ts
 
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -39,14 +39,11 @@ export async function POST(req: Request) {
   try {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    // get email
-    let userEmail =
-      session.customer_details?.email || session.customer_email || null;
+    // 1️⃣ Get user email
+    let userEmail = session.customer_details?.email || session.customer_email || null;
 
     if (!userEmail && session.customer) {
-      const customer = await stripe.customers.retrieve(
-        session.customer as string
-      );
+      const customer = await stripe.customers.retrieve(session.customer as string);
       if (!("deleted" in customer)) userEmail = customer.email ?? null;
     }
 
@@ -55,43 +52,54 @@ export async function POST(req: Request) {
       return NextResponse.json({ received: true, warning: "No email" });
     }
 
-    // optional: retrieve paymentIntent to get charges/payment method
-    let paymentIntent:
-      | (Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> })
-      | null = null;
+    // 2️⃣ Retrieve PaymentIntent
+    let paymentIntent: Stripe.PaymentIntent | null = null;
+    let charge: Stripe.Charge | null = null;
+
     if (session.payment_intent) {
-      paymentIntent = (await stripe.paymentIntents.retrieve(
-        session.payment_intent as string,
-        { expand: ["charges"] }
-      )) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
+      paymentIntent = await stripe.paymentIntents.retrieve(session.payment_intent as string);
+
+      // 3️⃣ Retrieve Charge directly using latest_charge ID
+      if (paymentIntent.latest_charge) {
+        charge = await stripe.charges.retrieve(paymentIntent.latest_charge as string);
+      }
     }
 
-    const charge = paymentIntent?.charges?.data?.[0];
-    const paymentMethod = charge?.payment_method_details;
-    const billingAddress =
-      charge?.billing_details?.address || session.customer_details?.address;
+    // 4️⃣ Card details from Charge
+    const cardDetails = charge?.payment_method_details?.card
+      ? {
+          brand: charge.payment_method_details.card.brand,
+          last4: charge.payment_method_details.card.last4,
+          exp_month: charge.payment_method_details.card.exp_month,
+          exp_year: charge.payment_method_details.card.exp_year,
+          country: charge.payment_method_details.card.country,
+          funding: charge.payment_method_details.card.funding,
+        }
+      : undefined;
 
+    // 5️⃣ Billing info
+    const billingAddress = charge?.billing_details || session.customer_details;
+
+    // 6️⃣ Line items
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
 
+    // 7️⃣ Premium duration calculation
     const euros = session.amount_total ? session.amount_total / 100 : 0;
-
     const fullMonths = Math.floor(euros);
     const extraDays = (euros - fullMonths) * 30;
 
     const startDate = new Date();
-
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + fullMonths);
     endDate.setDate(endDate.getDate() + extraDays);
 
+    // 8️⃣ Metadata
     const metadata =
       session.metadata && Object.keys(session.metadata).length > 0
-        ? Object.entries(session.metadata).map(([k, v]) => ({
-            key: k,
-            value: String(v),
-          }))
+        ? Object.entries(session.metadata).map(([k, v]) => ({ key: k, value: String(v) }))
         : [];
 
+    // 9️⃣ Payment object for Sanity
     const newPayment = {
       _key: session.id,
       stripeSessionId: session.id,
@@ -100,23 +108,18 @@ export async function POST(req: Request) {
       amount_total: session.amount_total,
       currency: session.currency,
       status: session.payment_status,
-      payment_method_type: paymentMethod?.type,
-      card: paymentMethod?.card
-        ? {
-            brand: paymentMethod.card.brand,
-            last4: paymentMethod.card.last4,
-            exp_month: paymentMethod.card.exp_month,
-            exp_year: paymentMethod.card.exp_year,
-          }
-        : undefined,
+      payment_method_type: charge?.payment_method_details?.type || "unknown",
+      card: cardDetails,
       billing_address: billingAddress
         ? {
-            line1: billingAddress.line1,
-            line2: billingAddress.line2,
-            city: billingAddress.city,
-            state: billingAddress.state,
-            postal_code: billingAddress.postal_code,
-            country: billingAddress.country,
+            name: billingAddress.name,
+            email: billingAddress.email,
+            line1: billingAddress.address?.line1,
+            line2: billingAddress.address?.line2,
+            city: billingAddress.address?.city,
+            state: billingAddress.address?.state,
+            postal_code: billingAddress.address?.postal_code,
+            country: billingAddress.address?.country,
           }
         : undefined,
       metadata,
@@ -129,20 +132,17 @@ export async function POST(req: Request) {
         amount_total: item.amount_total,
         currency: item.currency,
       })),
-      createdAt: session.created
-        ? new Date(session.created * 1000).toISOString()
-        : new Date().toISOString(),
+      createdAt: session.created ? new Date(session.created * 1000).toISOString() : new Date().toISOString(),
     };
 
-    // Update or create premiumUser
+    // 10️⃣ Update or create premiumUser
     const existingUser = await client.fetch(
       `*[_type == "premiumUser" && email == $email][0]`,
       { email: userEmail }
     );
 
     if (existingUser) {
-
-        const now = new Date();
+      const now = new Date();
       let newPremiumStart = now;
       let newPremiumEnd = endDate;
 
@@ -169,10 +169,7 @@ export async function POST(req: Request) {
       await client.create({
         _type: "premiumUser",
         email: userEmail,
-        name:
-          charge?.billing_details?.name ||
-          session.customer_details?.name ||
-          undefined,
+        name: billingAddress?.name || session.customer_details?.name || undefined,
         payments: [newPayment],
         premiumStart: startDate.toISOString(),
         premiumEnd: endDate.toISOString(),
