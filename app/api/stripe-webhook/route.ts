@@ -62,12 +62,12 @@ export async function POST(req: Request) {
     if (session.payment_intent) {
       paymentIntent = (await stripe.paymentIntents.retrieve(
         session.payment_intent as string,
-        { expand: ["charges"] }
+        { expand: ["charges.data.payment_method"] }
       )) as Stripe.PaymentIntent & { charges?: Stripe.ApiList<Stripe.Charge> };
     }
 
     const charge = paymentIntent?.charges?.data?.[0];
-    const paymentMethod = charge?.payment_method_details;
+    const paymentMethod = charge?.payment_method as Stripe.PaymentMethod | null;
     const billingAddress =
       charge?.billing_details?.address || session.customer_details?.address;
 
