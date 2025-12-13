@@ -268,7 +268,7 @@ export default function ScannerApp() {
       return;
 
     try {
-      // Get the images to save based on user selection
+      
       const imagesToSave = options.saveAll
         ? scannedImages
         : getSelectedImages();
