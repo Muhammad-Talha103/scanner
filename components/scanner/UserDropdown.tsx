@@ -11,6 +11,7 @@ import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { GrUpgrade } from "react-icons/gr";
 import { IoMdLogIn } from "react-icons/io";
+import { CiCreditCard1 } from "react-icons/ci";
 
 interface UserDropdownProps {
   isOpen: boolean;
@@ -140,6 +141,13 @@ export const UserDropdown = ({
                 <span>{t("admin.upgrade")}</span>
               </Link>
             )}
+             <Link
+                href="/payment-history"
+                className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"
+              >
+                <CiCreditCard1  className="w-4.5 h-4.5 mr-3 text-gray-500" />
+                <span>{t("admin.payment-history")}</span>
+              </Link>
             <button
               onClick={onLogout}
               className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-150"

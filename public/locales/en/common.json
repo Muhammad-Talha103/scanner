@@ -522,6 +522,8 @@
   "expired_premium_users":"Expired Premium Users",
   "change_credentials":"Change Credentials",
   "upgrade":"Upgrade to Premium",
+  "payment-history":"Payment History",
+
   "logout":"Logout",
   "user_management":"User Management"
 },

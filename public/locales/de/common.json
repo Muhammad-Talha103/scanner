@@ -538,6 +538,7 @@
   "expired_premium_users":"Abgelaufene Premium-Benutzer",
   "change_credentials": "Anmeldedaten ändern",
   "upgrade":"Upgrade auf Premium",
+  "payment-history":"Zahlungsverlauf",
   "logout": "Abmelden",
   "user_management": "Benutzerverwaltung"
 },
