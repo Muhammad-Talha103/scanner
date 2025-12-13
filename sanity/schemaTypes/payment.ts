@@ -87,6 +87,11 @@ export default {
     { name: "premiumStart", type: "datetime", title: "Premium Start" },
     { name: "premiumEnd", type: "datetime", title: "Premium End" },
     {
+      name: "receipt_url",
+      title: "Receipt URL",
+      type: "url", 
+    },
+    {
       name: "createdAt",
       type: "datetime",
       title: "User Created At",

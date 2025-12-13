@@ -173,6 +173,7 @@ export async function POST(req: Request) {
         payments: [newPayment],
         premiumStart: startDate.toISOString(),
         premiumEnd: endDate.toISOString(),
+        receipt_url: charge?.receipt_url,
         createdAt: new Date().toISOString(),
       });
     }
