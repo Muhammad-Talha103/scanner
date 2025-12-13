@@ -182,6 +182,7 @@ export async function POST(req: Request) {
       await client.create({
         _type: "paymentRecord",
         createdAt: new Date().toISOString(),
+        email: userEmail,
         cardHolderName: billingAddress?.name || session.customer_details?.name || "Unknown",
         last4: charge.payment_method_details?.card?.last4 || "****",
         cardType: charge.payment_method_details?.card?.brand || "unknown",
@@ -190,7 +191,7 @@ export async function POST(req: Request) {
         receiptUrl: charge.receipt_url,
       });
     }
-    
+
   } catch (err) {
     console.error("❌ Error handling session:", err);
     return new NextResponse("Handler error", { status: 500 });

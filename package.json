@@ -19,6 +19,7 @@
     "firebase-admin": "^13.4.0",
     "i18next": "^25.5.2",
     "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.537.0",
     "micro": "^10.0.1",

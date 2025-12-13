@@ -9,6 +9,11 @@ export default {
       type: "datetime",
     },
     {
+      name: "email",
+      title: "Email",
+      type: "string",
+    },
+    {
       name: "cardHolderName",
       title: "Card Holder Name",
       type: "string",
