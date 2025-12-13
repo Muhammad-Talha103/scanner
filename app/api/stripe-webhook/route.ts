@@ -141,13 +141,28 @@ export async function POST(req: Request) {
     );
 
     if (existingUser) {
+
+        const now = new Date();
+      let newPremiumStart = now;
+      let newPremiumEnd = endDate;
+
+      if (existingUser.premiumEnd) {
+        const currentEnd = new Date(existingUser.premiumEnd);
+        if (currentEnd > now) {
+          newPremiumStart = new Date(existingUser.premiumStart);
+          newPremiumEnd = new Date(currentEnd);
+          newPremiumEnd.setMonth(newPremiumEnd.getMonth() + fullMonths);
+          newPremiumEnd.setDate(newPremiumEnd.getDate() + extraDays);
+        }
+      }
+
       await client
         .patch(existingUser._id)
         .setIfMissing({ payments: [] })
         .append("payments", [newPayment])
         .set({
-          premiumStart: startDate.toISOString(),
-          premiumEnd: endDate.toISOString(),
+          premiumStart: newPremiumStart.toISOString(),
+          premiumEnd: newPremiumEnd.toISOString(),
         })
         .commit();
     } else {
