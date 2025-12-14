@@ -23,7 +23,6 @@
   "___comments_menuBar": "MenuBar.tsx",
   "fullscreen": "Vollbild",
 
-
   "___comments_deleteAlImages": "DeleteAllImages.tsx",
   "deleteAllTitle": "Alle Bilder löschen?",
   "deleteAllMessage": "Diese Aktion kann nicht rückgängig gemacht werden. Alle Bilder werden dauerhaft aus Ihrer Galerie gelöscht. Möchten Sie wirklich fortfahren?",
@@ -38,57 +37,57 @@
   "confirmDelete": "Löschen bestätigen",
   "deleting": "Löschen...",
 
-"___comments_imageEditor": "ImageEditor.tsx",
+  "___comments_imageEditor": "ImageEditor.tsx",
   "editImage": "Bild bearbeiten",
-    "rotateLeft": "Nach links drehen",
-    "rotateRight": "Nach rechts drehen",
-    "zoomIn": "Vergrößern",
-    "zoomOut": "Verkleinern",
-    "fitToScreen": "An Bildschirm anpassen",
-    "enterCropMode": "Zuschneidemodus starten",
-    "exitCropMode": "Zuschneidemodus beenden",
-    "undo": "Rückgängig",
-    "redo": "Wiederholen",
-    "scale": "Skalierung",
-    "crop": "Zuschneiden",
-    "saving": "Speichert...",
-    "loadingImage": "Bild wird geladen...",
-    "panInstruction": "Ziehen zum Verschieben • Zoom-Steuerung zum Skalieren verwenden",
-    "cropInstruction": "Griffe ziehen, um den Zuschnittsbereich zu ändern • Innen ziehen, um zu verschieben",
+  "rotateLeft": "Nach links drehen",
+  "rotateRight": "Nach rechts drehen",
+  "zoomIn": "Vergrößern",
+  "zoomOut": "Verkleinern",
+  "fitToScreen": "An Bildschirm anpassen",
+  "enterCropMode": "Zuschneidemodus starten",
+  "exitCropMode": "Zuschneidemodus beenden",
+  "undo": "Rückgängig",
+  "redo": "Wiederholen",
+  "scale": "Skalierung",
+  "crop": "Zuschneiden",
+  "saving": "Speichert...",
+  "loadingImage": "Bild wird geladen...",
+  "panInstruction": "Ziehen zum Verschieben • Zoom-Steuerung zum Skalieren verwenden",
+  "cropInstruction": "Griffe ziehen, um den Zuschnittsbereich zu ändern • Innen ziehen, um zu verschieben",
 
-    "___comments_ImportHandler": "ImportHandler.tsx",
-    "invalidFiles": "Bitte wählen Sie gültige Bilddateien aus (PNG, JPG, JPEG, TIFF)",
-    "errorImporting": "Fehler beim Importieren von Bildern. Bitte versuchen Sie es erneut.",
+  "___comments_ImportHandler": "ImportHandler.tsx",
+  "invalidFiles": "Bitte wählen Sie gültige Bilddateien aus (PNG, JPG, JPEG, TIFF)",
+  "errorImporting": "Fehler beim Importieren von Bildern. Bitte versuchen Sie es erneut.",
 
-    "___comments_MailModal": "MailModal.tsx",
-     "title": "E-Mail senden",
-    "to": "An",
-    "toPlaceholder": "empfänger@beispiel.de",
-    "subject": "Betreff",
-    "subjectPlaceholder": "E-Mail-Betreff",
-    "message": "Nachricht",
-    "messagePlaceholder": "Ihre Nachricht hier...",
-    "fileAttachment": "Dateianhang",
-    "chooseFile": "Datei auswählen",
-    "includePDF": "Gescannte/importierte Bilder als PDF einfügen ({{count}} Seite{{plural}})",
-    "pdfName": "PDF-Name",
-    "pdfNamePlaceholder": "Dokumentname",
-    "sendFrom": "Senden von",
-    "ownEmail": "Eigene E-Mail",
-    "grewScannerEmail": "GrewScanner E-Mail",
-    "send": "Senden",
-    "sending": "Wird gesendet...",
-    "errorRecipientRequired": "Empfänger-E-Mail ist erforderlich",
-    "errorInvalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-    "errorSubjectRequired": "Betreff ist erforderlich",
-    "errorPdfNameRequired": "PDF-Name ist erforderlich, wenn gescannte Bilder eingefügt werden",
-    "successTitle": "E-Mail erfolgreich gesendet!",
-    "successMessage": "Ihre E-Mail wurde an {{email}} zugestellt",
-     "downloadPDF": "PDF herunterladen: {{url}}",
+  "___comments_MailModal": "MailModal.tsx",
+  "title": "E-Mail senden",
+  "to": "An",
+  "toPlaceholder": "empfänger@beispiel.de",
+  "subject": "Betreff",
+  "subjectPlaceholder": "E-Mail-Betreff",
+  "message": "Nachricht",
+  "messagePlaceholder": "Ihre Nachricht hier...",
+  "fileAttachment": "Dateianhang",
+  "chooseFile": "Datei auswählen",
+  "includePDF": "Gescannte/importierte Bilder als PDF einfügen ({{count}} Seite{{plural}})",
+  "pdfName": "PDF-Name",
+  "pdfNamePlaceholder": "Dokumentname",
+  "sendFrom": "Senden von",
+  "ownEmail": "Eigene E-Mail",
+  "grewScannerEmail": "GrewScanner E-Mail",
+  "send": "Senden",
+  "sending": "Wird gesendet...",
+  "errorRecipientRequired": "Empfänger-E-Mail ist erforderlich",
+  "errorInvalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+  "errorSubjectRequired": "Betreff ist erforderlich",
+  "errorPdfNameRequired": "PDF-Name ist erforderlich, wenn gescannte Bilder eingefügt werden",
+  "successTitle": "E-Mail erfolgreich gesendet!",
+  "successMessage": "Ihre E-Mail wurde an {{email}} zugestellt",
+  "downloadPDF": "PDF herunterladen: {{url}}",
   "attachments": "Anhänge:",
   "failedToLoadImage": "Bild konnte nicht geladen werden",
 
- "___comments_ScannedImages": "ScannedImages.tsx",
+  "___comments_ScannedImages": "ScannedImages.tsx",
   "noDocumentLoaded": "Kein Dokument geladen",
   "clickScanOrImport": "Klicken Sie auf 'Scan', um zu scannen, oder auf 'Importieren', um Bilder zu laden",
   "clearAllImages": "Alle Bilder löschen",
@@ -99,7 +98,7 @@
   "selected": "Ausgewählt",
   "selectedForOperations": "Für Operationen ausgewählt",
 
- "___comments_ScannedStatus": "ScannerStatus.tsx",
+  "___comments_ScannedStatus": "ScannerStatus.tsx",
   "scanMode": "Scan-Modus:",
   "showScannerUI": "Scanner-Treiber UI anzeigen:",
   "error": "Fehler",
@@ -111,86 +110,92 @@
   "colorModes": "Farbmodi:",
   "selectColorMode": "Farbmodus auswählen",
   "duplex": "Duplex",
-  "blank_pages":"Leere Seiten verwerfen:",
+  "blank_pages": "Leere Seiten verwerfen:",
   "on": "Ein",
   "off": "Aus",
 
-  "not_logged_in_message":"Sie sind nicht angemeldet. Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
+  "not_logged_in_message": "Sie sind nicht angemeldet. Bitte melden Sie sich an, um diese Funktion nutzen zu können.",
 
   "pageNotFound": "Seite nicht gefunden",
   "goHome": "Zur Startseite",
-  "oops_message":"Hoppla! Die gesuchte Seite existiert nicht.",
+  "oops_message": "Hoppla! Die gesuchte Seite existiert nicht.",
 
-   "___comments_About.tsx": "About.tsx",
+  "___comments_About.tsx": "About.tsx",
   "backToHome": "Zur Startseite",
-    "heroTitle": "GreweScan",
-    "heroDescription": "Professionelle browserbasierte TWAIN-Scannerlösung, unterstützt durch Encleso SDK",
-    "heroBadge": "Browser-basiert • Encleso Client-Installation erforderlich",
-    "whatIsGreweScanTitle": "Was ist GreweScan?",
-    "whatIsGreweScanDescription1": "GreweScan ist eine revolutionäre browserbasierte Anwendung, die TWAIN-Scans direkt aus Webbrowsern mit dem leistungsstarken Encleso SDK ermöglicht. Während die Weboberfläche keine Installation erfordert, muss die Encleso-Clientsoftware auf dem lokalen Rechner installiert sein, um die Kommunikation zwischen Browser und Scanner zu gewährleisten.",
-    "whatIsGreweScanDescription2": "Dieser hybride Ansatz bietet den Komfort des webbasierten Zugriffs bei gleichzeitiger direkter Hardware-Kommunikation für optimale Scan-Leistung. GreweScan unterstützt nahezu alle TWAIN-kompatiblen Scanner und funktioniert nahtlos in Chrome, Firefox, Edge und Opera unter Windows.",
-    "keyBenefitsTitle": "Hauptvorteile",
-    "keyBenefitsList": [
-      "Weboberfläche ohne Browser-Plugins",
-      "Direkte Scanner-Kommunikation über Encleso Client",
-      "Unterstützt nahezu alle TWAIN-kompatiblen Scanner",
-      "Kompatibel mit Windows 7 bis Windows 11"
-    ],
-    "howItWorksTitle": "Wie es funktioniert",
-    "architectureTitle": "Client-Server-Architektur",
-    "architectureDescription": "GreweScan verwendet eine hybride Architektur, bei der die Webanwendung im Browser läuft, während die auf Ihrem Rechner installierte Encleso-Clientsoftware die direkte Scanner-Kommunikation über TWAIN-Treiber übernimmt.",
-    "webInterfaceTitle": "Weboberfläche",
-    "webInterfaceDesc": "Browserbasierte UI ohne Plugins. Funktioniert mit Chrome, Firefox, Edge und Opera",
-    "enclesoClientTitle": "Encleso Client",
-    "enclesoClientDesc": "Lokale Software, die Browser und Scanner über REST-API verbindet",
-    "twainScannerTitle": "TWAIN-Scanner",
-    "twainScannerDesc": "Direkte Hardware-Kommunikation mit nahezu allen TWAIN-kompatiblen Scannern",
-    "supportedFormatsTitle": "Unterstützte Formate",
-    "supportedFormatsList": ["PDF", "JPEG", "TIFF", "Multi-page TIFF", "PNG", "BMP"],
-    "systemRequirementsTitle": "Systemanforderungen",
-    "systemRequirementsList": [
-      "Windows 7 bis Windows 11 (32-Bit und 64-Bit)",
-      "TWAIN-kompatibler Scanner mit installierten Treibern",
-      "Installation der Encleso-Clientsoftware erforderlich",
-      "Moderner Webbrowser (Chrome, Firefox, Edge, Opera)"
-    ],
-    "aboutJSETitle": "Über JSE Imaging Solutions",
-    "30YearsOfInnovation": "30 Jahre TWAIN-Innovation",
-    "aboutJSEDesc1": "JSE Imaging Solutions ist ein führender Entwickler von TWAIN-Entwicklungstools, TWAIN-Treibern, TWAIN-Dienstprogrammen und Imaging-Tools mit 30 Jahren Innovation in Scan- und Bildlösungen. Sie spezialisieren sich auf die Erstellung von OEM-TWAIN- und WIA-Treibern für verschiedene Hersteller und bieten umfassende Imaging-Lösungen für Unternehmen weltweit.",
-    "aboutJSEDesc2": "JSE entwickelte das Encleso SDK, das GreweScan antreibt, und bringt damit jahrzehntelange TWAIN-Expertise in moderne browserbasierte Anwendungen. Ihre Lösungen überbrücken die Lücke zwischen traditionellem Desktop-Scanning und modernen Webtechnologien.",
-    "visitJSE": "JSE Imaging Solutions besuchen",
-    "products": {
-      "SnapTwain": "TWAIN-Treiber für Fujitsu und Ricoh ScanSnap Scanner (iX100, iX500, iX1300, iX1400, iX1500, iX1600)",
-      "TWAINCommander": "Befehlszeilen-Scan-Utility für Stapelscans von jedem TWAIN-kompatiblen Gerät",
-      "EnclesoSDK": "Web TWAIN SDK für browserbasierte Scan-Anwendungen"
+  "heroTitle": "GreweScan",
+  "heroDescription": "Professionelle browserbasierte TWAIN-Scannerlösung, unterstützt durch Encleso SDK",
+  "heroBadge": "Browser-basiert • Encleso Client-Installation erforderlich",
+  "whatIsGreweScanTitle": "Was ist GreweScan?",
+  "whatIsGreweScanDescription1": "GreweScan ist eine revolutionäre browserbasierte Anwendung, die TWAIN-Scans direkt aus Webbrowsern mit dem leistungsstarken Encleso SDK ermöglicht. Während die Weboberfläche keine Installation erfordert, muss die Encleso-Clientsoftware auf dem lokalen Rechner installiert sein, um die Kommunikation zwischen Browser und Scanner zu gewährleisten.",
+  "whatIsGreweScanDescription2": "Dieser hybride Ansatz bietet den Komfort des webbasierten Zugriffs bei gleichzeitiger direkter Hardware-Kommunikation für optimale Scan-Leistung. GreweScan unterstützt nahezu alle TWAIN-kompatiblen Scanner und funktioniert nahtlos in Chrome, Firefox, Edge und Opera unter Windows.",
+  "keyBenefitsTitle": "Hauptvorteile",
+  "keyBenefitsList": [
+    "Weboberfläche ohne Browser-Plugins",
+    "Direkte Scanner-Kommunikation über Encleso Client",
+    "Unterstützt nahezu alle TWAIN-kompatiblen Scanner",
+    "Kompatibel mit Windows 7 bis Windows 11"
+  ],
+  "howItWorksTitle": "Wie es funktioniert",
+  "architectureTitle": "Client-Server-Architektur",
+  "architectureDescription": "GreweScan verwendet eine hybride Architektur, bei der die Webanwendung im Browser läuft, während die auf Ihrem Rechner installierte Encleso-Clientsoftware die direkte Scanner-Kommunikation über TWAIN-Treiber übernimmt.",
+  "webInterfaceTitle": "Weboberfläche",
+  "webInterfaceDesc": "Browserbasierte UI ohne Plugins. Funktioniert mit Chrome, Firefox, Edge und Opera",
+  "enclesoClientTitle": "Encleso Client",
+  "enclesoClientDesc": "Lokale Software, die Browser und Scanner über REST-API verbindet",
+  "twainScannerTitle": "TWAIN-Scanner",
+  "twainScannerDesc": "Direkte Hardware-Kommunikation mit nahezu allen TWAIN-kompatiblen Scannern",
+  "supportedFormatsTitle": "Unterstützte Formate",
+  "supportedFormatsList": [
+    "PDF",
+    "JPEG",
+    "TIFF",
+    "Multi-page TIFF",
+    "PNG",
+    "BMP"
+  ],
+  "systemRequirementsTitle": "Systemanforderungen",
+  "systemRequirementsList": [
+    "Windows 7 bis Windows 11 (32-Bit und 64-Bit)",
+    "TWAIN-kompatibler Scanner mit installierten Treibern",
+    "Installation der Encleso-Clientsoftware erforderlich",
+    "Moderner Webbrowser (Chrome, Firefox, Edge, Opera)"
+  ],
+  "aboutJSETitle": "Über JSE Imaging Solutions",
+  "30YearsOfInnovation": "30 Jahre TWAIN-Innovation",
+  "aboutJSEDesc1": "JSE Imaging Solutions ist ein führender Entwickler von TWAIN-Entwicklungstools, TWAIN-Treibern, TWAIN-Dienstprogrammen und Imaging-Tools mit 30 Jahren Innovation in Scan- und Bildlösungen. Sie spezialisieren sich auf die Erstellung von OEM-TWAIN- und WIA-Treibern für verschiedene Hersteller und bieten umfassende Imaging-Lösungen für Unternehmen weltweit.",
+  "aboutJSEDesc2": "JSE entwickelte das Encleso SDK, das GreweScan antreibt, und bringt damit jahrzehntelange TWAIN-Expertise in moderne browserbasierte Anwendungen. Ihre Lösungen überbrücken die Lücke zwischen traditionellem Desktop-Scanning und modernen Webtechnologien.",
+  "visitJSE": "JSE Imaging Solutions besuchen",
+  "products": {
+    "SnapTwain": "TWAIN-Treiber für Fujitsu und Ricoh ScanSnap Scanner (iX100, iX500, iX1300, iX1400, iX1500, iX1600)",
+    "TWAINCommander": "Befehlszeilen-Scan-Utility für Stapelscans von jedem TWAIN-kompatiblen Gerät",
+    "EnclesoSDK": "Web TWAIN SDK für browserbasierte Scan-Anwendungen"
+  },
+  "poweredByEnclesoTitle": "Angetrieben durch Encleso SDK",
+  "poweredByEnclesoDesc": "GreweScan wird vom Encleso SDK unterstützt, einer TWAIN-Scan-Komponente, die speziell für browserbasierte Webanwendungen entwickelt wurde. Encleso ermöglicht es Benutzern, angeschlossene Scanner auszuwählen, Einstellungen wie Auflösung und Farbe zu konfigurieren und gescannte Seiten direkt auf Webseiten über die JavaScript-Bibliothek anzuzeigen.",
+  "poweredByEnclesoFeatures": [
+    {
+      "title": "Browser-Integration",
+      "desc": "JavaScript-Bibliothek für nahtlose Web-Integration"
     },
-    "poweredByEnclesoTitle": "Angetrieben durch Encleso SDK",
-    "poweredByEnclesoDesc": "GreweScan wird vom Encleso SDK unterstützt, einer TWAIN-Scan-Komponente, die speziell für browserbasierte Webanwendungen entwickelt wurde. Encleso ermöglicht es Benutzern, angeschlossene Scanner auszuwählen, Einstellungen wie Auflösung und Farbe zu konfigurieren und gescannte Seiten direkt auf Webseiten über die JavaScript-Bibliothek anzuzeigen.",
-    "poweredByEnclesoFeatures": [
-      {
-        "title": "Browser-Integration",
-        "desc": "JavaScript-Bibliothek für nahtlose Web-Integration"
-      },
-      {
-        "title": "Hohe Leistung",
-        "desc": "Direkte TWAIN-Kommunikation für optimale Scan-Geschwindigkeit"
-      },
-      {
-        "title": "Breite Kompatibilität",
-        "desc": "Unterstützt nahezu alle TWAIN-kompatiblen Scanner"
-      },
-      {
-        "title": "Entwicklerfreundlich",
-        "desc": "Einfache Integration mit umfassender Dokumentation"
-      }
-    ],
-    "learnMoreEncleso": "Mehr über Encleso SDK erfahren",
-    "footerVersion": "GreweScan Version",
-    "footerDescription": "Browserbasierte Anwendung für TWAIN-Scanning, unterstützt durch Encleso SDK.",
-    "footerCopyright": "(C) 2025 von JSE Imaging Solutions.",
-    "footerEncleso": "Verwendet Encleso Web TWAIN SDK von",
+    {
+      "title": "Hohe Leistung",
+      "desc": "Direkte TWAIN-Kommunikation für optimale Scan-Geschwindigkeit"
+    },
+    {
+      "title": "Breite Kompatibilität",
+      "desc": "Unterstützt nahezu alle TWAIN-kompatiblen Scanner"
+    },
+    {
+      "title": "Entwicklerfreundlich",
+      "desc": "Einfache Integration mit umfassender Dokumentation"
+    }
+  ],
+  "learnMoreEncleso": "Mehr über Encleso SDK erfahren",
+  "footerVersion": "GreweScan Version",
+  "footerDescription": "Browserbasierte Anwendung für TWAIN-Scanning, unterstützt durch Encleso SDK.",
+  "footerCopyright": "(C) 2025 von JSE Imaging Solutions.",
+  "footerEncleso": "Verwendet Encleso Web TWAIN SDK von",
 
-    
   "helpCenter": {
     "title": "GreweScanner Hilfe-Center",
     "subtitle": "Alles, was Sie für den Einstieg in GreweScanner benötigen",
@@ -263,90 +268,129 @@
   },
 
   "impressum": {
-      "title": "Impressum",
-      "backToHome": "Zurück zur Startseite",
+    "title": "Impressum",
+    "backToHome": "Zurück zur Startseite",
 
-      "companyInformation": {
-        "title": "Unternehmensinformationen",
-        "name": "JSE Imaging Solutions UG (haftungsbeschränkt)",
-        "managingDirector": "Geschäftsführer: Kai Jungclaus",
-        "street": "Kolpingstr. 11",
-        "zipCity": "40764 Langenfeld",
-        "country": "Deutschland"
-      },
-
-      "contact": {
-        "title": "Kontakt",
-        "phone": "Telefon: +49 2173 168 882",
-        "email": "E-Mail: sales@jse.de"
-      },
-
-      "legalInformation": {
-        "title": "Rechtliche Informationen",
-        "register": "HRB 92542 Amtsgericht Düsseldorf",
-        "vatId": "USt-IdNr.: DE341751063"
-      },
-
-      "editorialResponsibility": {
-        "title": "Verantwortlich für den Inhalt",
-        "text": "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 55. 2 RStV: K. Jungclaus unter der Firmenadresse."
-      },
-
-      "footer": "© 2025 JSE Imaging Solutions UG. Alle Rechte vorbehalten."
+    "companyInformation": {
+      "title": "Unternehmensinformationen",
+      "name": "JSE Imaging Solutions UG (haftungsbeschränkt)",
+      "managingDirector": "Geschäftsführer: Kai Jungclaus",
+      "street": "Kolpingstr. 11",
+      "zipCity": "40764 Langenfeld",
+      "country": "Deutschland"
     },
 
-   "upgrade": {
-  "hero": {
-    "offerBadge": "Zeitlich begrenztes Angebot",
-    "title": "Upgrade zu {{product}} Premium",
-    "subtitle": "Schalte professionelle Scan-Funktionen frei und steigere deine Produktivität auf das nächste Level",
-    "price": "€1",
-    "perMonth": "pro Monat",
-    "button": "Jetzt upgraden",
-    "important_notice": "⚠️ Wichtiger Hinweis",
-    
-"message": "Ändern Sie Ihre E-Mail-Adresse nicht auf der Stripe-Checkout-Seite. Ihr Premium-Konto wird nur für die E-Mail-Adresse aktiviert:",
-"cancel": "Abbrechen",
-"understand": "Ich verstehe",
+    "contact": {
+      "title": "Kontakt",
+      "phone": "Telefon: +49 2173 168 882",
+      "email": "E-Mail: sales@jse.de"
+    },
 
-  "loading": "Ihre Abonnementdaten werden überprüft...",
-  "premium_user": "Sie sind bereits ein Premium-Benutzer!",
-  "back": "Zurück zur Startseite",
-  "alreadyPremiumMessage": "Vielen Dank, dass Sie GreweScanner Premium unterstützen. Sie haben bereits vollen Zugriff auf alle Funktionen."
+    "legalInformation": {
+      "title": "Rechtliche Informationen",
+      "register": "HRB 92542 Amtsgericht Düsseldorf",
+      "vatId": "USt-IdNr.: DE341751063"
+    },
 
+    "editorialResponsibility": {
+      "title": "Verantwortlich für den Inhalt",
+      "text": "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 55. 2 RStV: K. Jungclaus unter der Firmenadresse."
+    },
 
-
+    "footer": "© 2025 JSE Imaging Solutions UG. Alle Rechte vorbehalten."
   },
-  "features": {
-    "title": "Premium-Funktionen",
-    "subtitle": "Alles, was du für professionelles Scannen brauchst",
-    "items": [
-      { "title": "Kein Encleso-Wasserzeichen", "description": "Saubere, professionelle Scans ohne Wasserzeichen oder Branding.", "icon": "✨" },
-      { "title": "24/7 Technischer Support", "description": "Erhalte jederzeit sofortige Hilfe durch unser engagiertes Support-Team.", "icon": "🛟" },
-      { "title": "Schnellere Uploads & Prioritätsserver", "description": "Blitzschnelle Verarbeitung mit spezieller Premium-Infrastruktur.", "icon": "⚡" },
-      { "title": "Dekorativer Vorschaumodus", "description": "Schöne Vorschau-Layouts, die deine Scans professionell wirken lassen.", "icon": "🎨" },
-      { "title": "Premium-Profilabzeichen", "description": "Zeige deinen Premium-Status mit einem exklusiven Profilabzeichen.", "icon": "👑" },
-      { "title": "Früher Zugang zu neuen Funktionen", "description": "Sei der Erste, der neue Funktionen und Verbesserungen ausprobiert.", "icon": "🚀" }
-    ]
+
+  "upgrade": {
+    "hero": {
+      "offerBadge": "Zeitlich begrenztes Angebot",
+      "title": "Upgrade zu {{product}} Premium",
+      "subtitle": "Schalte professionelle Scan-Funktionen frei und steigere deine Produktivität auf das nächste Level",
+      "price": "€1",
+      "perMonth": "pro Monat",
+      "button": "Jetzt upgraden",
+      "important_notice": "⚠️ Wichtiger Hinweis",
+
+      "message": "Ändern Sie Ihre E-Mail-Adresse nicht auf der Stripe-Checkout-Seite. Ihr Premium-Konto wird nur für die E-Mail-Adresse aktiviert:",
+      "cancel": "Abbrechen",
+      "understand": "Ich verstehe",
+
+      "loading": "Ihre Abonnementdaten werden überprüft...",
+      "premium_user": "Sie sind bereits ein Premium-Benutzer!",
+      "back": "Zurück zur Startseite",
+      "alreadyPremiumMessage": "Vielen Dank, dass Sie GreweScanner Premium unterstützen. Sie haben bereits vollen Zugriff auf alle Funktionen."
+    },
+    "features": {
+      "title": "Premium-Funktionen",
+      "subtitle": "Alles, was du für professionelles Scannen brauchst",
+      "items": [
+        {
+          "title": "Kein Encleso-Wasserzeichen",
+          "description": "Saubere, professionelle Scans ohne Wasserzeichen oder Branding.",
+          "icon": "✨"
+        },
+        {
+          "title": "24/7 Technischer Support",
+          "description": "Erhalte jederzeit sofortige Hilfe durch unser engagiertes Support-Team.",
+          "icon": "🛟"
+        },
+        {
+          "title": "Schnellere Uploads & Prioritätsserver",
+          "description": "Blitzschnelle Verarbeitung mit spezieller Premium-Infrastruktur.",
+          "icon": "⚡"
+        },
+        {
+          "title": "Dekorativer Vorschaumodus",
+          "description": "Schöne Vorschau-Layouts, die deine Scans professionell wirken lassen.",
+          "icon": "🎨"
+        },
+        {
+          "title": "Premium-Profilabzeichen",
+          "description": "Zeige deinen Premium-Status mit einem exklusiven Profilabzeichen.",
+          "icon": "👑"
+        },
+        {
+          "title": "Früher Zugang zu neuen Funktionen",
+          "description": "Sei der Erste, der neue Funktionen und Verbesserungen ausprobiert.",
+          "icon": "🚀"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "items": [
+        {
+          "q": "Bekomme ich technischen Support mit Premium?",
+          "a": "Ja — mit Premium erhältst du 24/7 technischen Support. Unser Team ist jederzeit bereit, dir zu helfen."
+        },
+        {
+          "q": "Welche Zahlungsmethoden akzeptiert ihr?",
+          "a": "Wir akzeptieren alle gängigen Kreditkarten, Debitkarten und digitale Zahlungsmethoden über unseren sicheren Stripe-Zahlungsanbieter."
+        },
+        {
+          "q": "Habe ich früher Zugriff auf neue Funktionen?",
+          "a": "Ja — Premium-Mitglieder genießen frühen Zugang zu neuen Funktionen und können diese als Erste ausprobieren."
+        },
+        {
+          "q": "Sind meine Scans noch mit Encleso-Wasserzeichen versehen?",
+          "a": "Nein — Premium entfernt das Encleso-Wasserzeichen vollständig und liefert dir saubere, professionelle Scans."
+        },
+        {
+          "q": "Kostet Premium wirklich nur 1 € pro Monat?",
+          "a": "Ja — das Premium-Abo kostet nur 1 € pro Monat und ist damit für jeden erschwinglich."
+        },
+        {
+          "q": "Bekomme ich ein Premium-Abzeichen in meinem Profil?",
+          "a": "Ja — Premium-Mitglieder erhalten ein spezielles Abzeichen, das deinen Support für GreweScanner zeigt und exklusive Vorteile freischaltet."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Bereit für Premium?",
+      "subtitle": "Schließe dich tausenden Profis an, die {{product}} Premium für ihre Scans nutzen",
+      "button": "Starte deine Premium-Reise",
+      "note": "Sichere Zahlung • Sofortige Aktivierung"
+    }
   },
-  "faq": {
-    "title": "Häufig gestellte Fragen",
-    "items": [
-      { "q": "Bekomme ich technischen Support mit Premium?", "a": "Ja — mit Premium erhältst du 24/7 technischen Support. Unser Team ist jederzeit bereit, dir zu helfen." },
-      { "q": "Welche Zahlungsmethoden akzeptiert ihr?", "a": "Wir akzeptieren alle gängigen Kreditkarten, Debitkarten und digitale Zahlungsmethoden über unseren sicheren Stripe-Zahlungsanbieter." },
-      { "q": "Habe ich früher Zugriff auf neue Funktionen?", "a": "Ja — Premium-Mitglieder genießen frühen Zugang zu neuen Funktionen und können diese als Erste ausprobieren." },
-      { "q": "Sind meine Scans noch mit Encleso-Wasserzeichen versehen?", "a": "Nein — Premium entfernt das Encleso-Wasserzeichen vollständig und liefert dir saubere, professionelle Scans." },
-      { "q": "Kostet Premium wirklich nur 1 € pro Monat?", "a": "Ja — das Premium-Abo kostet nur 1 € pro Monat und ist damit für jeden erschwinglich." },
-      { "q": "Bekomme ich ein Premium-Abzeichen in meinem Profil?", "a": "Ja — Premium-Mitglieder erhalten ein spezielles Abzeichen, das deinen Support für GreweScanner zeigt und exklusive Vorteile freischaltet." }
-    ]
-  },
-  "cta": {
-    "title": "Bereit für Premium?",
-    "subtitle": "Schließe dich tausenden Profis an, die {{product}} Premium für ihre Scans nutzen",
-    "button": "Starte deine Premium-Reise",
-    "note": "Sichere Zahlung • Sofortige Aktivierung"
-  }
-},
 
   "signin": {
     "appTitle": "GREWE Scanner Interface Cloud Version",
@@ -391,157 +435,158 @@
   },
 
   "signup": {
-  "back_to_home": "Zurück zur Startseite",
-  "grewe_scanner_interface_title": "GREWE Scanner Interface Cloud Version",
-  "create_your_account_title": "Erstelle dein Konto",
-  "verify_your_email_title": "E-Mail verifizieren",
-  "account_created_title": "Konto erstellt!",
-  "join_us_today_message": "Treten Sie uns heute bei und legen Sie los",
-  "enter_code_sent_to_email": "Gib den 6-stelligen Code ein, der an {email} gesendet wurde",
-  "account_created_successfully_message": "Dein Konto wurde erfolgreich erstellt",
-  "fix_validation_errors": "Bitte beheben Sie die Validierungsfehler.",
-  "name_is_required": "Name ist erforderlich",
-  "name_min_length": "Name muss mindestens 2 Zeichen lang sein",
-  "name_max_length": "Name muss weniger als 50 Zeichen lang sein",
-  "email_is_required": "E-Mail ist erforderlich",
-  "invalid_email_address": "Ungültige E-Mail-Adresse",
-  "password_is_required": "Passwort ist erforderlich",
-  "password_min_length": "Passwort muss mindestens 6 Zeichen lang sein",
-  "password_max_length": "Passwort muss weniger als 128 Zeichen lang sein",
-  "password_lowercase_required": "Passwort muss einen Kleinbuchstaben enthalten",
-  "password_uppercase_required": "Passwort muss einen Großbuchstaben enthalten",
-  "password_number_required": "Passwort muss eine Zahl enthalten",
-  "confirm_password_is_required": "Passwort bestätigen ist erforderlich",
-  "passwords_do_not_match": "Passwörter stimmen nicht überein",
-  "email_already_in_use_error": "Die E-Mail-Adresse wird bereits von einem anderen Konto verwendet.",
-  "firebase_invalid_email_error": "Die E-Mail-Adresse ist ungültig.",
-  "operation_not_allowed_error": "E-Mail-/Passwort-Konten sind nicht aktiviert.",
-  "weak_password_error": "Das Passwort ist zu schwach.",
-  "network_error": "Ein Netzwerkfehler ist aufgetreten. Bitte überprüfen Sie Ihre Verbindung.",
-  "too_many_requests_error": "Der Zugriff auf dieses Konto wurde aufgrund vieler fehlgeschlagener Anmeldeversuche vorübergehend blockiert.",
-  "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
-  "otp_sent_success": "OTP erfolgreich gesendet! Bitte überprüfen Sie Ihre E-Mails.",
-  "failed_to_send_otp": "Senden des OTP fehlgeschlagen. Bitte versuchen Sie es erneut.",
-  "invalid_or_expired_otp": "Ungültiges oder abgelaufenes OTP",
-  "entered_otp_invalid_or_expired": "Das eingegebene OTP ist ungültig oder abgelaufen.",
-  "verification_error": "Während der Überprüfung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-  "otp_resent_success": "OTP erfolgreich erneut gesendet! Bitte überprüfen Sie Ihre E-Mails.",
-  "failed_to_resend_otp": "Senden des OTP fehlgeschlagen",
-  "full_name_label": "Vollständiger Name",
-  "full_name_placeholder": "Max Mustermann",
-  "email_address_label": "E-Mail-Adresse",
-  "email_address_placeholder": "du@beispiel.com",
-  "password_label": "Passwort",
-  "password_placeholder": "••••••••",
-  "confirm_password_label": "Passwort bestätigen",
-  "confirm_password_placeholder": "••••••••",
-  "sending_otp_button": "Sende OTP...",
-  "create_account_button": "Konto erstellen",
-  "otp_sent_to_email_message": "Wir haben den Code an {email} gesendet",
-  "otp_placeholder": "000000",
-  "otp_has_expired": "OTP ist abgelaufen",
-  "time_remaining_label": "Verbleibende Zeit:",
-  "resend_otp_button": "OTP erneut senden",
-  "verifying_button": "Verifiziere...",
-  "verify_otp_button": "OTP verifizieren",
-  "back_to_signup_button": "Zurück zur Registrierung",
-  "verification_successful_heading": "Verifizierung erfolgreich!",
-  "verification_successful_description":"Ihr Konto wurde erfolgreich erstellt.",
-  "now_login_redirecting": "Jetzt anmelden • Weiterleitung in {countdownTimeLeft}s",
-  "go_to_signin_button": "Zur Anmeldung",
-  "already_have_account_question": "Bereits ein Konto?",
-  "sign_in_instead_button": "Stattdessen anmelden"
-},
-"login_admin": {
-  "appTitle": "GREWE Scanner Interface Cloud-Version",
-  "pageTitle": "Willkommen zurück",
-  "subtitle": "Melden Sie sich an, um auf Ihr Admin-Dashboard zuzugreifen",
+    "back_to_home": "Zurück zur Startseite",
+    "grewe_scanner_interface_title": "GREWE Scanner Interface Cloud Version",
+    "create_your_account_title": "Erstelle dein Konto",
+    "verify_your_email_title": "E-Mail verifizieren",
+    "account_created_title": "Konto erstellt!",
+    "join_us_today_message": "Treten Sie uns heute bei und legen Sie los",
+    "enter_code_sent_to_email": "Gib den 6-stelligen Code ein, der an {email} gesendet wurde",
+    "account_created_successfully_message": "Dein Konto wurde erfolgreich erstellt",
+    "fix_validation_errors": "Bitte beheben Sie die Validierungsfehler.",
+    "name_is_required": "Name ist erforderlich",
+    "name_min_length": "Name muss mindestens 2 Zeichen lang sein",
+    "name_max_length": "Name muss weniger als 50 Zeichen lang sein",
+    "email_is_required": "E-Mail ist erforderlich",
+    "invalid_email_address": "Ungültige E-Mail-Adresse",
+    "password_is_required": "Passwort ist erforderlich",
+    "password_min_length": "Passwort muss mindestens 6 Zeichen lang sein",
+    "password_max_length": "Passwort muss weniger als 128 Zeichen lang sein",
+    "password_lowercase_required": "Passwort muss einen Kleinbuchstaben enthalten",
+    "password_uppercase_required": "Passwort muss einen Großbuchstaben enthalten",
+    "password_number_required": "Passwort muss eine Zahl enthalten",
+    "confirm_password_is_required": "Passwort bestätigen ist erforderlich",
+    "passwords_do_not_match": "Passwörter stimmen nicht überein",
+    "email_already_in_use_error": "Die E-Mail-Adresse wird bereits von einem anderen Konto verwendet.",
+    "firebase_invalid_email_error": "Die E-Mail-Adresse ist ungültig.",
+    "operation_not_allowed_error": "E-Mail-/Passwort-Konten sind nicht aktiviert.",
+    "weak_password_error": "Das Passwort ist zu schwach.",
+    "network_error": "Ein Netzwerkfehler ist aufgetreten. Bitte überprüfen Sie Ihre Verbindung.",
+    "too_many_requests_error": "Der Zugriff auf dieses Konto wurde aufgrund vieler fehlgeschlagener Anmeldeversuche vorübergehend blockiert.",
+    "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "otp_sent_success": "OTP erfolgreich gesendet! Bitte überprüfen Sie Ihre E-Mails.",
+    "failed_to_send_otp": "Senden des OTP fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "invalid_or_expired_otp": "Ungültiges oder abgelaufenes OTP",
+    "entered_otp_invalid_or_expired": "Das eingegebene OTP ist ungültig oder abgelaufen.",
+    "verification_error": "Während der Überprüfung ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "otp_resent_success": "OTP erfolgreich erneut gesendet! Bitte überprüfen Sie Ihre E-Mails.",
+    "failed_to_resend_otp": "Senden des OTP fehlgeschlagen",
+    "full_name_label": "Vollständiger Name",
+    "full_name_placeholder": "Max Mustermann",
+    "email_address_label": "E-Mail-Adresse",
+    "email_address_placeholder": "du@beispiel.com",
+    "password_label": "Passwort",
+    "password_placeholder": "••••••••",
+    "confirm_password_label": "Passwort bestätigen",
+    "confirm_password_placeholder": "••••••••",
+    "sending_otp_button": "Sende OTP...",
+    "create_account_button": "Konto erstellen",
+    "otp_sent_to_email_message": "Wir haben den Code an {email} gesendet",
+    "otp_placeholder": "000000",
+    "otp_has_expired": "OTP ist abgelaufen",
+    "time_remaining_label": "Verbleibende Zeit:",
+    "resend_otp_button": "OTP erneut senden",
+    "verifying_button": "Verifiziere...",
+    "verify_otp_button": "OTP verifizieren",
+    "back_to_signup_button": "Zurück zur Registrierung",
+    "verification_successful_heading": "Verifizierung erfolgreich!",
+    "verification_successful_description": "Ihr Konto wurde erfolgreich erstellt.",
+    "now_login_redirecting": "Jetzt anmelden • Weiterleitung in {countdownTimeLeft}s",
+    "go_to_signin_button": "Zur Anmeldung",
+    "already_have_account_question": "Bereits ein Konto?",
+    "sign_in_instead_button": "Stattdessen anmelden"
+  },
+  "login_admin": {
+    "appTitle": "GREWE Scanner Interface Cloud-Version",
+    "pageTitle": "Willkommen zurück",
+    "subtitle": "Melden Sie sich an, um auf Ihr Admin-Dashboard zuzugreifen",
 
-  "emailLabel": "E-Mail-Adresse",
-  "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
 
-  "passwordLabel": "Passwort",
-  "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
 
-  "rememberMe": "Angemeldet bleiben",
-  "forgotPassword": "Passwort vergessen?",
+    "rememberMe": "Angemeldet bleiben",
+    "forgotPassword": "Passwort vergessen?",
 
-  "signIn": "Anmelden",
-  "signingIn": "Anmeldung läuft...",
+    "signIn": "Anmelden",
+    "signingIn": "Anmeldung läuft...",
 
-  "successTitle": "Erfolg!",
-  "errorTitle": "Fehler!",
-  "invalidCredentials": "Ungültige E-Mail oder Passwort",
-  "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
+    "successTitle": "Erfolg!",
+    "errorTitle": "Fehler!",
+    "invalidCredentials": "Ungültige E-Mail oder Passwort",
+    "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
 
-  "emailRequired": "E-Mail ist erforderlich",
-  "passwordRequired": "Passwort ist erforderlich",
+    "emailRequired": "E-Mail ist erforderlich",
+    "passwordRequired": "Passwort ist erforderlich",
 
-  "footerNote": "Geschützt durch Sicherheitsstandards auf Unternehmensebene"
-},
-"changePassword_admin": {
-  "pageTitle": "Admin-Passwort ändern",
-  "step1": "Aktuelle Zugangsdaten überprüfen",
-  "step2": "Neue Zugangsdaten festlegen",
+    "footerNote": "Geschützt durch Sicherheitsstandards auf Unternehmensebene"
+  },
+  "changePassword_admin": {
+    "pageTitle": "Admin-Passwort ändern",
+    "step1": "Aktuelle Zugangsdaten überprüfen",
+    "step2": "Neue Zugangsdaten festlegen",
 
-  "currentUsernameLabel": "Aktueller Benutzername",
-  "currentUsernamePlaceholder": "Aktuellen Benutzernamen eingeben",
+    "currentUsernameLabel": "Aktueller Benutzername",
+    "currentUsernamePlaceholder": "Aktuellen Benutzernamen eingeben",
 
-  "currentPasswordLabel": "Aktuelles Passwort",
-  "currentPasswordPlaceholder": "Aktuelles Passwort eingeben",
+    "currentPasswordLabel": "Aktuelles Passwort",
+    "currentPasswordPlaceholder": "Aktuelles Passwort eingeben",
 
-  "newUsernameLabel": "Neuer Benutzername",
-  "newUsernamePlaceholder": "Neuen Benutzernamen eingeben",
+    "newUsernameLabel": "Neuer Benutzername",
+    "newUsernamePlaceholder": "Neuen Benutzernamen eingeben",
 
-  "newPasswordLabel": "Neues Passwort",
-  "newPasswordPlaceholder": "Neues Passwort eingeben",
-  "passwordHint": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "newPasswordLabel": "Neues Passwort",
+    "newPasswordPlaceholder": "Neues Passwort eingeben",
+    "passwordHint": "Das Passwort muss mindestens 6 Zeichen lang sein",
 
-  "verifyButton": "Zugangsdaten überprüfen",
-  "verifying": "Überprüfung läuft...",
-  "updateButton": "Passwort aktualisieren",
-  "updating": "Aktualisierung läuft...",
-  "backButton": "Zurück",
+    "verifyButton": "Zugangsdaten überprüfen",
+    "verifying": "Überprüfung läuft...",
+    "updateButton": "Passwort aktualisieren",
+    "updating": "Aktualisierung läuft...",
+    "backButton": "Zurück",
 
-  "successTitle": "Erfolg!",
-  "successMessage": "Die Admin-Zugangsdaten wurden erfolgreich aktualisiert.",
-  "goToDashboard": "Zum Admin-Dashboard",
+    "successTitle": "Erfolg!",
+    "successMessage": "Die Admin-Zugangsdaten wurden erfolgreich aktualisiert.",
+    "goToDashboard": "Zum Admin-Dashboard",
 
-  "errorInvalid": "Ungültiger Benutzername oder Passwort",
-  "errorNotFound": "Admin-Zugangsdaten nicht in der Datenbank gefunden",
-  "errorGeneric": "Es ist ein Fehler aufgetreten"
-},
-"deleteUser": {
-  "successTitle": "Erfolgreich gelöscht",
-  "successMessageP1": "Benutzer ",
-  "successMessageP2": " wurde erfolgreich gelöscht",
+    "errorInvalid": "Ungültiger Benutzername oder Passwort",
+    "errorNotFound": "Admin-Zugangsdaten nicht in der Datenbank gefunden",
+    "errorGeneric": "Es ist ein Fehler aufgetreten"
+  },
+  "deleteUser": {
+    "successTitle": "Erfolgreich gelöscht",
+    "successMessageP1": "Benutzer ",
+    "successMessageP2": " wurde erfolgreich gelöscht",
 
-  "confirmTitle": "Löschen bestätigen",
- "confirmMessageP1": "Möchten Sie wirklich löschen",
-  "confirmMessageP2": " Diese Aktion kann nicht rückgängig gemacht werden.",
+    "confirmTitle": "Löschen bestätigen",
+    "confirmMessageP1": "Möchten Sie wirklich löschen",
+    "confirmMessageP2": " Diese Aktion kann nicht rückgängig gemacht werden.",
 
-  "cancelButton": "Abbrechen",
-  "deleteButton": "Löschen",
-  "deleting": "Wird gelöscht..."
-},
-"admin": {
-  "verifying": "Zugriff wird überprüft",
-  "checkadminCredentials": "Ihre Admin-Anmeldedaten und Berechtigungen werden überprüft...",
-  "accessDenied": "Zugriff verweigert",
-  "redirecting": "Weiterleitung zur Anmeldung...",
-  "admin_dashboard": "Admin-Dashboard",
-  "loadingDashboard": "Ihr Dashboard wird geladen...",
-  "loadingUsers": "Benutzer werden geladen",
-  "fetchingUsers": "Benutzerdaten werden aus der Datenbank abgerufen...",
-  "manage_users": "Benutzer und ihre Informationen verwalten",
-  "premium_users":"Premium-Benutzer",
-  "expired_premium_users":"Abgelaufene Premium-Benutzer",
-  "change_credentials": "Anmeldedaten ändern",
-  "upgrade":"Upgrade auf Premium",
-  "payment-history":"Zahlungsverlauf",
-  "logout": "Abmelden",
-  "user_management": "Benutzerverwaltung"
-},
+    "cancelButton": "Abbrechen",
+    "deleteButton": "Löschen",
+    "deleting": "Wird gelöscht..."
+  },
+  "admin": {
+    "verifying": "Zugriff wird überprüft",
+    "checkadminCredentials": "Ihre Admin-Anmeldedaten und Berechtigungen werden überprüft...",
+    "accessDenied": "Zugriff verweigert",
+    "redirecting": "Weiterleitung zur Anmeldung...",
+    "admin_dashboard": "Admin-Dashboard",
+    "loadingDashboard": "Ihr Dashboard wird geladen...",
+    "loadingUsers": "Benutzer werden geladen",
+    "fetchingUsers": "Benutzerdaten werden aus der Datenbank abgerufen...",
+    "manage_users": "Benutzer und ihre Informationen verwalten",
+    "premium_users": "Premium-Benutzer",
+    "expired_premium_users": "Abgelaufene Premium-Benutzer",
+    "payment_records": "Zahlungsaufzeichnungen",
+    "change_credentials": "Anmeldedaten ändern",
+    "upgrade": "Upgrade auf Premium",
+    "payment-history": "Zahlungsverlauf",
+    "logout": "Abmelden",
+    "user_management": "Benutzerverwaltung"
+  },
 
   "userTable": {
     "searchPlaceholder": "Benutzer nach Name oder E-Mail suchen...",
@@ -554,16 +599,16 @@
     "columnSerial": "#",
     "columnName": "Name",
     "columnEmail": "E-Mail",
-"columnCreatedAt": "Erstellt am",
+    "columnCreatedAt": "Erstellt am",
     "columnAction": "Aktion",
     "columnUserType": "Benutzertyp",
 
     "noResultsTitle": "Keine Benutzer gefunden",
     "noResultsDescription": "Versuchen Sie, Ihre Suchbegriffe anzupassen oder",
     "noResultsClearSearch": "Suche zurücksetzen",
-    "deletion_failed":"Das Löschen ist fehlgeschlagen",
-    "unknownError":"Es ist ein unbekannter Fehler aufgetreten",
-    "error":"Fehler"
+    "deletion_failed": "Das Löschen ist fehlgeschlagen",
+    "unknownError": "Es ist ein unbekannter Fehler aufgetreten",
+    "error": "Fehler"
   },
   "user_row": {
     "updated": "PASSWORT AKTUALISIERT",
@@ -575,332 +620,330 @@
     "hidePassword": "Passwort verbergen",
     "serialNumberPrefix": "#"
   },
-  "forget_password":{
-  "appTitle": "GREWE Scanner Interface Cloud-Version",
-  "resetPasswordHeading": "Passwort zurücksetzen",
-  "resetPasswordSubtext": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
-  "emailLabel": "E-Mail-Adresse",
-  "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
-  "emailHelp": "Wir senden einen Link zum Zurücksetzen des Passworts an diese E-Mail-Adresse.",
-  "validationEmailRequired": "E-Mail ist erforderlich",
-  "validationEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
-  "formErrorMessage": "Bitte beheben Sie die folgenden Fehler und versuchen Sie es erneut.",
-  "buttonSendReset": "Link zum Zurücksetzen senden",
-  "buttonSendingReset": "Link zum Zurücksetzen wird gesendet...",
-  "messageSuccessTitle": "Erfolg!",
-  "messageErrorTitle": "Fehler!",
-  "messageSuccessDefault": "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie in Kürze einen Link zum Zurücksetzen des Passworts.",
-  "messageErrorDefault": "Fehler beim Senden der E-Mail zum Zurücksetzen des Passworts. Bitte versuchen Sie es erneut.",
-  "errormessage":"Ein unbekannter Fehler ist aufgetreten.",
-  "firebaseErrors": {
-    "user-not-found": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfen Sie Ihre E-Mail oder erstellen Sie ein neues Konto.",
-    "invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-    "too-many-requests": "Zu viele Anfragen zum Zurücksetzen des Passworts. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
-    "network-request-failed": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
-    "operation-not-allowed": "Das Zurücksetzen des Passworts ist nicht aktiviert. Bitte kontaktieren Sie den Support.",
-    "invalid-action-code": "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
-    "expired-action-code": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie einen neuen an.",
-    "weak-password": "Bitte wählen Sie ein stärkeres Passwort.",
-    "default":"E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
-  },
-  "rememberPassword": "Erinnern Sie sich an Ihr Passwort?",
-  "backToSignIn": "Zurück zur Anmeldung",
-  "infoBoxTitle": "Was Sie erwarten können",
-  "infoBoxItems": {
-      "line1":"Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts",
-      "line2":"Der Link läuft aus Sicherheitsgründen in 1 Stunde ab",
+  "forget_password": {
+    "appTitle": "GREWE Scanner Interface Cloud-Version",
+    "resetPasswordHeading": "Passwort zurücksetzen",
+    "resetPasswordSubtext": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "emailHelp": "Wir senden einen Link zum Zurücksetzen des Passworts an diese E-Mail-Adresse.",
+    "validationEmailRequired": "E-Mail ist erforderlich",
+    "validationEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "formErrorMessage": "Bitte beheben Sie die folgenden Fehler und versuchen Sie es erneut.",
+    "buttonSendReset": "Link zum Zurücksetzen senden",
+    "buttonSendingReset": "Link zum Zurücksetzen wird gesendet...",
+    "messageSuccessTitle": "Erfolg!",
+    "messageErrorTitle": "Fehler!",
+    "messageSuccessDefault": "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie in Kürze einen Link zum Zurücksetzen des Passworts.",
+    "messageErrorDefault": "Fehler beim Senden der E-Mail zum Zurücksetzen des Passworts. Bitte versuchen Sie es erneut.",
+    "errormessage": "Ein unbekannter Fehler ist aufgetreten.",
+    "firebaseErrors": {
+      "user-not-found": "Kein Konto mit dieser E-Mail-Adresse gefunden. Bitte überprüfen Sie Ihre E-Mail oder erstellen Sie ein neues Konto.",
+      "invalid-email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "too-many-requests": "Zu viele Anfragen zum Zurücksetzen des Passworts. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
+      "network-request-failed": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+      "operation-not-allowed": "Das Zurücksetzen des Passworts ist nicht aktiviert. Bitte kontaktieren Sie den Support.",
+      "invalid-action-code": "Der Link zum Zurücksetzen des Passworts ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.",
+      "expired-action-code": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie einen neuen an.",
+      "weak-password": "Bitte wählen Sie ein stärkeres Passwort.",
+      "default": "E-Mail zum Zurücksetzen des Passworts konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+    },
+    "rememberPassword": "Erinnern Sie sich an Ihr Passwort?",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "infoBoxTitle": "Was Sie erwarten können",
+    "infoBoxItems": {
+      "line1": "Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts",
+      "line2": "Der Link läuft aus Sicherheitsgründen in 1 Stunde ab",
       "line3": "Überprüfen Sie Ihren Spam-Ordner, wenn Sie die E-Mail nicht sehen",
       "line4": "Kontaktieren Sie den Support, wenn die Probleme weiterhin bestehen"
-  },
-  "securityNoticeTitle": "Sicherheits-Hinweis",
-  "securityNoticeText": "Zu Ihrer Sicherheit haben wir diese Anfrage zum Zurücksetzen des Passworts protokolliert. Wenn Sie dies nicht angefordert haben, kontaktieren Sie bitte sofort den Support."
-},
-
-"premium":"Prämie",
-"expiresIn":"Läuft ab in",
-"expired":"Prämie abgelaufen",
-
-"reset_password":{
-  "verifyingResetLink": "Zurücksetzungslink wird überprüft...",
-  "code_verification_error":"Fehler bei der Codeüberprüfung:",
-  "invalidOrMissingCode": "Ungültiger oder fehlender Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
-  "unknownError": "Ein unbekannter Fehler ist aufgetreten",
-  "expiredActionCode": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie eine neue E-Mail zum Zurücksetzen an.",
-  "invalidActionCode": "Der Link zum Zurücksetzen ist ungültig oder wurde bereits verwendet. Bitte fordern Sie einen neuen an.",
-  "userDisabled": "Dieses Konto wurde deaktiviert. Bitte wenden Sie sich an den Support.",
-  "userNotFound": "Kein Konto gefunden. Der Benutzer wurde möglicherweise gelöscht.",
-  "weakPassword": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
-  "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
-  "tooManyRequests": "Zu viele Anfragen. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
-  "failedReset": "Das Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut oder fordern Sie einen neuen Link an.",
-  "invalidResetCode": "Ungültiger Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
-  "passwordResetSuccess": "Passwort erfolgreich zurückgesetzt! Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
-  "passwordRequired": "Passwort ist erforderlich",
-  "passwordMinLength": "Das Passwort muss mindestens 6 Zeichen lang sein",
-  "passwordMaxLength": "Das Passwort darf nicht länger als 128 Zeichen sein",
-  "passwordLowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
-  "passwordUppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
-  "passwordNumber": "Das Passwort muss mindestens eine Zahl enthalten",
-  "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
-  "confirmPasswordMismatch": "Die Passwörter stimmen nicht überein",
-  "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
-  "setNewPassword": "Neues Passwort festlegen",
-  "enterNewPasswordFor": "Geben Sie Ihr neues Passwort ein für",
-  "invalidResetLink": "Ungültiger Zurücksetzungslink",
-  "error": "Fehler!",
-  "success": "Erfolg!",
-  "requestNewResetLink": "Neuen Zurücksetzungslink anfordern",
-  "backToSignIn": "Zurück zur Anmeldung",
-  "newPassword": "Neues Passwort",
-  "enterNewPassword": "Geben Sie Ihr neues Passwort ein",
-  "confirmNewPassword": "Neues Passwort bestätigen",
-  "confirmYourPassword": "Bestätigen Sie Ihr neues Passwort",
-  "updatingPassword": "Passwort wird aktualisiert...",
-  "updatePassword": "Passwort aktualisieren",
-  "signInNow": "Jetzt anmelden",
-  "passwordRequirements": "Passwortanforderungen",
-  "requirementMinLength": "Mindestens 6 Zeichen lang",
-  "requirementUppercase": "Mindestens einen Großbuchstaben enthalten",
-  "requirementLowercase": "Mindestens einen Kleinbuchstaben enthalten",
-  "requirementNumber": "Mindestens eine Zahl enthalten"
-},
-"installation":{
-  "headerTitle": "Wie installiere ich Encleso",
-  "headerDescription": "Folgen Sie dieser Schritt-für-Schritt-Anleitung, um Encleso auf Ihrem Computer zu installieren. Der Installationsprozess ist einfach und sollte nur wenige Minuten dauern.",
-
-  "downloadSectionTitle": "Bereit, loszulegen?",
-  "downloadSectionDescription": "Laden Sie die neueste Version von Encleso herunter, um mit der Installation zu beginnen.",
-  "downloadButton": "Encleso herunterladen",
-
-  "steps": {
-    "1": {
-      "title": "Encleso herunterladen",
-      "description": "Klicken Sie auf die Schaltfläche oben, um mit dem Herunterladen von Encleso zu beginnen. Der Download startet automatisch und wird im Standard-Download-Ordner gespeichert."
     },
-    "2": {
-      "title": "Heruntergeladene Datei öffnen",
-      "description": "Sobald der Download abgeschlossen ist, navigieren Sie zu Ihrem Download-Ordner und öffnen Sie die Installationsdatei, um den Setup-Prozess zu starten. Die Datei heißt normalerweise \"EnclesoSetup.exe\" oder ähnlich."
-    },
-    "3": {
-      "title": "Willkommensbildschirm",
-      "description": "Sie sehen einen Willkommensbildschirm mit einer Einführung zu Encleso. Dies ist der Beginn des Installationsprozesses. Lesen Sie die Willkommensnachricht und klicken Sie auf „Weiter“, um fortzufahren."
-    },
-    "4": {
-      "title": "Installationsort wählen",
-      "description": "Wählen Sie als Nächstes den Ordner aus, in dem Sie Encleso installieren möchten. Standardmäßig schlägt das Installationsprogramm einen Speicherort im Ordner „Programme“ vor. Sie können diesen ändern, wenn Sie möchten."
-    },
-    "5": {
-      "title": "Bereit zur Installation",
-      "description": "Nach der Auswahl des Speicherorts sehen Sie eine Bestätigungsseite, die zeigt, dass die Installation beginnen kann. Überprüfen Sie Ihre Einstellungen und klicken Sie auf „Installieren“, wenn Sie fortfahren möchten."
-    },
-    "6": {
-      "title": "Installation läuft",
-      "description": "Klicken Sie auf „Installieren“ und der Vorgang beginnt mit dem Kopieren der Dateien auf Ihren Computer. Ein Fortschrittsbalken zeigt den Status an. Warten Sie, bis die Installation abgeschlossen ist – dies dauert normalerweise nur wenige Sekunden."
-    },
-    "7": {
-      "title": "Installation abgeschlossen",
-      "description": "Nach Abschluss der Installation sehen Sie eine letzte Seite mit einer Bestätigung. Sie können Encleso sofort starten oder auf „Fertigstellen“ klicken, um den Installer zu schließen und die Anwendung später über das Startmenü zu öffnen."
-    }
+    "securityNoticeTitle": "Sicherheits-Hinweis",
+    "securityNoticeText": "Zu Ihrer Sicherheit haben wir diese Anfrage zum Zurücksetzen des Passworts protokolliert. Wenn Sie dies nicht angefordert haben, kontaktieren Sie bitte sofort den Support."
   },
 
-  "footerMessage": "Viel Spaß beim Scannen mit Grewe Scanner!"
-},
-"app_page":{
+  "premium": "Prämie",
+  "expiresIn": "Läuft ab in",
+  "expired": "Prämie abgelaufen",
 
+  "reset_password": {
+    "verifyingResetLink": "Zurücksetzungslink wird überprüft...",
+    "code_verification_error": "Fehler bei der Codeüberprüfung:",
+    "invalidOrMissingCode": "Ungültiger oder fehlender Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
+    "unknownError": "Ein unbekannter Fehler ist aufgetreten",
+    "expiredActionCode": "Der Link zum Zurücksetzen des Passworts ist abgelaufen. Bitte fordern Sie eine neue E-Mail zum Zurücksetzen an.",
+    "invalidActionCode": "Der Link zum Zurücksetzen ist ungültig oder wurde bereits verwendet. Bitte fordern Sie einen neuen an.",
+    "userDisabled": "Dieses Konto wurde deaktiviert. Bitte wenden Sie sich an den Support.",
+    "userNotFound": "Kein Konto gefunden. Der Benutzer wurde möglicherweise gelöscht.",
+    "weakPassword": "Das Passwort ist zu schwach. Bitte wählen Sie ein stärkeres Passwort.",
+    "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.",
+    "tooManyRequests": "Zu viele Anfragen. Bitte warten Sie einige Minuten, bevor Sie es erneut versuchen.",
+    "failedReset": "Das Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut oder fordern Sie einen neuen Link an.",
+    "invalidResetCode": "Ungültiger Zurücksetzungscode. Bitte fordern Sie einen neuen Link zum Zurücksetzen des Passworts an.",
+    "passwordResetSuccess": "Passwort erfolgreich zurückgesetzt! Sie können sich jetzt mit Ihrem neuen Passwort anmelden.",
+    "passwordRequired": "Passwort ist erforderlich",
+    "passwordMinLength": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "passwordMaxLength": "Das Passwort darf nicht länger als 128 Zeichen sein",
+    "passwordLowercase": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten",
+    "passwordUppercase": "Das Passwort muss mindestens einen Großbuchstaben enthalten",
+    "passwordNumber": "Das Passwort muss mindestens eine Zahl enthalten",
+    "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+    "confirmPasswordMismatch": "Die Passwörter stimmen nicht überein",
+    "fixErrors": "Bitte beheben Sie die untenstehenden Fehler und versuchen Sie es erneut.",
+    "setNewPassword": "Neues Passwort festlegen",
+    "enterNewPasswordFor": "Geben Sie Ihr neues Passwort ein für",
+    "invalidResetLink": "Ungültiger Zurücksetzungslink",
+    "error": "Fehler!",
+    "success": "Erfolg!",
+    "requestNewResetLink": "Neuen Zurücksetzungslink anfordern",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "newPassword": "Neues Passwort",
+    "enterNewPassword": "Geben Sie Ihr neues Passwort ein",
+    "confirmNewPassword": "Neues Passwort bestätigen",
+    "confirmYourPassword": "Bestätigen Sie Ihr neues Passwort",
+    "updatingPassword": "Passwort wird aktualisiert...",
+    "updatePassword": "Passwort aktualisieren",
+    "signInNow": "Jetzt anmelden",
+    "passwordRequirements": "Passwortanforderungen",
+    "requirementMinLength": "Mindestens 6 Zeichen lang",
+    "requirementUppercase": "Mindestens einen Großbuchstaben enthalten",
+    "requirementLowercase": "Mindestens einen Kleinbuchstaben enthalten",
+    "requirementNumber": "Mindestens eine Zahl enthalten"
+  },
+  "installation": {
+    "headerTitle": "Wie installiere ich Encleso",
+    "headerDescription": "Folgen Sie dieser Schritt-für-Schritt-Anleitung, um Encleso auf Ihrem Computer zu installieren. Der Installationsprozess ist einfach und sollte nur wenige Minuten dauern.",
+
+    "downloadSectionTitle": "Bereit, loszulegen?",
+    "downloadSectionDescription": "Laden Sie die neueste Version von Encleso herunter, um mit der Installation zu beginnen.",
+    "downloadButton": "Encleso herunterladen",
+
+    "steps": {
+      "1": {
+        "title": "Encleso herunterladen",
+        "description": "Klicken Sie auf die Schaltfläche oben, um mit dem Herunterladen von Encleso zu beginnen. Der Download startet automatisch und wird im Standard-Download-Ordner gespeichert."
+      },
+      "2": {
+        "title": "Heruntergeladene Datei öffnen",
+        "description": "Sobald der Download abgeschlossen ist, navigieren Sie zu Ihrem Download-Ordner und öffnen Sie die Installationsdatei, um den Setup-Prozess zu starten. Die Datei heißt normalerweise \"EnclesoSetup.exe\" oder ähnlich."
+      },
+      "3": {
+        "title": "Willkommensbildschirm",
+        "description": "Sie sehen einen Willkommensbildschirm mit einer Einführung zu Encleso. Dies ist der Beginn des Installationsprozesses. Lesen Sie die Willkommensnachricht und klicken Sie auf „Weiter“, um fortzufahren."
+      },
+      "4": {
+        "title": "Installationsort wählen",
+        "description": "Wählen Sie als Nächstes den Ordner aus, in dem Sie Encleso installieren möchten. Standardmäßig schlägt das Installationsprogramm einen Speicherort im Ordner „Programme“ vor. Sie können diesen ändern, wenn Sie möchten."
+      },
+      "5": {
+        "title": "Bereit zur Installation",
+        "description": "Nach der Auswahl des Speicherorts sehen Sie eine Bestätigungsseite, die zeigt, dass die Installation beginnen kann. Überprüfen Sie Ihre Einstellungen und klicken Sie auf „Installieren“, wenn Sie fortfahren möchten."
+      },
+      "6": {
+        "title": "Installation läuft",
+        "description": "Klicken Sie auf „Installieren“ und der Vorgang beginnt mit dem Kopieren der Dateien auf Ihren Computer. Ein Fortschrittsbalken zeigt den Status an. Warten Sie, bis die Installation abgeschlossen ist – dies dauert normalerweise nur wenige Sekunden."
+      },
+      "7": {
+        "title": "Installation abgeschlossen",
+        "description": "Nach Abschluss der Installation sehen Sie eine letzte Seite mit einer Bestätigung. Sie können Encleso sofort starten oder auf „Fertigstellen“ klicken, um den Installer zu schließen und die Anwendung später über das Startmenü zu öffnen."
+      }
+    },
+
+    "footerMessage": "Viel Spaß beim Scannen mit Grewe Scanner!"
+  },
+  "app_page": {
     "loading": "Gespeicherte Bilder werden geladen...",
-  
-  "selected": {
-    "label": "Ausgewählt:",
-    "imported": "Importiertes Bild",
-    "scanned": "Gescanntes Bild"
-  },
-  "operations": {
-    "label": "Für Operationen:",
-    "count": "{{count}} Bild ausgewählt",
-    "count_plural": "{{count}} Bilder ausgewählt"
-  },
-  "image":"Bild",
-  "action":"Aktion",
-  "edit":"Bearbeiten",
-  "view":"Ansicht",
 
-  "menu": {
-    "action": {
-      "new": "Neues Dokument",
-      "open": "Öffnen",
-      "import": "Importieren",
-      "export": "Exportieren",
-      "send": "Senden",
-      "exit": "Beenden"
+    "selected": {
+      "label": "Ausgewählt:",
+      "imported": "Importiertes Bild",
+      "scanned": "Gescanntes Bild"
     },
-    "edit": {
-      "undo": "Rückgängig",
-      "redo": "Wiederholen",
-      "cut": "Ausschneiden",
-      "copy": "Kopieren",
-      "paste": "Einfügen",
-      "selectAll": "Alles auswählen"
+    "operations": {
+      "label": "Für Operationen:",
+      "count": "{{count}} Bild ausgewählt",
+      "count_plural": "{{count}} Bilder ausgewählt"
     },
-    "view": {
-      "zoomIn": "Vergrößern",
-      "zoomOut": "Verkleinern",
-      "fit": "An Fenster anpassen",
-      "fullScreen": "Vollbild",
-      "thumbnails": "Miniaturen",
-      "properties": "Eigenschaften"
+    "image": "Bild",
+    "action": "Aktion",
+    "edit": "Bearbeiten",
+    "view": "Ansicht",
+
+    "menu": {
+      "action": {
+        "new": "Neues Dokument",
+        "open": "Öffnen",
+        "import": "Importieren",
+        "export": "Exportieren",
+        "send": "Senden",
+        "exit": "Beenden"
+      },
+      "edit": {
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "cut": "Ausschneiden",
+        "copy": "Kopieren",
+        "paste": "Einfügen",
+        "selectAll": "Alles auswählen"
+      },
+      "view": {
+        "zoomIn": "Vergrößern",
+        "zoomOut": "Verkleinern",
+        "fit": "An Fenster anpassen",
+        "fullScreen": "Vollbild",
+        "thumbnails": "Miniaturen",
+        "properties": "Eigenschaften"
+      },
+      "help": {
+        "help": "Hilfe",
+        "about": "Über",
+        "impressum": "Impressum"
+      }
     },
-    "help": {
-      "help": "Hilfe",
-      "about": "Über",
-      "impressum": "Impressum"
+    "shortcuts": {
+      "new": "Strg+N",
+      "open": "Strg+O",
+      "import": "Strg+I",
+      "export": "Strg+E",
+      "send": "Strg+S",
+      "exit": "Alt+F4",
+      "undo": "Strg+Z",
+      "redo": "Strg+Y",
+      "cut": "Strg+X",
+      "copy": "Strg+C",
+      "paste": "Strg+V",
+      "selectAll": "Strg+A",
+      "zoomIn": "Strg++",
+      "zoomOut": "Strg+-",
+      "fit": "Strg+0",
+      "fullScreen": "F11",
+      "thumbnails": "Strg+T",
+      "properties": "Alt+Eingabe"
     }
   },
-  "shortcuts": {
-    "new": "Strg+N",
-    "open": "Strg+O",
-    "import": "Strg+I",
-    "export": "Strg+E",
-    "send": "Strg+S",
-    "exit": "Alt+F4",
-    "undo": "Strg+Z",
-    "redo": "Strg+Y",
-    "cut": "Strg+X",
-    "copy": "Strg+C",
-    "paste": "Strg+V",
-    "selectAll": "Strg+A",
-    "zoomIn": "Strg++",
-    "zoomOut": "Strg+-",
-    "fit": "Strg+0",
-    "fullScreen": "F11",
-    "thumbnails": "Strg+T",
-    "properties": "Alt+Eingabe"
-  }
-}
-,
-"expired_premium_user":{
-  "expiredPremiumUsers": "Abgelaufene Premium-Benutzer",
-  "total": "Insgesamt:",
-  "expiredUser": "abgelaufener Benutzer ",
-  "reload": "Aktualisieren",
-  "searchPlaceholder": "Nach Name oder E-Mail suchen...",
-  "sortMovedNewest": "Verschoben: Neueste zuerst",
-  "sortMovedOldest": "Verschoben: Älteste zuerst",
-  "sortPremiumLatest": "Premium-Ende: Neueste zuerst",
-  "sortPremiumEarliest": "Premium-Ende: Älteste zuerst",
-  "clearFilters": "Filter zurücksetzen",
-  "noUsersFound": "Keine abgelaufenen Premium-Benutzer gefunden",
-  "tryAdjustSearch": "Versuche, deine Suchanfrage anzupassen.",
-  "noExpiredUsers": "Momentan gibt es keine abgelaufenen Premium-Benutzer.",
-  "paymentHistory": "Zahlungsverlauf",
-  "amount": "Betrag",
-  "status": "Status",
-  "date": "Datum",
-  "name": "Name",
-  "premiumStart": "Premium-Start",
-  "premiumEnd": "Premium-Ende",
-  "movedToExpired": "Als abgelaufen markiert",
-  "failedToLoad": "Abgelaufene Premium-Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
-  "tryAgain": "Erneut versuchen"
-},
-"premiumUsers":{
-  "premiumUsers": "Premium-Benutzer",
-  "total": "Gesamt:",
-  "premium":"Prämie",
-  "reload": "Aktualisieren",
-  "searchPlaceholder": "Nach Name oder E-Mail suchen...",
-   "sortby": "Sortieren nach",
-  "sortPremiumStartNewest": "Premium-Start (Neueste zuerst)",
-  "sortPremiumStartOldest": "Premium-Start (Älteste zuerst)",
-  "sortCreatedDateNewest": "Erstellungsdatum (Neueste zuerst)",
-  "noPremiumUsers": "Noch keine Premium-Benutzer",
-  "premiumUsersWillAppear": "Premium-Benutzer werden hier angezeigt, sobald sie abonnieren.",
-  "oopsSomethingWrong": "Ups! Etwas ist schiefgelaufen",
-  "tryAgain": "Erneut versuchen",
-  "noResultsFound": "Keine Ergebnisse gefunden",
-  "adjustSearchQuery": "Versuche, deine Suchanfrage anzupassen.",
-  "name": "Name",
-  "premiumPeriod": "Premium-Zeitraum",
-  "accountCreated": "Konto erstellt",
-  "paymentHistory": "Zahlungsverlauf ",
-  "stripeIDs": "Stripe-IDs",
-  "session": "Sitzung",
-  "intent": "Intent",
-  "charge": "Charge",
-  "card": "Karte",
-  "expires": "Gültig bis",
-  "billingAddress": "Rechnungsadresse",
-  "items": "Artikel",
-  "quantity": "Menge",
-  "noPaymentHistory": "Keine Zahlungsinformationen verfügbar",
-  "statusSucceeded": "Erfolgreich",
-  "statusPaid": "Bezahlt",
-  "statusPending": "Ausstehend",
-  "statusFailed": "Fehlgeschlagen"
-},
-"save_modal": {
-  "modalTitle": "Gescannten Bilder speichern",
-  "cancel": "Abbrechen",
-  "next": "Weiter",
-  "back": "Zurück",
-  "save": "Speichern",
-  "done": "Fertig",
-  "tryAgain": "Erneut versuchen",
-  "savingTitle": "Dateien werden gespeichert...",
-  "savingText": "Bitte warten Sie, während wir Ihre ",
-  "as": "als",
-  "savingImages": "Bilder speichern",
-  "successTitle": "Dateien erfolgreich gespeichert!",
-  "successText": "Ihre Dateien wurden erfolgreich gespeichert als ",
-  "the_selected_folder": "der ausgewählte Ordner",
-  "the_selected_location": "der ausgewählte Speicherort",
+  "expired_premium_user": {
+    "expiredPremiumUsers": "Abgelaufene Premium-Benutzer",
+    "total": "Insgesamt:",
+    "expiredUser": "abgelaufener Benutzer ",
+    "reload": "Aktualisieren",
+    "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+    "sortMovedNewest": "Verschoben: Neueste zuerst",
+    "sortMovedOldest": "Verschoben: Älteste zuerst",
+    "sortPremiumLatest": "Premium-Ende: Neueste zuerst",
+    "sortPremiumEarliest": "Premium-Ende: Älteste zuerst",
+    "clearFilters": "Filter zurücksetzen",
+    "noUsersFound": "Keine abgelaufenen Premium-Benutzer gefunden",
+    "tryAdjustSearch": "Versuche, deine Suchanfrage anzupassen.",
+    "noExpiredUsers": "Momentan gibt es keine abgelaufenen Premium-Benutzer.",
+    "paymentHistory": "Zahlungsverlauf",
+    "amount": "Betrag",
+    "status": "Status",
+    "date": "Datum",
+    "name": "Name",
+    "premiumStart": "Premium-Start",
+    "premiumEnd": "Premium-Ende",
+    "movedToExpired": "Als abgelaufen markiert",
+    "failedToLoad": "Abgelaufene Premium-Benutzer konnten nicht geladen werden. Bitte versuche es erneut.",
+    "tryAgain": "Erneut versuchen"
+  },
+  "premiumUsers": {
+    "premiumUsers": "Premium-Benutzer",
+    "total": "Gesamt:",
+    "premium": "Prämie",
+    "reload": "Aktualisieren",
+    "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+    "sortby": "Sortieren nach",
+    "sortPremiumStartNewest": "Premium-Start (Neueste zuerst)",
+    "sortPremiumStartOldest": "Premium-Start (Älteste zuerst)",
+    "sortCreatedDateNewest": "Erstellungsdatum (Neueste zuerst)",
+    "noPremiumUsers": "Noch keine Premium-Benutzer",
+    "premiumUsersWillAppear": "Premium-Benutzer werden hier angezeigt, sobald sie abonnieren.",
+    "oopsSomethingWrong": "Ups! Etwas ist schiefgelaufen",
+    "tryAgain": "Erneut versuchen",
+    "noResultsFound": "Keine Ergebnisse gefunden",
+    "adjustSearchQuery": "Versuche, deine Suchanfrage anzupassen.",
+    "name": "Name",
+    "premiumPeriod": "Premium-Zeitraum",
+    "accountCreated": "Konto erstellt",
+    "paymentHistory": "Zahlungsverlauf ",
+    "stripeIDs": "Stripe-IDs",
+    "session": "Sitzung",
+    "intent": "Intent",
+    "charge": "Charge",
+    "card": "Karte",
+    "expires": "Gültig bis",
+    "billingAddress": "Rechnungsadresse",
+    "items": "Artikel",
+    "quantity": "Menge",
+    "noPaymentHistory": "Keine Zahlungsinformationen verfügbar",
+    "statusSucceeded": "Erfolgreich",
+    "statusPaid": "Bezahlt",
+    "statusPending": "Ausstehend",
+    "statusFailed": "Fehlgeschlagen"
+  },
+  "save_modal": {
+    "modalTitle": "Gescannten Bilder speichern",
+    "cancel": "Abbrechen",
+    "next": "Weiter",
+    "back": "Zurück",
+    "save": "Speichern",
+    "done": "Fertig",
+    "tryAgain": "Erneut versuchen",
+    "savingTitle": "Dateien werden gespeichert...",
+    "savingText": "Bitte warten Sie, während wir Ihre ",
+    "as": "als",
+    "savingImages": "Bilder speichern",
+    "successTitle": "Dateien erfolgreich gespeichert!",
+    "successText": "Ihre Dateien wurden erfolgreich gespeichert als ",
+    "the_selected_folder": "der ausgewählte Ordner",
+    "the_selected_location": "der ausgewählte Speicherort",
 
-  "in": "in",
-  "successPath": "Gespeicherter Pfad",
-  "errorTitle": "Speichern fehlgeschlagen",
-  "errorText": "{message}",
-  "selectFormatTitle": "Dateiformat auswählen",
-  "combine": "Alle Bilder zusammenführen",
-  "onefile": "Eine Datei pro Bild",
-  "selectFormatDescription": "Wählen Sie das Format aus, in dem Sie Ihre gescannten Bilder speichern möchten.",
-  "multiPageInfoTitle": "Mehrseitiges Format:",
-  "multiPageInfo": "Alle Bilder werden zu einer einzigen Datei zusammengefasst.",
-  "file": "Datei",
-  "singlePageInfoTitle": "Einseitiges Format:",
-  "singlePageInfo": "Jedes Bild wird als separate Datei gespeichert.",
-  "selectImagesTitle": "Bilder auswählen",
-  "selectImagesDescription": "Wählen Sie die Bilder aus, die Sie speichern möchten.",
-  "totalImages": "Gesamtbilder:",
-  "selectedImages": "Ausgewählte Bilder:",
-  "saveAllImages": "Alle Bilder speichern",
-  "saveAllImagesDesc": "Alle",
-  "scanned_images": "gescannten Bilder speichern",
-  "saveSelectedOnly": "Nur ausgewählte speichern",
-  "selected_image_preview": "Vorschau der ausgewählten Bilder:",
-  "saveSelectedOnlyDesc": "Nur die ",
-  "selected_images": "ausgewählten Bilder speichern",
-  "noImagesSelectedWarning": "Derzeit sind keine Bilder ausgewählt. Bitte wählen Sie mindestens ein Bild zum Speichern aus.",
-  "chooseLocationTitle": "Speicherort wählen",
-  "chooseLocationDescriptionFolder": "Wählen Sie einen Ordner, um Ihre Dateien zu speichern.",
-  "chooseLocationDescriptionFile": "Wählen Sie aus, wo Sie Ihre Datei speichern möchten.",
-  "unsupportedBrowserWarning": "Ihr Browser unterstützt keine Ordnerauswahl. Bitte geben Sie den Ordnerpfad manuell ein.",
-  "formatLabel": "Format:",
-  "imagesToSaveLabel": "Zu speichernde Bilder:",
-  "outputLabel": "Ausgabe:",
-  "browse": "Durchsuchen",
-  "selectedFolder": "Ausgewählter Ordner:",
-  "selectedFile": "Ausgewählte Datei:",
-  "noLocationSelected": "Kein Speicherort ausgewählt",
-  "locationSuccessTitle": "Speicherort erfolgreich ausgewählt",
-  "locationSuccessText": "Bereit zum Speichern Ihrer Dateien",
-  "noImagesError": "Keine Bilder zum Speichern ausgewählt",
-  "noLocationError": "Bitte wählen Sie einen Speicherort",
-  "abortError": "Keine Datei oder kein Ordner ausgewählt.",
-  "deniedError": "Zugriff verweigert. Bitte erteilen Sie die Berechtigung zum Speichern von Dateien.",
-  "error_select_folder": "Ordnerauswahl fehlgeschlagen. Bitte versuchen Sie es erneut.",
-  "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-},
-"payment_success":{
- "loading": {
+    "in": "in",
+    "successPath": "Gespeicherter Pfad",
+    "errorTitle": "Speichern fehlgeschlagen",
+    "errorText": "{message}",
+    "selectFormatTitle": "Dateiformat auswählen",
+    "combine": "Alle Bilder zusammenführen",
+    "onefile": "Eine Datei pro Bild",
+    "selectFormatDescription": "Wählen Sie das Format aus, in dem Sie Ihre gescannten Bilder speichern möchten.",
+    "multiPageInfoTitle": "Mehrseitiges Format:",
+    "multiPageInfo": "Alle Bilder werden zu einer einzigen Datei zusammengefasst.",
+    "file": "Datei",
+    "singlePageInfoTitle": "Einseitiges Format:",
+    "singlePageInfo": "Jedes Bild wird als separate Datei gespeichert.",
+    "selectImagesTitle": "Bilder auswählen",
+    "selectImagesDescription": "Wählen Sie die Bilder aus, die Sie speichern möchten.",
+    "totalImages": "Gesamtbilder:",
+    "selectedImages": "Ausgewählte Bilder:",
+    "saveAllImages": "Alle Bilder speichern",
+    "saveAllImagesDesc": "Alle",
+    "scanned_images": "gescannten Bilder speichern",
+    "saveSelectedOnly": "Nur ausgewählte speichern",
+    "selected_image_preview": "Vorschau der ausgewählten Bilder:",
+    "saveSelectedOnlyDesc": "Nur die ",
+    "selected_images": "ausgewählten Bilder speichern",
+    "noImagesSelectedWarning": "Derzeit sind keine Bilder ausgewählt. Bitte wählen Sie mindestens ein Bild zum Speichern aus.",
+    "chooseLocationTitle": "Speicherort wählen",
+    "chooseLocationDescriptionFolder": "Wählen Sie einen Ordner, um Ihre Dateien zu speichern.",
+    "chooseLocationDescriptionFile": "Wählen Sie aus, wo Sie Ihre Datei speichern möchten.",
+    "unsupportedBrowserWarning": "Ihr Browser unterstützt keine Ordnerauswahl. Bitte geben Sie den Ordnerpfad manuell ein.",
+    "formatLabel": "Format:",
+    "imagesToSaveLabel": "Zu speichernde Bilder:",
+    "outputLabel": "Ausgabe:",
+    "browse": "Durchsuchen",
+    "selectedFolder": "Ausgewählter Ordner:",
+    "selectedFile": "Ausgewählte Datei:",
+    "noLocationSelected": "Kein Speicherort ausgewählt",
+    "locationSuccessTitle": "Speicherort erfolgreich ausgewählt",
+    "locationSuccessText": "Bereit zum Speichern Ihrer Dateien",
+    "noImagesError": "Keine Bilder zum Speichern ausgewählt",
+    "noLocationError": "Bitte wählen Sie einen Speicherort",
+    "abortError": "Keine Datei oder kein Ordner ausgewählt.",
+    "deniedError": "Zugriff verweigert. Bitte erteilen Sie die Berechtigung zum Speichern von Dateien.",
+    "error_select_folder": "Ordnerauswahl fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "unexpectedError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "payment_success": {
+    "loading": {
       "title": "Zahlung wird verarbeitet...",
       "message": "Bitte warten Sie, während wir Ihre Zahlung bestätigen."
     },
@@ -910,14 +953,143 @@
       "button": "Zur Startseite"
     },
     "success": {
-  "title": "🎉 Zahlung erfolgreich!",
-  "message": "Ihre Zahlung war erfolgreich und Ihr Konto wurde aktualisiert auf ",
-  "grew_scan_premium": "Grewe Scan Premium.",
-  "button": "Zur Startseite"
+      "title": "🎉 Zahlung erfolgreich!",
+      "message": "Ihre Zahlung war erfolgreich und Ihr Konto wurde aktualisiert auf ",
+      "grew_scan_premium": "Grewe Scan Premium.",
+      "button": "Zur Startseite"
+    }
+  },
+  "payment_history":{
+  "loginPrompt": {
+    "title": "Bitte melden Sie sich an, um die Details zu sehen",
+    "description": "Sie müssen eingeloggt sein, um Ihre Zahlungshistorie einzusehen."
+  },
+  "backButton": "Zurück zur Startseite",
+  "userEmailLabel": "Benutzer-E-Mail:",
+  "paymentHistoryTitle": "Zahlungshistorie",
+  "filters": {
+    "button": "Filter hinzufügen",
+    "cardTypeAll": "Alle Karten",
+    "cardTypeVisa": "Visa",
+    "cardTypeMastercard": "Mastercard",
+    "cardTypeAmex": "American Express",
+    "cardTypeOther": "Andere",
+    "resetButton": "Alle zurücksetzen",
+    "applyButton": "Filter anwenden",
+    "sections": {
+      "dateRange": "Zeitraum",
+      "fromDate": "Von Datum",
+      "toDate": "Bis Datum",
+      "cardType": "Kartentyp",
+      "amountRange": "Betragsbereich",
+      "minAmount": "Mindestbetrag",
+      "maxAmount": "Höchstbetrag",
+      "search": "Suche",
+      "searchPlaceholder": "Nach Name oder letzte 4 Ziffern suchen"
+    }
+  },
+  "pdf": {
+    "title": "Zahlungshistorie",
+    "userEmail": "Benutzer-E-Mail:",
+    "generated": "Erstellt am:",
+    "tableHeaders": ["Datum & Uhrzeit", "Karteninhaber", "Kartentyp", "Letzte 4 Ziffern", "Betrag"],
+    "totalAmountLabel": "Gesamtbetrag:",
+    "totalPaymentsLabel": "Gesamtanzahl Zahlungen:"
+  },
+  "paymentTable": {
+    "dateTime": "Datum & Uhrzeit",
+    "cardHolder": "Karteninhaber",
+    "cardType": "Kartentyp",
+    "last4Digits": "Letzte 4 Ziffern",
+    "amount": "Betrag",
+    "receipt": "Beleg",
+    "view": "Ansehen",
+    "noReceipt": "Kein Beleg",
+    "loadingNoData": "Keine Zahlungen gefunden",
+    "tryAdjustFilters": "Versuchen Sie, die Filter anzupassen"
+  },
+  "paymentCards": {
+    "dateTime": "Datum & Uhrzeit",
+    "amount": "Betrag",
+    "cardHolder": "Karteninhaber",
+    "cardType": "Kartentyp",
+    "last4Digits": "Letzte 4 Ziffern",
+    "view": "Ansehen",
+    "noReceipt": "Kein Beleg",
+    "noData": "Keine Zahlungen gefunden",
+    "tryAdjustFilters": "Versuchen Sie, die Filter anzupassen"
+  },
+  "summary": {
+    "totalAmountPaid": "Insgesamt gezahlter Betrag",
+    "transactions": "Gesamttransaktionen"
+  },
+  "pdfDownloadButton": "PDF herunterladen",
+  "clearAllButton": "Alles löschen"
 }
+,
 
+  "adminPaymentRecords": {
+    "pageTitle": "Admin-Zahlungsaufzeichnungen",
+    "pageDescription": "Alle Benutzertransaktionen an einem Ort",
+    "totalPaymentsLabel": "Gesamtzahlungen:",
+    "filterPaymentsButton": "Zahlungen filtern",
+    "filterButtonShort": "Filtern",
+    "downloadPDFButton": "PDF herunterladen",
+    "downloadPDFButtonShort": "PDF",
+    "loadingMessage": "Zahlungsaufzeichnungen werden geladen...",
+    "tableHeaders": {
+      "paymentDate": "Zahlungsdatum",
+      "email": "E-Mail",
+      "cardHolderName": "Karteninhabername",
+      "cardType": "Kartentyp",
+      "last4Digits": "Letzte 4 Ziffern",
+      "amountUSD": "Betrag (USD)",
+      "receipt": "Beleg"
+    },
+    "noReceiptText": "Kein Beleg",
+    "view":"Sicht",
+    "totalSummary": {
+      "label": "Gesamtbetrag erhalten"
+    },
+    "filterModal": {
+      "title": "Zahlungen filtern",
+      "dateFrom": "Datum von",
+      "dateTo": "Datum bis",
+      "cardType": "Kartentyp",
+      "allTypesOption": "Alle Typen",
+      "visaOption": "Visa",
+      "mastercardOption": "Mastercard",
+      "amexOption": "Amex",
+      "otherOption": "Andere",
+      "emailSearch": "E-Mail Suche",
+      "emailSearchPlaceholder": "Nach E-Mail suchen...",
+      "minAmount": "Mindestbetrag ($)",
+      "maxAmount": "Höchstbetrag ($)",
+      "minAmountPlaceholder": "0,00",
+      "maxAmountPlaceholder": "10000,00",
+      "nameSearch": "Karteninhabername Suche",
+      "nameSearchPlaceholder": "Nach Karteninhaber suchen...",
+      "resetFiltersButton": "Filter zurücksetzen",
+      "applyFiltersButton": "Filter anwenden"
+    },
+    "pdf": {
+      "title": "Grewe Scan Admin-Zahlungsaufzeichnungen",
+      "generatedLabel": "Erstellt am:",
+      "paymentDate": "Datum",
+        "email": "E-Mail",
+        "cardHolderName": "Karteninhaber",
+        "cardType": "Kartentyp",
+        "last4Digits": "Letzte 4",
+        "amount": "Betrag",
+      "totalAmountLabel": "Gesamtbetrag: ${total}"
+    },
+    "mobileCardView": {
+      "dateLabel": "Datum:",
+      "cardLabel": "Karte:",
+      "amountLabel": "Betrag:",
+      "receiptLabel": "Beleg:"
+    }
   }
-
 
 
 

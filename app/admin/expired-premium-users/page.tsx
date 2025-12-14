@@ -6,6 +6,7 @@ import { client } from "@/sanity/lib/client"
 import { useState, useEffect, useMemo } from "react"
 import { RefreshCw, Search, ChevronDown, Calendar, CreditCard, AlertCircle, Users } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import AdminAuthGuard from "../AdminAuthGuard"
 
 
 // ============================================================================
@@ -402,6 +403,8 @@ export default function ExpiredPremiumUsersPage() {
   }
 
   return (
+    <AdminAuthGuard>
+
     <div className="min-h-screen bg-[#F6F7F9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -532,5 +535,6 @@ export default function ExpiredPremiumUsersPage() {
         )}
       </div>
     </div>
+    </AdminAuthGuard>
   )
 }

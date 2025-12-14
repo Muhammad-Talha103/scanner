@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { fetchUsersWithPasswordMerge, Userr } from "./datafetch";
 import UserTable from "./UserTable";
 import { useRouter } from "next/navigation";
-import { Shield, Users, Loader2, Key, LogOut, UserIcon } from "lucide-react";
+import { Shield, Users, Loader2, Key, LogOut, UserIcon, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
@@ -275,6 +275,14 @@ export default function AdminPage() {
                 >
                   <Key className="w-4 h-4 mr-2" />
                   {t("admin.expired_premium_users")}
+                </Link>
+                <Link
+                  href="/admin/payments-record"
+                  className="flex items-center px-4 py-2 text-gray-800 text-sm hover:bg-gray-100 transition"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  <span className="text-[11px]">{t("admin.payment_records")}</span>
                 </Link>
                 <button
                   onClick={() => {

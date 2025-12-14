@@ -17,6 +17,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { client } from "@/sanity/lib/client";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 type Payment = {
   _id: string;
@@ -32,6 +33,7 @@ type Payment = {
 export default function PaymentHistoryPage() {
   const userInfo = useSelector((state: RootState) => state.user.userInfo);
   const userEmail = userInfo?.email;
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -49,10 +51,10 @@ export default function PaymentHistoryPage() {
         <div className="bg-white p-8 rounded-xl shadow-md text-center border">
           <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h2 className="text-xl font-bold text-slate-800 mb-2">
-            Please login to see the details
+            {t("payment_history.loginPrompt.title")}
           </h2>
           <p className="text-slate-500 text-sm">
-            You must be logged in to view your payment history.
+            {t("payment_history.loginPrompt.subtitle")}
           </p>
         </div>
       </div>
@@ -139,7 +141,10 @@ export default function PaymentHistoryPage() {
 
   // Calculate total amount
   const totalAmount = useMemo(() => {
-    return filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    return filteredPayments.reduce(
+      (sum, payment) => sum + payment.amount / 100,
+      0
+    );
   }, [filteredPayments]);
 
   const resetFilters = () => {
@@ -173,11 +178,11 @@ export default function PaymentHistoryPage() {
     const doc = new jsPDF();
     doc.setFontSize(20);
     doc.setTextColor(15, 23, 42);
-    doc.text("Payment History", 14, 20);
+    doc.text(t("payment_history.pdf.title"), 14, 20);
 
     doc.setFontSize(10);
     doc.setTextColor(71, 85, 105);
-    doc.text(`User Email: ${userEmail}`, 14, 28);
+    doc.text(`${t("payment_history.pdf.userEmail")}: ${userEmail}`, 14, 28);
 
     const generatedDate = new Date().toLocaleDateString("en-US", {
       month: "long",
@@ -186,7 +191,7 @@ export default function PaymentHistoryPage() {
       hour: "2-digit",
       minute: "2-digit",
     });
-    doc.text(`Generated: ${generatedDate}`, 14, 34);
+    doc.text(`${t("payment_history.pdf.generated")}: ${generatedDate}`, 14, 34);
 
     const tableData = filteredPayments.map((payment) => [
       formatDate(payment.createdAt),
@@ -199,7 +204,13 @@ export default function PaymentHistoryPage() {
     autoTable(doc, {
       startY: 42,
       head: [
-        ["Date & Time", "Card Holder", "Card Type", "Last 4 Digits", "Amount"],
+        [
+          t("payment_history.paymentTable.dateTime"),
+          t("payment_history.paymentTable.cardHolder"),
+          t("payment_history.paymentTable.cardType"),
+          t("payment_history.paymentTable.last4Digits"),
+          t("payment_history.paymentTable.amount"),
+        ],
       ],
       body: tableData,
       theme: "striped",
@@ -255,16 +266,20 @@ export default function PaymentHistoryPage() {
             className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors mb-6 group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">Back to Home</span>
+            <span className="font-medium">
+              {t("payment_history.backButton")}
+            </span>
           </button>
 
           <div className="flex flex-col gap-2">
             <div className="text-sm text-slate-600">
-              <span className="font-medium">User Email:</span>{" "}
+              <span className="font-medium">
+                {t("payment_history.userEmailLabel")}
+              </span>{" "}
               <span className="text-blue-600 font-medium">{userEmail}</span>
             </div>
             <h1 className="text-4xl font-bold text-slate-900 text-balance">
-              Payment History
+              {t("payment_history.paymentHistoryTitle")}
             </h1>
           </div>
         </div>
@@ -276,7 +291,9 @@ export default function PaymentHistoryPage() {
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-blue-400 text-slate-700 rounded-lg transition-all shadow-sm"
             >
               <Filter className="w-5 h-5 text-blue-600" />
-              <span className="font-medium">Add Filters</span>
+              <span className="font-medium">
+                {t("payment_history.filters.button")}
+              </span>
               {hasActiveFilters && (
                 <span className="ml-1 px-2 py-0.5 bg-blue-600 text-white text-xs font-semibold rounded-full">
                   {
@@ -299,7 +316,7 @@ export default function PaymentHistoryPage() {
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg transition-all shadow-sm font-medium"
             >
               <Download className="w-5 h-5" />
-              <span>Download PDF</span>
+              <span>{t("payment_history.pdfDownloadButton")}</span>
             </button>
           </div>
 
@@ -309,7 +326,9 @@ export default function PaymentHistoryPage() {
               className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:text-slate-900 transition-colors"
             >
               <X className="w-4 h-4" />
-              <span className="font-medium">Clear All</span>
+              <span className="font-medium">
+                {t("payment_history.clearAllButton")}
+              </span>
             </button>
           )}
         </div>
@@ -342,12 +361,12 @@ export default function PaymentHistoryPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
                       <div className="w-1 h-4 bg-blue-600 rounded-full"></div>
-                      Date Range
+                      {t("payment_history.filters.sections.dateRange")}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                          From Date
+                          {t("payment_history.filters.sections.fromDate")}
                         </label>
                         <input
                           type="date"
@@ -359,7 +378,7 @@ export default function PaymentHistoryPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                          To Date
+                          {t("payment_history.filters.sections.toDate")}
                         </label>
                         <input
                           type="date"
@@ -376,18 +395,29 @@ export default function PaymentHistoryPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
                       <div className="w-1 h-4 bg-blue-600 rounded-full"></div>
-                      Card Type
+                      {t("payment_history.filters.sections.cardType")}
                     </h3>
                     <select
                       value={cardType}
                       onChange={(e) => setCardType(e.target.value)}
                       className="w-full px-4 py-2.5 bg-white border-2 border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
                     >
-                      <option value="">All Cards</option>
-                      <option value="Visa">Visa</option>
-                      <option value="Mastercard">Mastercard</option>
-                      <option value="Amex">American Express</option>
-                      <option value="Other">Other</option>
+                      <option value="">
+                        {" "}
+                        {t("payment_history.filters.cardTypeAll")}
+                      </option>
+                      <option value="Visa">
+                        {t("payment_history.filters.cardTypeVisa")}
+                      </option>
+                      <option value="Mastercard">
+                        {t("payment_history.filters.cardTypeMastercard")}
+                      </option>
+                      <option value="Amex">
+                        {t("payment_history.filters.cardTypeAmex")}
+                      </option>
+                      <option value="Other">
+                        {t("payment_history.filters.cardTypeOther")}
+                      </option>
                     </select>
                   </div>
 
@@ -395,12 +425,12 @@ export default function PaymentHistoryPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
                       <div className="w-1 h-4 bg-blue-600 rounded-full"></div>
-                      Amount Range
+                      {t("payment_history.filters.sections.amountRange")}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Minimum Amount
+                          {t("payment_history.filters.sections.minAmount")}
                         </label>
                         <div className="relative">
                           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">
@@ -417,7 +447,7 @@ export default function PaymentHistoryPage() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
-                          Maximum Amount
+                          {t("payment_history.filters.sections.maxAmount")}
                         </label>
                         <div className="relative">
                           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">
@@ -439,13 +469,15 @@ export default function PaymentHistoryPage() {
                   <div>
                     <h3 className="text-sm font-semibold text-slate-900 mb-3 flex items-center gap-2">
                       <div className="w-1 h-4 bg-blue-600 rounded-full"></div>
-                      Search
+                      {t("payment_history.filters.sections.search")}
                     </h3>
                     <div className="relative">
                       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                       <input
                         type="text"
-                        placeholder="Search by name or last 4 digits"
+                        placeholder={t(
+                          "payment_history.filters.sections.searchPlaceholder"
+                        )}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-full pl-12 pr-4 py-2.5 bg-white border-2 border-slate-200 rounded-lg text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
@@ -461,13 +493,13 @@ export default function PaymentHistoryPage() {
                   onClick={resetFilters}
                   className="px-4 py-2.5 text-slate-600 hover:text-slate-900 hover:bg-slate-200 rounded-lg transition-colors font-medium"
                 >
-                  Reset All
+                  {t("payment_history.filters.resetButton")}
                 </button>
                 <button
                   onClick={() => setShowFilterModal(false)}
                   className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium shadow-sm"
                 >
-                  Apply Filters
+                  {t("payment_history.filters.applyButton")}
                 </button>
               </div>
             </div>
@@ -481,22 +513,22 @@ export default function PaymentHistoryPage() {
               <thead className="bg-slate-50 border-b-2 border-slate-200">
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Date & Time
+                    {t("payment_history.paymentCards.dateTime")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Card Holder
+                    {t("payment_history.paymentCards.cardHolder")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Card Type
+                    {t("payment_history.paymentCards.cardType")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Last 4 Digits
+                    {t("payment_history.paymentCards.last4Digits")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Amount
+                    {t("payment_history.paymentCards.amount")}
                   </th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-slate-700">
-                    Receipt
+                    {t("payment_history.paymentTable.receipt")}
                   </th>
                 </tr>
               </thead>
@@ -532,10 +564,10 @@ export default function PaymentHistoryPage() {
                       <div className="flex flex-col items-center gap-3">
                         <FileText className="w-12 h-12 text-slate-300" />
                         <p className="text-slate-500 font-medium">
-                          No payments found
+                          {t("payment_history.paymentCards.noData")}
                         </p>
                         <p className="text-slate-400 text-sm mt-1">
-                          Try adjusting your filters
+                          {t("payment_history.paymentCards.tryAdjustFilters")}
                         </p>
                       </div>
                     </td>
@@ -577,11 +609,11 @@ export default function PaymentHistoryPage() {
                             className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors group border border-blue-200"
                           >
                             <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                            View
+                            {t("payment_history.paymentCards.view")}
                           </Link>
                         ) : (
                           <span className="text-slate-400 italic text-sm">
-                            No receipt
+                            {t("payment_history.paymentCards.noReceipt")}
                           </span>
                         )}
                       </td>
@@ -613,9 +645,11 @@ export default function PaymentHistoryPage() {
             // Empty state
             <div className="bg-white border-2 border-slate-200 rounded-xl p-8 text-center">
               <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-              <p className="text-slate-500 font-medium">No payments found</p>
+              <p className="text-slate-500 font-medium">
+                {t("payment_history.paymentCards.noData")}
+              </p>
               <p className="text-slate-400 text-sm mt-1">
-                Try adjusting your filters
+                {t("payment_history.paymentCards.tryAdjustFilters")}
               </p>
             </div>
           ) : (
@@ -629,7 +663,7 @@ export default function PaymentHistoryPage() {
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="text-xs text-slate-500 font-medium mb-1">
-                        Date & Time
+                        {t("payment_history.paymentCards.dateTime")}
                       </div>
                       <div className="text-sm text-slate-700">
                         {formatDate(payment.createdAt)}
@@ -637,7 +671,7 @@ export default function PaymentHistoryPage() {
                     </div>
                     <div className="text-right">
                       <div className="text-xs text-slate-500 font-medium mb-1">
-                        Amount
+                        {t("payment_history.paymentCards.amount")}
                       </div>
                       <div className="text-lg font-bold text-blue-600">
                         {" "}
@@ -649,7 +683,7 @@ export default function PaymentHistoryPage() {
                   <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-200">
                     <div>
                       <div className="text-xs text-slate-500 font-medium mb-1">
-                        Card Holder
+                        {t("payment_history.paymentCards.cardHolder")}
                       </div>
                       <div className="text-[16px] text-slate-900 font-semibold">
                         {payment.cardHolderName}
@@ -657,7 +691,7 @@ export default function PaymentHistoryPage() {
                     </div>
                     <div>
                       <div className="text-xs text-slate-500 font-medium mb-1">
-                        Card Type
+                        {t("payment_history.paymentCards.cardType")}
                       </div>
                       <div className="flex items-center gap-2">
                         {getCardIcon(payment.cardType)}
@@ -671,7 +705,7 @@ export default function PaymentHistoryPage() {
                   <div className="flex justify-between items-center pt-3 border-t border-slate-200">
                     <div>
                       <div className="text-xs text-slate-500 font-medium mb-1">
-                        Last 4 Digits
+                        {t("payment_history.paymentCards.last4Digits")}
                       </div>
                       <div className="text-sm text-slate-700 font-mono">
                         •••• {payment.last4}
@@ -685,11 +719,11 @@ export default function PaymentHistoryPage() {
                         className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors group border border-blue-200"
                       >
                         <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                        View
+                        {t("payment_history.paymentCards.view")}
                       </Link>
                     ) : (
                       <span className="text-slate-400 italic text-sm">
-                        No receipt
+                        {t("payment_history.paymentCards.noReceipt")}
                       </span>
                     )}
                   </div>
@@ -708,15 +742,18 @@ export default function PaymentHistoryPage() {
               </div>
               <div>
                 <div className="text-sm text-slate-600 font-medium">
-                  Total Amount Paid
+                  {t("payment_history.summary.totalAmountPaid")}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5">
-                  From {filteredPayments.length} transaction(s)
+                  {t("payment_history.summary.transactions")}{" "}
+                  <span className="text-sm font-semibold">
+                    ({filteredPayments.length})
+                  </span>
                 </div>
               </div>
             </div>
             <div className="text-3xl font-bold text-blue-600 transition-all duration-300">
-              ${(totalAmount / 100).toFixed(2)}
+              ${totalAmount.toFixed(2)}
             </div>
           </div>
         </div>

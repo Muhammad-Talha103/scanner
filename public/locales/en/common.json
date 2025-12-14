@@ -520,6 +520,7 @@
   "manage_users":"Manage users and their information",
   "premium_users":"Premium Users",
   "expired_premium_users":"Expired Premium Users",
+  "payment_records":"Payment Records",
   "change_credentials":"Change Credentials",
   "upgrade":"Upgrade to Premium",
   "payment-history":"Payment History",
@@ -903,6 +904,138 @@
       "grew_scan_premium":"Grewe Scan Premium.",
       "button": "Go to Home"
     }
-}
+},
+"payment_history":{
+  "loginPrompt": {
+    "title": "Please login to see the details",
+    "description": "You must be logged in to view your payment history."
+  },
+  "backButton": "Back to Home",
+  "userEmailLabel": "User Email:",
+  "paymentHistoryTitle": "Payment History",
+  "filters": {
+    "button": "Add Filters",
+    "cardTypeAll": "All Cards",
+    "cardTypeVisa": "Visa",
+    "cardTypeMastercard": "Mastercard",
+    "cardTypeAmex": "American Express",
+    "cardTypeOther": "Other",
+    "resetButton": "Reset All",
+    "applyButton": "Apply Filters",
+    "sections": {
+      "dateRange": "Date Range",
+      "fromDate": "From Date",
+      "toDate": "To Date",
+      "cardType": "Card Type",
+      "amountRange": "Amount Range",
+      "minAmount": "Minimum Amount",
+      "maxAmount": "Maximum Amount",
+      "search": "Search",
+      "searchPlaceholder": "Search by name or last 4 digits"
+    }
+  },
+  "pdf": {
+    "title": "Payment History",
+    "userEmail": "User Email:",
+    "generated": "Generated:",
+    "tableHeaders": ["Date & Time", "Card Holder", "Card Type", "Last 4 Digits", "Amount"],
+    "totalAmountLabel": "Total Amount:",
+    "totalPaymentsLabel": "Total Payments:"
+  },
+  "paymentTable": {
+    "dateTime": "Date & Time",
+    "cardHolder": "Card Holder",
+    "cardType": "Card Type",
+    "last4Digits": "Last 4 Digits",
+    "amount": "Amount",
+    "receipt": "Receipt",
+    "view": "View",
+    "noReceipt": "No receipt",
+    "loadingNoData": "No payments found",
+    "tryAdjustFilters": "Try adjusting your filters"
+  },
+  "paymentCards": {
+    "dateTime": "Date & Time",
+    "amount": "Amount",
+    "cardHolder": "Card Holder",
+    "cardType": "Card Type",
+    "last4Digits": "Last 4 Digits",
+    "view": "View",
+    "noReceipt": "No receipt",
+    "noData": "No payments found",
+    "tryAdjustFilters": "Try adjusting your filters"
+  },
+  "summary": {
+    "totalAmountPaid": "Total Amount Paid",
+    "transactions": "Total Transactions"
+  },
+  "pdfDownloadButton": "Download PDF",
+  "clearAllButton": "Clear All"
+},
+  "adminPaymentRecords": {
+    "pageTitle": "Admin Payment Records",
+    "pageDescription": "All user transactions in one place",
+    "totalPaymentsLabel": "Total Payments:",
+    "filterPaymentsButton": "Filter Payments",
+    "filterButtonShort": "Filter",
+    "downloadPDFButton": "Download PDF",
+    "downloadPDFButtonShort": "PDF",
+    "loadingMessage": "Loading payment records...",
+    "tableHeaders": {
+      "paymentDate": "Payment Date",
+      "email": "Email",
+      "cardHolderName": "Card Holder Name",
+      "cardType": "Card Type",
+      "last4Digits": "Last 4 Digits",
+      "amountUSD": "Amount (USD)",
+      "receipt": "Receipt"
+    },
+    "noReceiptText": "No Receipt",
+    "view":"View",
+    "totalSummary": {
+      "label": "Total Amount Received"
+    },
+    "filterModal": {
+      "title": "Filter Payments",
+      "dateFrom": "Date From",
+      "dateTo": "Date To",
+      "cardType": "Card Type",
+      "allTypesOption": "All Types",
+      "visaOption": "Visa",
+      "mastercardOption": "Mastercard",
+      "amexOption": "Amex",
+      "otherOption": "Other",
+      "emailSearch": "Email Search",
+      "emailSearchPlaceholder": "Search by email...",
+      "minAmount": "Minimum Amount ($)",
+      "maxAmount": "Maximum Amount ($)",
+      "minAmountPlaceholder": "0.00",
+      "maxAmountPlaceholder": "10000.00",
+      "nameSearch": "Card Holder Name Search",
+      "nameSearchPlaceholder": "Search by card holder name...",
+      "resetFiltersButton": "Reset Filters",
+      "applyFiltersButton": "Apply Filters"
+    },
+    "pdf": {
+      "title": "Grewe Scan Admin Payment Records",
+      "generatedLabel": "Generated: ",
+       "paymentDate": "Date",
+        "email": "Email",
+        "cardHolderName": "Card Holder",
+        "cardType": "Card Type",
+        "last4Digits": "Last 4",
+        "amount": "Amount",
+      "totalAmountLabel": "Total Amount: ${total}"
+    },
+    "mobileCardView": {
+      "dateLabel": "Date:",
+      "cardLabel": "Card:",
+      "amountLabel": "Amount:",
+      "receiptLabel": "Receipt:"
+    }
+  }
+
+
+
 
 }

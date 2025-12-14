@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { client } from "@/sanity/lib/client";
 import { useTranslation } from "react-i18next";
+import AdminAuthGuard from "../AdminAuthGuard";
 
 // ============================================================================
 // TYPES
@@ -186,7 +187,7 @@ function useDebounce<T>(value: T, delay: number): T {
 // MAIN COMPONENT
 // ============================================================================
 
-export default function PremiumUsersPage() {
+function PremiumUsersPage() {
   const { t } = useTranslation();
   const [users, setUsers] = useState<PremiumUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -796,5 +797,15 @@ export default function PremiumUsersPage() {
         )}
       </div>
     </main>
+  );
+}
+
+
+
+export default function Home() {
+  return (
+    <AdminAuthGuard>
+      <PremiumUsersPage />
+    </AdminAuthGuard>
   );
 }

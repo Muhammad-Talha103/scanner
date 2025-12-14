@@ -4,6 +4,7 @@ import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import AdminAuthGuard from "../AdminAuthGuard";
 
 interface FormData {
   currentUsername: string;
@@ -12,7 +13,7 @@ interface FormData {
   newPassword: string;
 }
 
-export default function ChangePasswordForm() {
+function ChangePasswordForm() {
     const { t } = useTranslation();
   const [step, setStep] = useState<1 | 2>(1);
   const [formData, setFormData] = useState<FormData>({
@@ -292,5 +293,13 @@ export default function ChangePasswordForm() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AdminAuthGuard>
+      <ChangePasswordForm />
+    </AdminAuthGuard>
   );
 }
