@@ -566,9 +566,7 @@ export default function PaymentHistoryPage() {
                         <p className="text-slate-500 font-medium">
                           {t("payment_history.paymentCards.noData")}
                         </p>
-                        <p className="text-slate-400 text-sm mt-1">
-                          {t("payment_history.paymentCards.tryAdjustFilters")}
-                        </p>
+
                       </div>
                     </td>
                   </tr>
@@ -648,9 +646,7 @@ export default function PaymentHistoryPage() {
               <p className="text-slate-500 font-medium">
                 {t("payment_history.paymentCards.noData")}
               </p>
-              <p className="text-slate-400 text-sm mt-1">
-                {t("payment_history.paymentCards.tryAdjustFilters")}
-              </p>
+             
             </div>
           ) : (
             // Data cards
